@@ -285,7 +285,7 @@ header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; 
       <div class="label">رسوم الاشتراك السنوي</div>
     </div>
 
-    <label class="input-label">أدخل كود التفعيل</label>
+    <div style="background:#0d1420;border:1px solid #1e2d45;border-radius:12px;padding:14px;margin-bottom:20px;text-align:center;"><div style="font-size:11px;color:#64748b;margin-bottom:6px">رقم جهازك — أرسله لنا على تيليجرام</div><div style="display:flex;align-items:center;justify-content:center;gap:10px;"><span id="deviceIdDisplay" style="font-size:22px;font-weight:800;color:#00c9a7;letter-spacing:4px;font-family:monospace">...</span><button onclick="copyDeviceId()" style="background:#1e2d45;border:none;border-radius:8px;padding:6px 12px;color:#e2e8f0;cursor:pointer;font-size:12px;font-family:Tajawal,sans-serif;">نسخ</button></div></div><label class="input-label">أدخل كود التفعيل</label>
     <input class="code-input" id="codeInput" type="text" placeholder="XXXX-XXXX" maxlength="9">
     <button class="btn-activate" onclick="tryActivate()">🔓 تفعيل</button>
     <a class="btn-tg" href="https://t.me/f_8e5" target="_blank">✈️ تواصل معنا على تيليجرام للدفع</a>
@@ -475,6 +475,15 @@ function showApp() {
   buildList(pathoLectures, 'pathoList', 'patho', 'patho');
   buildList(mriLectures, 'mriList', 'mri', 'mri');
 }
+
+function copyDeviceId() {
+  const id = getDeviceId();
+  navigator.clipboard.writeText(id).then(() => alert("تم نسخ رقم الجهاز: " + id));
+}
+
+// Show device ID on lock screen
+const devEl = document.getElementById("deviceIdDisplay");
+if (devEl) devEl.textContent = getDeviceId();
 
 // Check activation on load
 if (isActivated()) {
