@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة الثانية عشر - Inter-Slice Gap & Image Matrix</title>
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #1e2a42;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3f5e;
+    --glow: rgba(59,130,246,0.3);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.07) 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 80%, rgba(16,185,129,0.05) 0%, transparent 50%);
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f1729 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .header-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    line-height: 1.4;
+  }
+  .header-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .header-link a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: rgba(59,130,246,0.12);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(59,130,246,0.3);
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  .header-link a:hover { background: rgba(59,130,246,0.25); }
+  .header-link .link-sub { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 3px; }
+
+  /* TIMER & STATS */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 24px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .stat-icon { font-size: 1.1rem; }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); }
+  .stat-value { font-size: 1rem; font-weight: 700; color: var(--text); font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; }
+  #timer-val { color: var(--warning); }
+  #score-val { color: var(--success); }
+  #q-val { color: var(--accent2); }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 12px 24px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: var(--bg);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px var(--glow);
+    width: 0%;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 28px 16px 40px;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    animation: fadeSlide 0.4s ease;
+  }
+  @keyframes fadeSlide {
+    from { opacity:0; transform: translateY(16px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  .q-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(59,130,246,0.15);
+    color: var(--accent2);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(59,130,246,0.3);
+    margin-bottom: 16px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+  }
+  .q-text {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 22px;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 18px;
+    text-align: right;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.95rem;
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.1);
+    transform: translateX(-3px);
+  }
+  .opt-letter {
+    min-width: 32px;
+    height: 32px;
+    background: var(--bg);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .opt-btn.correct {
+    border-color: var(--success);
+    background: rgba(16,185,129,0.12);
+  }
+  .opt-btn.correct .opt-letter { background: var(--success); color: #fff; border-color: var(--success); }
+  .opt-btn.wrong {
+    border-color: var(--danger);
+    background: rgba(239,68,68,0.1);
+  }
+  .opt-btn.wrong .opt-letter { background: var(--danger); color: #fff; border-color: var(--danger); }
+  .opt-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    display: none;
+    margin-top: 16px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.9rem;
+    color: var(--accent2);
+    line-height: 1.6;
+    animation: fadeSlide 0.3s ease;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent2); font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif; }
+
+  /* NEXT BTN */
+  .btn-next {
+    display: none;
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.35);
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59,130,246,0.5); }
+  .btn-next.show { display: block; }
+
+  /* RESULT SCREEN */
+  #result-screen {
+    display: none;
+    text-align: center;
+    animation: fadeSlide 0.5s ease;
+  }
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+  .result-emoji { font-size: 4rem; margin-bottom: 16px; }
+  .result-title { font-size: 1.8rem; font-weight: 800; color: var(--accent2); margin-bottom: 8px; }
+  .result-score-big { font-size: 3.5rem; font-weight: 800; font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; color: var(--success); margin: 16px 0; }
+  .result-stats { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
+  .result-stat { background: var(--bg); padding: 14px 22px; border-radius: 12px; border: 1px solid var(--border); }
+  .result-stat .rs-val { font-size: 1.5rem; font-weight: 700; font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; }
+  .result-stat .rs-lbl { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+  .btn-restart {
+    margin-top: 24px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.35);
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 999;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  #toast.correct-toast { background: var(--success); color: #fff; box-shadow: 0 4px 20px rgba(16,185,129,0.4); }
+  #toast.wrong-toast { background: var(--danger); color: #fff; box-shadow: 0 4px 20px rgba(239,68,68,0.4); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    background: var(--card);
+    margin-top: 20px;
+  }
+  footer a { color: var(--accent2); text-decoration: none; font-weight: 700; }
+  footer a:hover { text-decoration: underline; }
+
+  /* START SCREEN */
+  #start-screen {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .start-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 44px 30px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+  .start-icon { font-size: 3.5rem; margin-bottom: 16px; }
+  .start-title { font-size: 1.5rem; font-weight: 800; color: var(--accent2); margin-bottom: 8px; line-height: 1.4; }
+  .start-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 8px; font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; }
+  .start-info { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
+  .si-item { background: var(--bg); padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border); font-size: 0.85rem; }
+  .btn-start {
+    margin-top: 16px;
+    padding: 16px 48px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.45);
+    letter-spacing: 0.5px;
+  }
+  .btn-start:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(59,130,246,0.55); }
+
+  .made-by { font-size: 0.78rem; color: var(--text-muted); margin-top: 16px; }
+
+  @media (max-width: 600px) {
+    .stats-bar { gap: 8px; padding: 10px 12px; }
+    .stat-item { padding: 6px 10px; }
+    .q-card { padding: 18px 14px; }
+    header { flex-direction: column; gap: 10px; text-align: center; }
+    .header-link { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-title">🧠 الفيزياء الإشعاعية 2 — المحاضرة الثانية عشر</div>
+    <div class="header-sub">Inter-Slice Gap & Image Matrix | من إنشاء: محمد صبار</div>
+  </div>
+  <div class="header-link">
+    <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+    <div class="link-sub">اضغط هنا للحصول على اختبارات باقي المحاضرات</div>
+  </div>
+</header>
+
+<div class="stats-bar" id="stats-bar" style="display:none">
+  <div class="stat-item">
+    <span class="stat-icon">⏱️</span>
+    <div>
+      <div class="stat-label">الوقت</div>
+      <div class="stat-value" id="timer-val">00:00</div>
+    </div>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">🎯</span>
+    <div>
+      <div class="stat-label">النقاط</div>
+      <div class="stat-value" id="score-val">0</div>
+    </div>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">📋</span>
+    <div>
+      <div class="stat-label">السؤال</div>
+      <div class="stat-value" id="q-val">0 / 45</div>
+    </div>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">✅</span>
+    <div>
+      <div class="stat-label">صحيح</div>
+      <div class="stat-value" id="correct-val" style="color:var(--success)">0</div>
+    </div>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">❌</span>
+    <div>
+      <div class="stat-label">خطأ</div>
+      <div class="stat-value" id="wrong-val" style="color:var(--danger)">0</div>
+    </div>
+  </div>
+</div>
+
+<div class="progress-wrap" id="prog-wrap" style="display:none">
+  <div class="progress-info">
+    <span id="prog-text">التقدم: 0%</span>
+    <span id="prog-q">0 من 45 سؤال</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="prog-fill"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<main>
+  <!-- START SCREEN -->
+  <div id="start-screen">
+    <div class="start-card">
+      <div class="start-icon">🏥</div>
+      <div class="start-title">اختبار المحاضرة الثانية عشر<br>Inter-Slice Gap & Image Matrix</div>
+      <div class="start-sub">جامعة الهادي | كلية التقنيات الصحية والطبية | قسم تقنيات الأشعة | المرحلة الثالثة<br>قسم تقنيات الأشعة — الفيزياء الإشعاعية 2</div>
+      <div class="start-info">
+        <div class="si-item">📝 45 سؤال</div>
+        <div class="si-item">🏆 نقطة لكل إجابة صحيحة</div>
+        <div class="si-item">⏱️ بدون حد زمني</div>
+        <div class="si-item">📚 شرح عند الخطأ</div>
+      </div>
+      <button class="btn-start" onclick="startQuiz()">ابدأ الاختبار الآن ▶</button>
+      <div class="made-by">من إنشاء: <a href="https://t.me/mulimcq" target="_blank" style="color:var(--accent2)">محمد صبار</a> — اضغط هنا للحصول على اختبارات باقي المحاضرات</div>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" style="display:none">
+    <div class="q-card" id="q-card">
+      <div class="q-badge" id="q-badge">سؤال 1 من 45</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="explanation" id="explanation"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">السؤال التالي ⟵</button>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen">
+    <div class="result-card">
+      <div class="result-emoji" id="result-emoji">🎉</div>
+      <div class="result-title">انتهى الاختبار!</div>
+      <div class="result-score-big" id="result-score-big">0 / 45</div>
+      <div class="result-stats">
+        <div class="result-stat">
+          <div class="rs-val" style="color:var(--success)" id="rs-correct">0</div>
+          <div class="rs-lbl">إجابات صحيحة</div>
+        </div>
+        <div class="result-stat">
+          <div class="rs-val" style="color:var(--danger)" id="rs-wrong">0</div>
+          <div class="rs-lbl">إجابات خاطئة</div>
+        </div>
+        <div class="result-stat">
+          <div class="rs-val" style="color:var(--warning)" id="rs-percent">0%</div>
+          <div class="rs-lbl">النسبة المئوية</div>
+        </div>
+        <div class="result-stat">
+          <div class="rs-val" style="color:var(--accent2)" id="rs-time">00:00</div>
+          <div class="rs-lbl">وقت الاختبار</div>
+        </div>
+      </div>
+      <div id="result-msg" style="color:var(--text-muted);font-size:0.95rem;margin:10px 0;"></div>
+      <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+      <div style="margin-top:20px;font-size:0.82rem;color:var(--text-muted)">
+        <a href="https://t.me/mulimcq" target="_blank" style="color:var(--accent2);font-weight:700">محمد صبار</a> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  <br><span style="font-size:0.75rem;margin-top:4px;display:block">المحاضرة الثانية عشر | الفيزياء الإشعاعية 2 | قسم تقنيات الأشعة</span>
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "What is the inter-slice gap in MRI?",
+    opts: ["The thickness of a single slice","The small space between two adjacent slices","The field of view size","The pixel size in the matrix"],
+    ans: 1,
+    exp: "Inter-slice gap (spacing) is the small space between two adjacent slices, measured in millimeters."
+  },
+  {
+    q: "What is the unit used to measure inter-slice gap?",
+    opts: ["Centimeters","Micrometers","Millimeters","Tesla"],
+    ans: 2,
+    exp: "Inter-slice gap is measured in millimeters (mm)."
+  },
+  {
+    q: "What does inter-slice gap compensate for?",
+    opts: ["Perfect rectangular slice profiles","Imperfect RF excitation pulse","Large field of view","High matrix size"],
+    ans: 1,
+    exp: "Inter-slice gap provides a method to compensate for the imperfect RF excitation pulse."
+  },
+  {
+    q: "Why are resultant slice profiles not perfectly rectangular?",
+    opts: ["Due to high magnetic field","Due to imperfect RF excitation pulses","Due to large matrix size","Due to small FOV"],
+    ans: 1,
+    exp: "The resultant slice profiles are not perfectly rectangular because of the imperfect nature of RF excitation pulses."
+  },
+  {
+    q: "What happens when adjacent slices are closely spaced without an inter-slice gap?",
+    opts: ["They become sharper","They overlap at their edges","They become thicker","SNR increases"],
+    ans: 1,
+    exp: "Two adjacent slices overlap at their edges when closely spaced because slice profiles are not perfectly rectangular."
+  },
+  {
+    q: "In which imaging technique are inter-slice gaps necessary?",
+    opts: ["Gradient Echo (GRE)","CT imaging","Spin Echo (SE) imaging","Ultrasound imaging"],
+    ans: 2,
+    exp: "Inter-slice gaps are necessary in spin echo (SE) imaging due to overlapping of nonrectangular slice profiles."
+  },
+  {
+    q: "What is 'cross-talk' in MRI?",
+    opts: ["Noise from the scanner","RF pulse for one slice exciting protons in adjacent slices","Overlap of two FOVs","Signal from multiple patients"],
+    ans: 1,
+    exp: "Cross-talk is the interference that occurs when the RF pulse for one slice stimulates protons in adjacent slices."
+  },
+  {
+    q: "What effect does cross-talk have on image quality?",
+    opts: ["Increases SNR","Has no effect","Leads to reduction in SNR","Increases spatial resolution"],
+    ans: 2,
+    exp: "Cross-talk leads to a reduction in SNR (Signal-to-Noise Ratio)."
+  },
+  {
+    q: "What is the recommended inter-slice gap to minimize artifact?",
+    opts: ["10% of slice thickness","30% of slice thickness","100% of slice thickness","50% of FOV"],
+    ans: 1,
+    exp: "A small gap of approximately 30% of slice thickness is recommended to minimize artifact and improve SNR."
+  },
+  {
+    q: "The practical range for inter-slice gaps is:",
+    opts: ["5–10% of slice thickness","25–50% of slice thickness","60–80% of slice thickness","100% of slice thickness"],
+    ans: 1,
+    exp: "In most practical applications, inter-slice gaps of 25–50% of the slice thickness are inserted."
+  },
+  {
+    q: "What is the compromise when selecting an appropriate inter-slice gap?",
+    opts: ["Between cost and quality","Between optimal SNR and minimizing missed information","Between speed and resolution","Between FOV and matrix size"],
+    ans: 1,
+    exp: "One must find a compromise between an optimal SNR (requiring large gap) and reducing missed information (requiring small gap)."
+  },
+  {
+    q: "A large inter-slice gap will:",
+    opts: ["Eliminate cross-talk but increase missed information","Increase SNR but worsen resolution","Have no effect on image quality","Reduce slice thickness"],
+    ans: 0,
+    exp: "A large enough gap completely eliminates cross-talk, but risks missing information between slices."
+  },
+  {
+    q: "Which of the following describes the ideal slice profile?",
+    opts: ["Gaussian","Triangular","Perfectly rectangular","Sinusoidal"],
+    ans: 2,
+    exp: "The ideal slice profile is perfectly rectangular, but in practice it is distorted and nonrectangular in SE imaging."
+  },
+  {
+    q: "What controls the size of the imaging volume in MRI?",
+    opts: ["TE time","TR time","Inter-slice gap","Flip angle"],
+    ans: 2,
+    exp: "Inter-slice gap allows the technologist to control the size of the imaging volume by increasing and decreasing the space between slices."
+  },
+  {
+    q: "What is a voxel?",
+    opts: ["A 2D picture element","A 3D volume of tissue represented on the image matrix","The full FOV","A type of RF pulse"],
+    ans: 1,
+    exp: "A voxel is a 3-dimensional volume of tissue represented on the image matrix by a pixel (picture element)."
+  },
+  {
+    q: "What does spatial resolution correspond to?",
+    opts: ["The size of the FOV","The size of the smallest detectable detail","The number of slices","The TR value"],
+    ans: 1,
+    exp: "Spatial resolution corresponds to the size of the smallest detectable detail in the image."
+  },
+  {
+    q: "Which statement about voxel size and spatial resolution is correct?",
+    opts: ["Larger voxels give higher spatial resolution","Smaller voxels give higher spatial resolution","Voxel size does not affect spatial resolution","Only slice thickness affects spatial resolution"],
+    ans: 1,
+    exp: "The smaller the voxels, the higher the potential spatial resolution will be."
+  },
+  {
+    q: "How many parameters affect voxel volume?",
+    opts: ["One","Two","Three","Four"],
+    ans: 2,
+    exp: "Three parameters affect voxel volume: pixel size (from matrix size), field of view (FOV), and slice thickness."
+  },
+  {
+    q: "Which of the following is NOT a parameter that affects voxel volume?",
+    opts: ["Pixel size","Slice thickness","Field of view","TR time"],
+    ans: 3,
+    exp: "TR (repetition time) does not affect voxel volume. The three parameters are pixel size, FOV, and slice thickness."
+  },
+  {
+    q: "What is an example of a coarse matrix?",
+    opts: ["512 × 512","256 × 256","128 × 128","1024 × 1024"],
+    ans: 2,
+    exp: "A coarse matrix has a small number of pixels in the FOV; an example is 128 × 128."
+  },
+  {
+    q: "What is an example of a fine matrix?",
+    opts: ["64 × 64","128 × 128","256 × 256","512 × 512"],
+    ans: 3,
+    exp: "A fine matrix has a large number of pixels in the FOV; an example is 512 × 512."
+  },
+  {
+    q: "How is voxel size calculated?",
+    opts: ["From TR and TE only","From the field of view, matrix size, and slice thickness","From the magnetic field strength only","From the number of excitations"],
+    ans: 1,
+    exp: "Voxel size can be calculated from the field of view, the matrix size, and the slice thickness."
+  },
+  {
+    q: "Why do larger voxels have increased SNR?",
+    opts: ["They reduce the noise from the scanner","There are more hydrogen nuclei in the voxel to contribute to the signal","They use a higher magnetic field","They have a smaller pixel size"],
+    ans: 1,
+    exp: "Larger voxels contain more hydrogen nuclei, which contribute more signal, thereby increasing SNR and contrast resolution."
+  },
+  {
+    q: "Larger voxels are represented on the image matrix by:",
+    opts: ["Smaller pixels","Larger pixels","The same size pixels","No pixels"],
+    ans: 1,
+    exp: "Larger voxels are represented on the image matrix by larger pixels."
+  },
+  {
+    q: "What happens to SNR and voxel volume when slice thickness is doubled?",
+    opts: ["Both are halved","SNR is doubled and voxel volume is doubled","SNR decreases and voxel volume increases","No change"],
+    ans: 1,
+    exp: "Assuming a square FOV, doubling the slice thickness doubles both the SNR and the voxel volume, increasing contrast resolution."
+  },
+  {
+    q: "What happens to contrast resolution when slice thickness is halved?",
+    opts: ["Doubles","Quadruples","Decreases by half","Remains the same"],
+    ans: 2,
+    exp: "Halving the slice thickness adversely affects the SNR and therefore decreases the contrast resolution by half."
+  },
+  {
+    q: "What happens to SNR when the field of view is doubled?",
+    opts: ["SNR doubles","SNR increases by four","SNR is halved","SNR is unchanged"],
+    ans: 1,
+    exp: "Doubling the FOV doubles the voxel volume on both axes and increases the SNR by four."
+  },
+  {
+    q: "What happens to voxel volume when FOV is doubled?",
+    opts: ["Voxel volume doubles on one axis only","Voxel volume doubles on both axes","Voxel volume is halved","No change"],
+    ans: 1,
+    exp: "Doubling the field of view doubles the voxel volume on both axes."
+  },
+  {
+    q: "What happens to SNR when the FOV is halved?",
+    opts: ["SNR doubles","SNR increases by four","SNR is reduced by a quarter","SNR is unaffected"],
+    ans: 2,
+    exp: "Halving the FOV reduces the voxel volume and reduces the SNR by a quarter."
+  },
+  {
+    q: "Which pulse sequence provides the best signal amplitude?",
+    opts: ["Gradient echo (GRE)","Fast spin echo (FSE)","Classic spin echo (SE)","Inversion recovery (IR)"],
+    ans: 2,
+    exp: "The best pulse sequence for signal amplitude is the classic spin echo (SE) sequence due to its 180-degree RF pulse that re-phases all hydrogen protons."
+  },
+  {
+    q: "How does the classic spin echo sequence achieve the best signal amplitude?",
+    opts: ["By using a very short TR","By using a 180-degree RF pulse to re-phase all hydrogen protons to create an echo","By using a small flip angle","By using a large FOV"],
+    ans: 1,
+    exp: "The classic SE sequence uses a 180-degree RF pulse to re-phase all of the hydrogen protons in order to create an echo, allowing for the best signal amplitude."
+  },
+  {
+    q: "How do gradient echo sequences compare to spin echo in terms of signal?",
+    opts: ["They produce more signal than SE","They produce the same signal as SE","They do not re-phase hydrogen nuclei as effectively, leading to signal loss","They eliminate cross-talk better"],
+    ans: 2,
+    exp: "Gradient echo sequences do not re-phase the hydrogen nuclei as effectively as spin echo, resulting in signal loss."
+  },
+  {
+    q: "What is the effect of a large number of hydrogen protons in the scanned area on SNR?",
+    opts: ["SNR decreases","SNR is not affected","Signal amplitude increases, so SNR and contrast resolution increase","Signal becomes noisy"],
+    ans: 2,
+    exp: "A large number of hydrogen protons increases the signal amplitude, thereby increasing SNR and contrast resolution."
+  },
+  {
+    q: "What is the effect of a low number of protons in the scanned area?",
+    opts: ["Better image quality","Low signal and poor contrast resolution","Higher SNR","No effect on image quality"],
+    ans: 1,
+    exp: "If the number of protons in the area is low, the signal will be low and the contrast resolution will be poor."
+  },
+  {
+    q: "The background noise from the MRI system is:",
+    opts: ["The same for all patients","A constant amount for each patient but different from one patient to another","Zero in all cases","Always higher than the signal"],
+    ans: 1,
+    exp: "The background noise from the system is a constant amount for each patient but is different for every patient."
+  },
+  {
+    q: "A small FOV is generally defined as:",
+    opts: ["More than 30 cm","Less than 18 cm","Between 18 and 30 cm","Exactly 20 cm"],
+    ans: 1,
+    exp: "A small FOV is usually less than 18 cm, while a large FOV is more than 30 cm."
+  },
+  {
+    q: "A large FOV is generally defined as:",
+    opts: ["Less than 18 cm","Between 10 and 20 cm","More than 30 cm","Exactly 25 cm"],
+    ans: 2,
+    exp: "A large FOV is generally more than 30 cm."
+  },
+  {
+    q: "Which of the following best describes the relationship between matrix size and pixel size?",
+    opts: ["Matrix size has no effect on pixel size","The matrix size chosen establishes the pixel size","Only FOV determines pixel size","Only slice thickness determines pixel size"],
+    ans: 1,
+    exp: "The matrix size chosen establishes the pixel size, which therefore determines the size of the voxel it represents."
+  },
+  {
+    q: "What is the most efficient single way to increase both SNR and contrast resolution?",
+    opts: ["Decrease the slice thickness","Increase the matrix size","Double the field of view","Reduce inter-slice gap to zero"],
+    ans: 2,
+    exp: "Doubling the field of view is described as the single best and most efficient way to increase SNR and contrast resolution, as it increases SNR by four."
+  },
+  {
+    q: "What does FOV define in a 2D scan?",
+    opts: ["The slice thickness","The image size in two dimensions","The matrix size","The number of averages"],
+    ans: 1,
+    exp: "The field of view (FOV) defines the image size in two dimensions for 2D scans (or three dimensions for 3D scans)."
+  },
+  {
+    q: "What does FOV define in a 3D scan?",
+    opts: ["The image size in one dimension","The image size in two dimensions","The image size in three dimensions","Only the slice thickness"],
+    ans: 2,
+    exp: "For 3D scans, the FOV defines the image size in three dimensions."
+  },
+  {
+    q: "Which matrix type provides better spatial resolution?",
+    opts: ["Coarse matrix (128×128)","Fine matrix (512×512)","Both provide equal resolution","Resolution depends only on FOV"],
+    ans: 1,
+    exp: "A fine matrix (e.g., 512×512) has more pixels in the FOV, resulting in smaller voxels and better spatial resolution."
+  },
+  {
+    q: "Which matrix type has a small number of pixels in the field of view?",
+    opts: ["Fine matrix","Coarse matrix","Mixed matrix","Isotropic matrix"],
+    ans: 1,
+    exp: "Coarse matrices have a small number of pixels in the field of view, resulting in larger voxels and lower spatial resolution."
+  },
+  {
+    q: "What is an alternative approach to reducing cross-talk besides using an inter-slice gap?",
+    opts: ["Increasing TR","Reducing the saturation of protons in adjacent slices","Increasing the matrix size","Increasing FOV"],
+    ans: 1,
+    exp: "An alternative approach is reducing the saturation of protons in adjacent slices, which helps minimize undesired cross-slice imaging effects."
+  },
+  {
+    q: "In the context of SNR, what does increasing contrast resolution require?",
+    opts: ["A smaller number of hydrogen protons","A larger signal amplitude relative to noise","A smaller FOV","A thinner slice"],
+    ans: 1,
+    exp: "Better contrast resolution requires a larger signal amplitude relative to background noise, which is achieved with larger voxels or more hydrogen protons."
+  }
+];
+
+let current = 0;
+let score = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let answered = false;
+let timerInterval;
+let seconds = 0;
+let finalTime = "00:00";
+
+function startQuiz() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('prog-wrap').style.display = 'block';
+  startTimer();
+  loadQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = Math.floor(seconds / 60).toString().padStart(2,'0');
+    const s = (seconds % 60).toString().padStart(2,'0');
+    document.getElementById('timer-val').textContent = `${m}:${s}`;
+    finalTime = `${m}:${s}`;
+  }, 1000);
+}
+
+function loadQuestion() {
+  answered = false;
+  const q = questions[current];
+  const total = questions.length;
+
+  document.getElementById('q-badge').textContent = `سؤال ${current+1} من ${total}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-val').textContent = `${current+1} / ${total}`;
+
+  const pct = Math.round((current / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = `التقدم: ${pct}%`;
+  document.getElementById('prog-q').textContent = `${current} من ${total} سؤال`;
+
+  const letters = ['A','B','C','D'];
+  const optsDiv = document.getElementById('options');
+  optsDiv.innerHTML = '';
+
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, btn);
+    optsDiv.appendChild(btn);
+  });
+
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('btn-next').className = 'btn-next';
+}
+
+function selectAnswer(idx, btn) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[current];
+  const allBtns = document.querySelectorAll('.opt-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  if (idx === q.ans) {
+    btn.classList.add('correct');
+    score++;
+    correctCount++;
+    document.getElementById('score-val').textContent = score;
+    document.getElementById('correct-val').textContent = correctCount;
+    showToast('✅ إجابة صحيحة!', 'correct-toast');
+  } else {
+    btn.classList.add('wrong');
+    allBtns[q.ans].classList.add('correct');
+    wrongCount++;
+    document.getElementById('wrong-val').textContent = wrongCount;
+    showToast('❌ إجابة خاطئة!', 'wrong-toast');
+
+    const expDiv = document.getElementById('explanation');
+    expDiv.innerHTML = `<strong>💡 الشرح:</strong> ${q.exp}`;
+    expDiv.classList.add('show');
+  }
+
+  const nextBtn = document.getElementById('btn-next');
+  if (current === questions.length - 1) {
+    nextBtn.textContent = 'إنهاء الاختبار 🏆';
+  } else {
+    nextBtn.textContent = 'السؤال التالي ⟵';
+  }
+  nextBtn.classList.add('show');
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    loadQuestion();
+    document.getElementById('q-card').style.animation = 'none';
+    requestAnimationFrame(() => {
+      document.getElementById('q-card').style.animation = 'fadeSlide 0.4s ease';
+    });
+  }
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('stats-bar').style.display = 'none';
+  document.getElementById('prog-wrap').style.display = 'none';
+
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById('result-score-big').textContent = `${score} / ${questions.length}`;
+  document.getElementById('rs-correct').textContent = correctCount;
+  document.getElementById('rs-wrong').textContent = wrongCount;
+  document.getElementById('rs-percent').textContent = pct + '%';
+  document.getElementById('rs-time').textContent = finalTime;
+
+  let emoji = '😔', msg = 'حاول مرة أخرى، أنت قادر على التحسين!';
+  if (pct >= 90) { emoji = '🏆'; msg = 'ممتاز! أداء رائع جداً!'; }
+  else if (pct >= 75) { emoji = '🎉'; msg = 'جيد جداً! استمر في التقدم!'; }
+  else if (pct >= 60) { emoji = '👍'; msg = 'جيد! راجع الإجابات الخاطئة.'; }
+  else if (pct >= 50) { emoji = '📚'; msg = 'مقبول، راجع المحاضرة مجدداً.'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-msg').textContent = msg;
+  document.getElementById('result-screen').style.display = 'block';
+
+  const fill = document.getElementById('prog-fill');
+  fill.style.width = '100%';
+}
+
+function restartQuiz() {
+  current = 0;
+  score = 0;
+  correctCount = 0;
+  wrongCount = 0;
+  answered = false;
+  seconds = 0;
+  finalTime = "00:00";
+
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('prog-wrap').style.display = 'block';
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('correct-val').textContent = '0';
+  document.getElementById('wrong-val').textContent = '0';
+  document.getElementById('timer-val').textContent = '00:00';
+
+  clearInterval(timerInterval);
+  startTimer();
+  loadQuestion();
+}
+
+function showToast(msg, cls) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `${cls} show`;
+  setTimeout(() => { t.className = ''; }, 2200);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liver Diseases (2) - Quiz</title>
+<!-- Fonts embedded for offline use -->
+<style>
+  @font-face {
+    font-family: 'Tajawal';
+    src: local('Tajawal'), local('Arial'), local('Helvetica Neue');
+    font-weight: 400 900;
+  }
+</style>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #111827;
+    --card2: #1a2235;
+    --accent: #f59e0b;
+    --accent2: #10b981;
+    --accent3: #ef4444;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #1e2d45;
+    --correct: #065f46;
+    --wrong: #7f1d1d;
+    --correct-border: #10b981;
+    --wrong-border: #ef4444;
+    --progress-bg: #1e2d45;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Tajawal', 'Segoe UI', Arial, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(245,158,11,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(16,185,129,0.04) 0%, transparent 50%);
+  }
+
+  .header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(17,24,39,0.95) 0%, transparent 100%);
+  }
+
+  .lecture-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .main-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(22px, 4vw, 36px);
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .sub-info {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .creator-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .tg-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--accent2);
+    text-decoration: none;
+    margin-right: 10px;
+    transition: all 0.3s;
+  }
+
+  .tg-link:hover {
+    background: rgba(16,185,129,0.2);
+    transform: translateY(-1px);
+  }
+
+  .tg-link svg { width: 16px; height: 16px; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .stat-box.score .stat-value { color: var(--accent); }
+  .stat-box.correct .stat-value { color: var(--accent2); }
+  .stat-box.wrong .stat-value { color: var(--accent3); }
+  .stat-box.remain .stat-value { color: #60a5fa; }
+
+  /* PROGRESS */
+  .progress-section {
+    padding: 14px 24px 8px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .progress-track {
+    height: 8px;
+    background: var(--progress-bg);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* QUIZ CONTAINER */
+  .quiz-container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 16px 20px 60px;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    animation: slideIn 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-number {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .q-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .question-text {
+    font-size: 17px;
+    line-height: 1.65;
+    color: #f1f5f9;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .options-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .option-btn {
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 18px;
+    text-align: right;
+    cursor: pointer;
+    font-family: 'Tajawal', 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(245,158,11,0.06);
+    transform: translateX(-3px);
+  }
+
+  .option-label {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    letter-spacing: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+    transition: all 0.2s;
+    font-family: Consolas, monospace;
+  }
+
+  .option-text {
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  .option-btn.correct {
+    background: rgba(16,185,129,0.12);
+    border-color: var(--correct-border);
+    color: #6ee7b7;
+  }
+
+  .option-btn.correct .option-label {
+    background: var(--accent2);
+    color: #fff;
+    border-color: var(--accent2);
+  }
+
+  .option-btn.wrong {
+    background: rgba(239,68,68,0.12);
+    border-color: var(--wrong-border);
+    color: #fca5a5;
+  }
+
+  .option-btn.wrong .option-label {
+    background: var(--accent3);
+    color: #fff;
+    border-color: var(--accent3);
+  }
+
+  .option-btn.reveal-correct {
+    background: rgba(16,185,129,0.07);
+    border-color: rgba(16,185,129,0.4);
+    color: #6ee7b7;
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation-box {
+    margin-top: 14px;
+    background: rgba(245,158,11,0.07);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #fde68a;
+    line-height: 1.7;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .explanation-box.show { display: block; }
+
+  .exp-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .answered-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-right: auto;
+  }
+
+  .answered-badge.ok {
+    background: rgba(16,185,129,0.2);
+    color: var(--accent2);
+    border: 1px solid rgba(16,185,129,0.3);
+  }
+
+  .answered-badge.no {
+    background: rgba(239,68,68,0.2);
+    color: var(--accent3);
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+
+  /* RESULT SCREEN */
+  #result-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px 80px;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: slideIn 0.5s ease;
+  }
+
+  .result-icon { font-size: 80px; margin-bottom: 20px; }
+
+  .result-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 32px;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .result-score-big {
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin: 20px 0;
+  }
+
+  .result-details {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 20px 0 30px;
+    flex-wrap: wrap;
+  }
+
+  .rd-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .rd-num { font-size: 28px; font-weight: 900; }
+  .rd-lbl { font-size: 13px; color: var(--muted); }
+
+  .result-msg {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  .restart-btn {
+    background: linear-gradient(135deg, var(--accent2), #059669);
+    color: #fff;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: 'Tajawal', 'Segoe UI', Arial, sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(16,185,129,0.3);
+  }
+
+  .restart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(16,185,129,0.4);
+  }
+
+  /* FLOATING SCROLL */
+  .scroll-top-btn {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    width: 44px; height: 44px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(245,158,11,0.4);
+    transition: all 0.3s;
+    z-index: 100;
+  }
+
+  .scroll-top-btn.show { display: flex; }
+  .scroll-top-btn:hover { transform: scale(1.1); }
+
+  /* SEPARATOR LINE */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 10px 0 20px;
+  }
+
+  .section-header {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: center;
+    margin: 30px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-header::before,
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .question-card { padding: 18px; }
+    .question-text { font-size: 15px; }
+    .option-btn { font-size: 14px; padding: 11px 14px; }
+    .stats-bar { gap: 10px; }
+    .stat-value { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="lecture-label">&#127973; Systemic Pathology — 3rd Stage</div>
+  <h1 class="main-title">Liver Diseases (2)</h1>
+  <div class="sub-info">Al-Hadi University&nbsp;|&nbsp; Radiological Technique Department</div>
+  <div style="margin-bottom:8px;">
+    <span class="creator-badge">✏️ إعداد: محمد صبار</span>
+  </div>
+  <a href="https://t.me/mulimcq" target="_blank" class="tg-link">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.16-1.97 9.3c-.15.67-.53.84-1.08.52l-2.97-2.19-1.43 1.38c-.16.16-.3.3-.6.3l.21-3.02 5.5-4.97c.24-.21-.05-.33-.37-.12L7.03 14.18l-2.93-.92c-.64-.2-.65-.64.13-.95l11.47-4.42c.53-.2 1 .13.84.95l-.6-.68z"/></svg>
+    <a href="https://t.me/mulimcq" target="_blank" style="text-decoration:none;color:inherit;">محمد صبار</a> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-box score">
+    <div class="stat-value" id="stat-score">0</div>
+    <div class="stat-label">النقاط</div>
+  </div>
+  <div class="stat-box correct">
+    <div class="stat-value" id="stat-correct">0</div>
+    <div class="stat-label">إجابات صحيحة</div>
+  </div>
+  <div class="stat-box wrong">
+    <div class="stat-value" id="stat-wrong">0</div>
+    <div class="stat-label">إجابات خاطئة</div>
+  </div>
+  <div class="stat-box remain">
+    <div class="stat-value" id="stat-remain">45</div>
+    <div class="stat-label">متبقي</div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-section">
+  <div class="progress-header">
+    <span id="prog-label">السؤال 0 من 45</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="quiz-container" id="quiz-container"></div>
+
+<!-- RESULT SCREEN -->
+<div id="result-screen">
+  <div class="result-icon" id="result-icon">🎓</div>
+  <div class="result-title">انتهى الاختبار!</div>
+  <div class="result-score-big" id="result-final-score">0</div>
+  <div style="font-size:14px;color:var(--muted);margin-top:-10px;">نقطة من أصل 45</div>
+  <div class="result-details">
+    <div class="rd-item"><div class="rd-num" style="color:var(--accent2)" id="r-correct">0</div><div class="rd-lbl">صحيحة</div></div>
+    <div class="rd-item"><div class="rd-num" style="color:var(--accent3)" id="r-wrong">0</div><div class="rd-lbl">خاطئة</div></div>
+    <div class="rd-item"><div class="rd-num" style="color:#60a5fa" id="r-pct">0%</div><div class="rd-lbl">نسبة النجاح</div></div>
+  </div>
+  <div class="result-msg" id="result-msg"></div>
+  <button class="restart-btn" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+  <br><br>
+  <a href="https://t.me/mulimcq" target="_blank" class="tg-link" style="display:inline-flex;margin-top:10px;">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.16-1.97 9.3c-.15.67-.53.84-1.08.52l-2.97-2.19-1.43 1.38c-.16.16-.3.3-.6.3l.21-3.02 5.5-4.97c.24-.21-.05-.33-.37-.12L7.03 14.18l-2.93-.92c-.64-.2-.65-.64.13-.95l11.47-4.42c.53-.2 1 .13.84.95l-.6-.68z"/></svg>
+    محمد صبار — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</div>
+
+<button class="scroll-top-btn" id="scrollBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const questions = [
+  {
+    q: "Cholestasis is defined as:",
+    options: [
+      "Increased bilirubin production in the spleen",
+      "Failure of normal amounts of bile to reach the duodenum",
+      "Excessive bile secretion into the bloodstream",
+      "Inflammation of the gallbladder wall"
+    ],
+    correct: 1,
+    exp: "Cholestasis (hyperbilirubinaemia) is defined as failure of normal amounts of bile to reach the duodenum, resulting in bile accumulation in liver cells and biliary passages."
+  },
+  {
+    q: "Intrahepatic cholestasis involves a defect located in:",
+    options: [
+      "The common bile duct",
+      "The extrahepatic biliary apparatus",
+      "The biliary canaliculi of hepatocytes and microscopic bile ducts",
+      "The sphincter of Oddi"
+    ],
+    correct: 2,
+    exp: "Intrahepatic cholestasis involves a defect within the biliary canaliculi of the hepatocyte and the microscopic bile ducts, unlike extrahepatic cholestasis which involves obstruction of large bile ducts."
+  },
+  {
+    q: "Extrahepatic cholestasis is also called:",
+    options: [
+      "Medical jaundice",
+      "Haemolytic jaundice",
+      "Obstructive jaundice",
+      "Prehepatic jaundice"
+    ],
+    correct: 2,
+    exp: "Extrahepatic cholestasis results from mechanical obstruction of large bile ducts and is termed 'obstructive jaundice', while intrahepatic cholestasis is called 'medical jaundice'."
+  },
+  {
+    q: "Which of the following is an acquired cause of intrahepatic cholestasis?",
+    options: [
+      "Hereditary cholestasis syndrome",
+      "Viral hepatitis",
+      "Gallstones",
+      "Carcinoma of the head of pancreas"
+    ],
+    correct: 1,
+    exp: "Acquired disorders of intrahepatic cholestasis include viral hepatitis, alcoholic hepatitis, and drug-induced cholestasis (e.g., oral contraceptives). Gallstones and pancreatic carcinoma cause extrahepatic cholestasis."
+  },
+  {
+    q: "Which laboratory finding helps distinguish hepatocellular cholestasis from pure cholestasis?",
+    options: [
+      "Elevated serum alkaline phosphatase",
+      "Bilirubinuria",
+      "Elevated serum transaminases",
+      "Hyperlipidaemia"
+    ],
+    correct: 2,
+    exp: "Elevated serum transaminases (AST/ALT) are seen in hepatocellular cholestasis due to liver cell injury, which distinguishes it from 'pure cholestasis' where transaminase levels are normal."
+  },
+  {
+    q: "Which type of bilirubin is predominantly elevated in both intrahepatic and extrahepatic cholestasis?",
+    options: [
+      "Unconjugated bilirubin",
+      "Conjugated bilirubin",
+      "Delta bilirubin",
+      "Free bilirubin"
+    ],
+    correct: 1,
+    exp: "Both intrahepatic and extrahepatic cholestasis are characterized by predominant conjugated (direct) hyperbilirubinaemia due to regurgitation of conjugated bilirubin back into the blood."
+  },
+  {
+    q: "Pruritus in cholestasis is caused by:",
+    options: [
+      "Elevated serum transaminases",
+      "Elevated serum bile acids",
+      "Hyperlipidaemia",
+      "Bilirubinuria"
+    ],
+    correct: 1,
+    exp: "Elevated serum bile acids, occurring in cholestasis, cause intense pruritus (itching) by their deposition in the skin."
+  },
+  {
+    q: "In obstructive jaundice (extrahepatic cholestasis), which vitamins are malabsorbed?",
+    options: [
+      "Vitamins B and C",
+      "Vitamins A, D, E, and K",
+      "Vitamins B6, B12, and folate",
+      "Vitamin C only"
+    ],
+    correct: 1,
+    exp: "In obstructive jaundice, the absence of bile salts from the intestine leads to malabsorption of fat-soluble vitamins A, D, E, and K, and also causes steatorrhoea."
+  },
+  {
+    q: "A prolonged prothrombin time in obstructive jaundice improves following:",
+    options: [
+      "Oral antibiotics",
+      "Parenteral administration of vitamin K",
+      "Blood transfusion",
+      "Administration of bile salts"
+    ],
+    correct: 1,
+    exp: "Obstructive jaundice causes vitamin K deficiency (fat-soluble vitamin malabsorption), leading to prolonged prothrombin time. This corrects with parenteral (injectable) vitamin K administration."
+  },
+  {
+    q: "Sclerosing cholangitis is a cause of:",
+    options: [
+      "Intrahepatic cholestasis",
+      "Haemolytic jaundice",
+      "Extrahepatic cholestasis",
+      "Viral hepatitis"
+    ],
+    correct: 2,
+    exp: "Sclerosing cholangitis, along with gallstones, inflammatory strictures, carcinoma of the head of pancreas, and congenital atresia, is a common cause of extrahepatic cholestasis."
+  },
+  {
+    q: "How many main varieties of hepatotropic viruses cause viral hepatitis?",
+    options: [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    correct: 2,
+    exp: "There are currently 5 main types of hepatotropic viruses: HAV, HBV, HCV, HDV (hepatitis delta virus), and HEV."
+  },
+  {
+    q: "Hepatitis A virus (HAV) causes:",
+    options: [
+      "A parenterally transmitted chronic disease",
+      "A faecally-spread self-limiting disease",
+      "Water-borne infection with carrier stage",
+      "Transfusion-related hepatitis"
+    ],
+    correct: 1,
+    exp: "HAV causes a faecally-spread, self-limiting disease. It does not have a carrier stage and does not cause chronic hepatitis."
+  },
+  {
+    q: "Hepatitis B virus (HBV) is unique among hepatotropic viruses because:",
+    options: [
+      "It is the only RNA virus",
+      "It is a DNA virus",
+      "It causes only acute hepatitis",
+      "It is transmitted by the feco-oral route"
+    ],
+    correct: 1,
+    exp: "HBV is the only DNA virus among the hepatotropic viruses. HAV, HCV, HDV, and HEV are all RNA viruses."
+  },
+  {
+    q: "Hepatitis C virus (HCV) was previously known as:",
+    options: [
+      "Serum hepatitis virus",
+      "Infectious hepatitis virus",
+      "Non-A, Non-B (NANB) hepatitis virus",
+      "Delta agent"
+    ],
+    correct: 2,
+    exp: "HCV was previously termed 'non-A, non-B (NANB) hepatitis virus' and is the virus chiefly involved in transfusion-related hepatitis."
+  },
+  {
+    q: "Hepatitis delta virus (HDV) is associated with:",
+    options: [
+      "HAV superinfection",
+      "HCV coinfection",
+      "HBV superinfection",
+      "HEV coinfection"
+    ],
+    correct: 2,
+    exp: "HDV is sometimes associated as a superinfection with Hepatitis B infection, as it requires HBV for its replication."
+  },
+  {
+    q: "Hepatitis E virus (HEV) causes:",
+    options: [
+      "Sexually transmitted hepatitis",
+      "Parenteral transmission",
+      "Water-borne infection",
+      "Blood transfusion-related hepatitis"
+    ],
+    correct: 2,
+    exp: "HEV causes water-borne infection. Like HAV, it does not have a carrier stage and does not cause chronic hepatitis."
+  },
+  {
+    q: "Which hepatitis viruses do NOT have a carrier stage and do NOT cause chronic hepatitis?",
+    options: [
+      "HBV and HCV",
+      "HAV and HEV",
+      "HDV and HCV",
+      "HBV and HDV"
+    ],
+    correct: 1,
+    exp: "HAV and HEV do not have a carrier stage, nor do they cause chronic hepatitis. HBV, HCV, and HDV can cause chronic hepatitis."
+  },
+  {
+    q: "The incubation period for Hepatitis A virus (HAV) is approximately:",
+    options: [
+      "30-180 days",
+      "15-45 days",
+      "20-90 days",
+      "15-60 days"
+    ],
+    correct: 1,
+    exp: "The incubation period for HAV is about 4 weeks (15-45 days). HBV has the longest incubation at 30-180 days (average 10 weeks)."
+  },
+  {
+    q: "The average incubation period for Hepatitis B virus (HBV) is:",
+    options: [
+      "4 weeks",
+      "6 weeks",
+      "10 weeks",
+      "2-8 weeks"
+    ],
+    correct: 2,
+    exp: "The average incubation period for HBV is 10 weeks (range: 30-180 days), which is the longest among all hepatotropic viruses."
+  },
+  {
+    q: "Which phase of acute hepatitis is characterized by constitutional symptoms like anorexia, nausea, and fatigue?",
+    options: [
+      "Incubation period",
+      "Pre-icteric phase",
+      "Icteric phase",
+      "Post-icteric phase"
+    ],
+    correct: 1,
+    exp: "The pre-icteric (prodromal) phase is marked by constitutional symptoms: anorexia, nausea, vomiting, fatigue, malaise, arthralgia, headache, and possibly low-grade fever."
+  },
+  {
+    q: "Clay-coloured stools in viral hepatitis are caused by:",
+    options: [
+      "Elevated serum transaminases",
+      "Cholestasis (reduced bile reaching the intestine)",
+      "Bilirubinuria",
+      "Haemolytic anaemia"
+    ],
+    correct: 1,
+    exp: "Clay-coloured (pale) stools in the icteric phase result from cholestasis — bile cannot reach the intestine normally, depriving stools of their normal brown colour (stercobilin)."
+  },
+  {
+    q: "Dark-coloured urine in viral hepatitis is due to:",
+    options: [
+      "Haematuria",
+      "Bilirubinuria",
+      "Myoglobinuria",
+      "Dehydration"
+    ],
+    correct: 1,
+    exp: "Dark-coloured urine (coca-cola urine) in the icteric phase of viral hepatitis is due to bilirubinuria — conjugated bilirubin being excreted in the urine."
+  },
+  {
+    q: "Chronic hepatitis is defined as continuing or relapsing hepatic disease for more than:",
+    options: [
+      "3 months",
+      "6 months",
+      "1 year",
+      "2 years"
+    ],
+    correct: 1,
+    exp: "Chronic hepatitis is defined as continuing or relapsing hepatic disease for more than 6 months with biochemical, serologic, and histopathologic evidence of inflammation and necrosis."
+  },
+  {
+    q: "What percentage of acute hepatitis cases may develop fulminant hepatitis?",
+    options: [
+      "Up to 1%",
+      "5-10%",
+      "20%",
+      "50%"
+    ],
+    correct: 0,
+    exp: "Up to 1% of cases of acute hepatitis may develop the severe form known as fulminant hepatitis. An additional 5-10% progress to chronic hepatitis."
+  },
+  {
+    q: "Wilson disease is characterized by impaired:",
+    options: [
+      "Iron absorption in the gut",
+      "Copper excretion into bile and failure to incorporate copper into ceruloplasmin",
+      "Bilirubin conjugation in hepatocytes",
+      "Glycogen storage in the liver"
+    ],
+    correct: 1,
+    exp: "Wilson disease results in impaired copper excretion into bile and failure to incorporate copper into ceruloplasmin, causing toxic levels of copper to accumulate in the liver, brain, and eye."
+  },
+  {
+    q: "Wilson disease is inherited as:",
+    options: [
+      "Autosomal dominant",
+      "X-linked recessive",
+      "Autosomal recessive",
+      "X-linked dominant"
+    ],
+    correct: 2,
+    exp: "Wilson disease is an autosomal recessive disorder where mutations in the ATP7B gene impair copper transport, leading to toxic copper accumulation."
+  },
+  {
+    q: "The principal organs affected in Wilson disease are:",
+    options: [
+      "Kidney, lung, and spleen",
+      "Liver, brain, and eye",
+      "Heart, joints, and skin",
+      "Pancreas, adrenal glands, and bone"
+    ],
+    correct: 1,
+    exp: "Wilson disease principally affects the liver, brain, and eye. Copper deposition in the eye causes the pathognomonic Kayser-Fleischer rings."
+  },
+  {
+    q: "In a1-antitrypsin (a1AT) deficiency, the lung complication is:",
+    options: [
+      "Lung fibrosis",
+      "Pulmonary hypertension",
+      "Pulmonary emphysema",
+      "Asthma"
+    ],
+    correct: 2,
+    exp: "a1AT deficiency leads to unopposed neutrophil elastase activity, which destroys elastic fibers in alveolar walls, resulting in pulmonary emphysema."
+  },
+  {
+    q: "Hereditary hemochromatosis results from:",
+    options: [
+      "Excessive breakdown of red blood cells",
+      "Excessive absorption of iron",
+      "Impaired bilirubin conjugation",
+      "Copper accumulation in the liver"
+    ],
+    correct: 1,
+    exp: "Hemochromatosis is caused by excessive absorption of iron from the gut, which then deposits in organs such as the liver, pancreas, heart, joints, and endocrine organs."
+  },
+  {
+    q: "In severe hemochromatosis, total body iron may exceed:",
+    options: [
+      "10 gm",
+      "20 gm",
+      "50 gm",
+      "100 gm"
+    ],
+    correct: 2,
+    exp: "In severe hemochromatosis, total iron may exceed 50 gm (normal: 3-4 gm), with one-third of the excess accumulating in the liver."
+  },
+  {
+    q: "The classic triad of fully developed hemochromatosis includes:",
+    options: [
+      "Cirrhosis, diabetes, and abnormal skin pigmentation",
+      "Cirrhosis, renal failure, and hypertension",
+      "Jaundice, anaemia, and splenomegaly",
+      "Encephalopathy, ascites, and bleeding"
+    ],
+    correct: 0,
+    exp: "Fully developed hemochromatosis exhibits micronodular cirrhosis, diabetes (up to 80% of patients), and abnormal skin pigmentation (up to 80% of patients) — often called 'bronze diabetes'."
+  },
+  {
+    q: "Gallstones are formed from constituents of bile. The most common type of gallstone is:",
+    options: [
+      "Pure cholesterol gallstones (10%)",
+      "Mixed gallstones (80%)",
+      "Pure pigment gallstones (10%)",
+      "Combined gallstones (10%)"
+    ],
+    correct: 1,
+    exp: "Mixed gallstones are the most common type (80%), containing more than 50% cholesterol monohydrate plus calcium salts, bile pigments, and fatty acids. Pure and combined gallstones each comprise about 10%."
+  },
+  {
+    q: "The classical risk factors for cholesterol gallstones are remembered by the mnemonic:",
+    options: [
+      "3C's (Cold, Crohn's, Cholesterol)",
+      "4F's (Fat, Female, Fertile, Forty)",
+      "4H's (Haemolysis, High fat, Hereditary, Hyperlipidaemia)",
+      "ABCD (Age, BMI, Crohn's, Drugs)"
+    ],
+    correct: 1,
+    exp: "The classical risk factors for gallstones are summarized by the '4F's': Fat (obesity), Female, Fertile (multipara), and Forty (advancing age)."
+  },
+  {
+    q: "Gallstones are how many times more frequent in women than in men?",
+    options: [
+      "Equal frequency",
+      "Twice",
+      "Three times",
+      "Five times"
+    ],
+    correct: 1,
+    exp: "Gallstones are twice more frequent in women than in men, partly due to oestrogen effects on cholesterol metabolism."
+  },
+  {
+    q: "Which drugs increase the incidence of gallstones?",
+    options: [
+      "Antibiotics and antifungals",
+      "Oestrogen therapy and birth control pills",
+      "NSAIDs and anticoagulants",
+      "Beta-blockers and diuretics"
+    ],
+    correct: 1,
+    exp: "Women on oestrogen therapy or birth control pills have a higher incidence of gallstones because oestrogen increases cholesterol secretion into bile."
+  },
+  {
+    q: "Pigment gallstones are more frequently associated with:",
+    options: [
+      "Obesity",
+      "Haemolytic anaemias",
+      "Oestrogen therapy",
+      "Crohn's disease"
+    ],
+    correct: 1,
+    exp: "Pigment stones are more frequently associated with haemolytic anaemias, which lead to increased unconjugated bilirubin content in the bile, forming pigment deposits."
+  },
+  {
+    q: "Mixed gallstones are always:",
+    options: [
+      "Solitary and large",
+      "Pure cholesterol",
+      "Multiple",
+      "Radiopaque"
+    ],
+    correct: 2,
+    exp: "Mixed gallstones are always multiple. They contain >50% cholesterol monohydrate mixed with calcium salts, bile pigments, and fatty acids."
+  },
+  {
+    q: "Combined gallstones have which unique structure?",
+    options: [
+      "A mixed gallstone nucleus with a pure gallstone shell, or vice versa",
+      "Entirely made of cholesterol with a calcium core",
+      "Multiple layers of pure bile pigment",
+      "No defined structure"
+    ],
+    correct: 0,
+    exp: "Combined gallstones are usually solitary with a pure gallstone nucleus and mixed outer shell, or a mixed nucleus with a pure outer shell. They comprise about 10% of all gallstones."
+  },
+  {
+    q: "Cholesterol gallstones appear on imaging as:",
+    options: [
+      "Radio-opaque shadows",
+      "Radiolucent filling defects",
+      "Hyperechoic with posterior shadowing on X-ray",
+      "Calcified masses"
+    ],
+    correct: 1,
+    exp: "Cholesterol stones appear as radiolucent filling defects in the gallbladder on imaging. Gallstones containing calcium salts appear radio-opaque."
+  },
+  {
+    q: "What percentage of gallstone cases produce no symptoms (silent gallstones)?",
+    options: [
+      "About 10%",
+      "About 25%",
+      "About 50%",
+      "About 75%"
+    ],
+    correct: 2,
+    exp: "In about 50% of cases, gallstones cause no symptoms and may be discovered incidentally. Symptomatic disease appears only when complications develop."
+  },
+  {
+    q: "Which of the following is NOT listed as a complication of gallstone disease?",
+    options: [
+      "Cholecystitis",
+      "Pancreatitis",
+      "Gallbladder cancer",
+      "Hepatocellular carcinoma"
+    ],
+    correct: 3,
+    exp: "The listed complications of gallstones are: cholecystitis, biliary fistula, gallstone ileus, pancreatitis, and gallbladder cancer. Hepatocellular carcinoma is associated with viral hepatitis (HBV/HCV), not directly with gallstones."
+  },
+  {
+    q: "Crohn's disease and ileal bypass surgery can cause gallstones because they:",
+    options: [
+      "Increase cholesterol synthesis",
+      "Interrupt the enterohepatic circulation",
+      "Cause haemolytic anaemia",
+      "Increase oestrogen levels"
+    ],
+    correct: 1,
+    exp: "Crohn's disease and ileal bypass surgery interrupt the enterohepatic circulation of bile salts, leading to reduced bile salt pool and altered bile composition, promoting gallstone formation."
+  },
+  {
+    q: "Which hepatitis virus has the longest average incubation period?",
+    options: [
+      "Hepatitis A (HAV)",
+      "Hepatitis B (HBV)",
+      "Hepatitis C (HCV)",
+      "Hepatitis E (HEV)"
+    ],
+    correct: 1,
+    exp: "HBV has the longest average incubation period at about 10 weeks (30-180 days), compared to HAV (4 weeks), HCV (7 weeks), HDV (6 weeks), and HEV (2-8 weeks)."
+  },
+  {
+    q: "a1-Antitrypsin deficiency is inherited as:",
+    options: [
+      "Autosomal dominant",
+      "X-linked recessive",
+      "Autosomal recessive",
+      "Multifactorial"
+    ],
+    correct: 2,
+    exp: "a1-Antitrypsin (a1AT) deficiency is an autosomal recessive disorder that leads to unopposed neutrophil elastase activity, causing pulmonary emphysema."
+  },
+  {
+    q: "In hemochromatosis, what amount of iron is normally stored in hepatocytes in healthy adults?",
+    options: [
+      "0.5 gm",
+      "3-4 gm",
+      "10 gm",
+      "50 gm"
+    ],
+    correct: 0,
+    exp: "In healthy adults, about 0.5 gm of iron is stored in hepatocytes. The total body iron pool is 3-4 gm. In severe hemochromatosis, total iron can exceed 50 gm."
+  },
+  {
+    q: "Which finding would help distinguish extrahepatic from intrahepatic cholestasis?",
+    options: [
+      "Conjugated hyperbilirubinaemia",
+      "Elevated serum alkaline phosphatase",
+      "Malabsorption of fat-soluble vitamins and steatorrhoea",
+      "Bilirubinuria"
+    ],
+    correct: 2,
+    exp: "Malabsorption of fat-soluble vitamins (A, D, E, K) and steatorrhoea are features that help distinguish extrahepatic (obstructive) from intrahepatic cholestasis, as they result from physical blockage of bile reaching the intestine."
+  }
+];
+
+let score = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let answeredCount = 0;
+const totalQ = questions.length;
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  const sections = [
+    { label: "Cholestasis & Jaundice", range: [0, 9] },
+    { label: "Viral Hepatitis", range: [10, 22] },
+    { label: "Inherited Metabolic Liver Diseases", range: [23, 29] },
+    { label: "Cholelithiasis (Gallstones)", range: [30, 44] }
+  ];
+
+  sections.forEach(sec => {
+    const secHeader = document.createElement('div');
+    secHeader.className = 'section-header';
+    secHeader.textContent = sec.label;
+    container.appendChild(secHeader);
+
+    for (let i = sec.range[0]; i <= sec.range[1] && i < questions.length; i++) {
+      container.appendChild(buildCard(i));
+    }
+  });
+}
+
+function buildCard(index) {
+  const q = questions[index];
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.id = `card-${index}`;
+
+  const labels = ['A', 'B', 'C', 'D'];
+
+  card.innerHTML = `
+    <div class="question-number">
+      <span class="q-dot"></span>
+      السؤال ${index + 1} من ${totalQ}
+      <span id="badge-${index}" class="answered-badge" style="display:none"></span>
+    </div>
+    <div class="question-text">${q.q}</div>
+    <div class="options-grid" id="opts-${index}">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" id="opt-${index}-${i}" onclick="selectAnswer(${index}, ${i})" data-index="${i}">
+          <span class="option-label">${labels[i]}</span>
+          <span class="option-text">${opt}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="explanation-box" id="exp-${index}">
+      <div class="exp-title">📖 الشرح</div>
+      <div>${q.exp}</div>
+    </div>
+  `;
+
+  return card;
+}
+
+function selectAnswer(qIndex, optIndex) {
+  const q = questions[qIndex];
+  const buttons = document.querySelectorAll(`#opts-${qIndex} .option-btn`);
+
+  // Disable all
+  buttons.forEach(btn => btn.disabled = true);
+
+  const isCorrect = optIndex === q.correct;
+
+  // Mark selected
+  buttons[optIndex].classList.add(isCorrect ? 'correct' : 'wrong');
+
+  // If wrong, reveal correct answer
+  if (!isCorrect) {
+    buttons[q.correct].classList.add('reveal-correct');
+  }
+
+  // Show explanation
+  if (!isCorrect) {
+    document.getElementById(`exp-${qIndex}`).classList.add('show');
+  }
+
+  // Badge
+  const badge = document.getElementById(`badge-${qIndex}`);
+  badge.style.display = 'inline-block';
+  if (isCorrect) {
+    badge.textContent = '✓ صحيح';
+    badge.className = 'answered-badge ok';
+    score++;
+    correctCount++;
+  } else {
+    badge.textContent = '✗ خاطئ';
+    badge.className = 'answered-badge no';
+    wrongCount++;
+  }
+
+  answeredCount++;
+  updateStats();
+
+  // Check if done
+  if (answeredCount === totalQ) {
+    setTimeout(showResult, 1200);
+  }
+}
+
+function updateStats() {
+  document.getElementById('stat-score').textContent = score;
+  document.getElementById('stat-correct').textContent = correctCount;
+  document.getElementById('stat-wrong').textContent = wrongCount;
+  document.getElementById('stat-remain').textContent = totalQ - answeredCount;
+
+  const pct = Math.round((answeredCount / totalQ) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = `السؤال ${answeredCount} من ${totalQ}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+}
+
+function showResult() {
+  document.getElementById('quiz-container').style.display = 'none';
+  document.querySelector('.progress-section').style.display = 'none';
+
+  const resultScreen = document.getElementById('result-screen');
+  resultScreen.style.display = 'block';
+
+  const pct = Math.round((correctCount / totalQ) * 100);
+  document.getElementById('result-final-score').textContent = score;
+  document.getElementById('r-correct').textContent = correctCount;
+  document.getElementById('r-wrong').textContent = wrongCount;
+  document.getElementById('r-pct').textContent = pct + '%';
+
+  let icon = '🎓', msg = '';
+  if (pct >= 90) {
+    icon = '🏆';
+    msg = 'ممتاز! أداء رائع جداً، أنت متمكن من المادة بشكل كبير.';
+  } else if (pct >= 75) {
+    icon = '🌟';
+    msg = 'جيد جداً! مستوى متميز، استمر في المراجعة لتحقيق التفوق.';
+  } else if (pct >= 60) {
+    icon = '👍';
+    msg = 'جيد! تحتاج إلى مراجعة بعض المحاور لتعزيز فهمك.';
+  } else if (pct >= 50) {
+    icon = '📚';
+    msg = 'مقبول. راجع المحاضرة مرة أخرى مع التركيز على المواضيع التي أخطأت فيها.';
+  } else {
+    icon = '💪';
+    msg = 'لا تستسلم! راجع المحاضرة بعناية وأعد الاختبار. المثابرة هي مفتاح النجاح.';
+  }
+
+  document.getElementById('result-icon').textContent = icon;
+  document.getElementById('result-msg').textContent = msg;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restartQuiz() {
+  score = 0;
+  correctCount = 0;
+  wrongCount = 0;
+  answeredCount = 0;
+
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-container').style.display = 'block';
+  document.querySelector('.progress-section').style.display = 'block';
+
+  updateStats();
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Scroll to top button
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollBtn');
+  if (window.scrollY > 400) btn.classList.add('show');
+  else btn.classList.remove('show');
+});
+
+// Init
+buildQuiz();
+updateStats();
+</script>
+</body>
+</html>

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة التاسعة - Signal Coding | من إنشاء محمد صبار</title>
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #141929;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3f5e;
+    --glow: rgba(59,130,246,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(59,130,246,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(96,165,250,0.05) 0%, transparent 50%);
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f1628 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-left h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    letter-spacing: 0.3px;
+  }
+  .header-left p {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .timer-box {
+    background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 10px;
+    padding: 8px 14px;
+    text-align: center;
+    min-width: 80px;
+  }
+  .timer-label { font-size: 0.65rem; color: var(--text-muted); display: block; }
+  .timer-val { font-family: 'Roboto', monospace; font-size: 1.2rem; font-weight: 700; color: var(--accent2); }
+
+  .score-box {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 10px;
+    padding: 8px 14px;
+    text-align: center;
+    min-width: 80px;
+  }
+  .score-label { font-size: 0.65rem; color: var(--text-muted); display: block; }
+  .score-val { font-family: 'Roboto'; font-size: 1.2rem; font-weight: 700; color: var(--success); }
+
+  .tg-link-header {
+    color: var(--accent2);
+    text-decoration: none;
+    font-size: 0.78rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tg-link-header:hover { background: rgba(59,130,246,0.15); border-color: var(--accent); }
+
+  /* PROGRESS */
+  .progress-section {
+    padding: 16px 24px 0;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .progress-bar-wrap {
+    background: var(--card);
+    border-radius: 99px;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px rgba(59,130,246,0.5);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .q-number::before {
+    content: '';
+    width: 4px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .q-text {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 1.08rem;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* OPTIONS */
+  .options-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    width: 100%;
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: left;
+    direction: ltr;
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+    transform: translateX(-2px);
+  }
+  .option-btn:disabled { cursor: default; }
+
+  .opt-letter {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--accent2);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .option-btn.correct {
+    border-color: var(--success);
+    background: rgba(34,197,94,0.1);
+  }
+  .option-btn.correct .opt-letter {
+    background: rgba(34,197,94,0.2);
+    border-color: var(--success);
+    color: var(--success);
+  }
+
+  .option-btn.wrong {
+    border-color: var(--danger);
+    background: rgba(239,68,68,0.08);
+  }
+  .option-btn.wrong .opt-letter {
+    background: rgba(239,68,68,0.2);
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+
+  /* EXPLANATION */
+  .explanation-box {
+    margin-top: 16px;
+    background: rgba(59,130,246,0.07);
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 12px;
+    padding: 16px;
+    display: none;
+    direction: ltr;
+    text-align: left;
+  }
+  .explanation-box.show { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .explanation-title {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .explanation-text {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* NAV BUTTONS */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+  }
+  .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--card2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent2); }
+
+  /* RESULTS */
+  #results-screen {
+    display: none;
+    animation: slideIn 0.4s ease;
+  }
+
+  .results-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  .results-emoji { font-size: 4rem; margin-bottom: 16px; }
+  .results-title { font-size: 1.8rem; font-weight: 800; color: var(--accent2); margin-bottom: 8px; }
+  .results-sub { font-size: 1rem; color: var(--text-muted); margin-bottom: 30px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  .stat-box {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .stat-num { font-size: 2rem; font-weight: 800; font-family: 'Roboto'; }
+  .stat-lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+  .stat-box.correct-stat .stat-num { color: var(--success); }
+  .stat-box.wrong-stat .stat-num { color: var(--danger); }
+  .stat-box.score-stat .stat-num { color: var(--accent2); }
+
+  .score-ring {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring .ring-bg { fill: none; stroke: var(--card2); stroke-width: 10; }
+  .score-ring .ring-fill { fill: none; stroke: var(--accent); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .score-ring .ring-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Roboto';
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+  }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 999;
+    pointer-events: none;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  #toast.success-toast { border-color: var(--success); color: var(--success); }
+  #toast.error-toast { border-color: var(--danger); color: var(--danger); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--accent2); text-decoration: none; font-weight: 700; }
+  footer a:hover { text-decoration: underline; }
+
+  /* WELCOME SCREEN */
+  #welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    text-align: center;
+    padding: 20px;
+  }
+  .welcome-badge {
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 99px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    color: var(--accent2);
+    margin-bottom: 20px;
+  }
+  .welcome-title { font-size: 2rem; font-weight: 800; color: var(--text); margin-bottom: 10px; line-height: 1.3; }
+  .welcome-sub { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 8px; }
+  .welcome-en { font-family: 'Roboto'; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 30px; direction: ltr; }
+  .info-chips {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 36px;
+  }
+  .chip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chip span { color: var(--accent2); font-weight: 700; }
+
+  @media (max-width: 600px) {
+    header { flex-wrap: wrap; gap: 12px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .question-card { padding: 20px; }
+    .welcome-title { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <h1>🧲 اختبار المحاضرة التاسعة</h1>
+    <p>الفيزياء الشعاعية / الرنين المغناطيسي — Signal Coding</p>
+  </div>
+  <div class="header-right">
+    <a class="tg-link-header" href="https://t.me/mulimcq" target="_blank">
+      📢 <strong>محمد صبار</strong> | اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </a>
+    <div class="timer-box">
+      <span class="timer-label">الوقت</span>
+      <span class="timer-val" id="timer-display">00:00</span>
+    </div>
+    <div class="score-box">
+      <span class="score-label">النقاط</span>
+      <span class="score-val" id="score-display">0</span>
+    </div>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-section" id="progress-section" style="display:none;">
+  <div class="progress-info">
+    <span id="q-counter">السؤال 1 من 45</span>
+    <span id="q-pct">0%</span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- WELCOME SCREEN -->
+  <div id="welcome-screen">
+    <div class="welcome-badge">📚 المحاضرة التاسعة | من إنشاء محمد صبار</div>
+    <h2 class="welcome-title">اختبار Signal Coding<br>في الرنين المغناطيسي</h2>
+    <p class="welcome-sub">جامعة الهادي | كلية التقنيات الصحية والطبية | قسم تقنيات الأشعة</p>
+    <p class="welcome-en">MRI Physics — Signal Coding, Slice Encoding & Gradients</p>
+    <div class="info-chips">
+      <div class="chip">📝 عدد الأسئلة: <span>45</span></div>
+      <div class="chip">🎯 لكل إجابة صحيحة: <span>+1 نقطة</span></div>
+      <div class="chip">💡 يوجد شرح عند الخطأ</div>
+      <div class="chip">⏱️ يُحسب الوقت تلقائياً</div>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.1rem; padding:16px 48px;">
+      🚀 ابدأ الاختبار
+    </button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" style="display:none;">
+    <div class="question-card" id="question-card">
+      <div class="q-number" id="q-num-label">السؤال 1 من 45</div>
+      <div class="q-text" id="q-text"></div>
+      <ul class="options-list" id="options-list"></ul>
+      <div class="explanation-box" id="explanation-box">
+        <div class="explanation-title">📖 Explanation</div>
+        <div class="explanation-text" id="explanation-text"></div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" id="prev-btn" onclick="prevQ()" style="display:none;">← السابق</button>
+      <button class="btn btn-primary" id="next-btn" onclick="nextQ()" style="display:none;">التالي ←</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen">
+    <div class="results-card">
+      <div class="results-emoji" id="results-emoji">🏆</div>
+      <div class="score-ring">
+        <svg viewBox="0 0 120 120" width="130" height="130">
+          <circle class="ring-bg" cx="60" cy="60" r="50"/>
+          <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="50"
+            stroke-dasharray="314"
+            stroke-dashoffset="314"/>
+        </svg>
+        <div class="ring-text" id="ring-pct-text">0%</div>
+      </div>
+      <div class="results-title" id="results-title">أحسنت!</div>
+      <div class="results-sub" id="results-sub"></div>
+      <div class="stats-grid">
+        <div class="stat-box correct-stat">
+          <div class="stat-num" id="res-correct">0</div>
+          <div class="stat-lbl">✅ إجابات صحيحة</div>
+        </div>
+        <div class="stat-box wrong-stat">
+          <div class="stat-num" id="res-wrong">0</div>
+          <div class="stat-lbl">❌ إجابات خاطئة</div>
+        </div>
+        <div class="stat-box score-stat">
+          <div class="stat-num" id="res-time">00:00</div>
+          <div class="stat-lbl">⏱️ الوقت المستغرق</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="restartQuiz()" style="margin-left:8px; font-size:1rem; padding:14px 32px;">
+        🔄 إعادة الاختبار
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>
+    اختبار المحاضرة التاسعة من إنشاء
+    <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+    — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </p>
+  <p style="margin-top:6px; font-size:0.75rem;">الفيزياء الشعاعية / الرنين المغناطيسي | المرحلة الثالثة</p>
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "What is the main purpose of Signal Coding in MRI?",
+    opts: ["To increase the magnetic field strength", "To determine the spatial origin of MRI signals", "To reduce patient radiation dose", "To improve the RF pulse shape"],
+    ans: 1,
+    exp: "Signal Coding allows the MRI system to determine exactly where in the body each signal originates from, enabling spatial localization of the image data."
+  },
+  {
+    q: "In the example used in the lecture, what strength magnet is assumed for the axial brain image?",
+    opts: ["3 Tesla", "0.5 Tesla", "1.5 Tesla", "7 Tesla"],
+    ans: 2,
+    exp: "The lecture uses a 1.5 Tesla magnet as the assumed field strength for the signal coding explanation example."
+  },
+  {
+    q: "What is the Larmor frequency of protons in a homogeneous 1.5 T magnetic field (as used in the lecture example)?",
+    opts: ["42.58 MHz", "63.6 MHz", "127.7 MHz", "21.3 MHz"],
+    ans: 1,
+    exp: "At 1.5 Tesla, protons precess at a Larmor frequency of 63.6 MHz as stated in the lecture example."
+  },
+  {
+    q: "If a 90° excitation RF-pulse is applied without any gradient, what happens?",
+    opts: ["Only head protons respond", "Only foot protons respond", "All protons from head to toe respond", "No protons respond"],
+    ans: 2,
+    exp: "Without a gradient, all protons in the homogeneous field spin at the same Larmor frequency and all would respond to the RF pulse, making spatial localization impossible."
+  },
+  {
+    q: "What does homogeneity refer to in MRI?",
+    opts: ["The uniformity of the patient's tissue", "The uniformity/straightness of the magnetic field lines", "The speed of image acquisition", "The resolution of the final image"],
+    ans: 1,
+    exp: "Homogeneity refers to the uniformity of the magnetic field — the straightness of magnetic lines within the iso-center of the magnet needs to be near-perfect."
+  },
+  {
+    q: "What is the acceptable level of field inhomogeneities within the scan region?",
+    opts: ["Less than 10 ppm", "Less than 5 ppm", "Less than 3 ppm", "Less than 1 ppm"],
+    ans: 2,
+    exp: "Fluctuations (inhomogeneities) in the field strength within the scan region should be less than three parts per million (3 ppm)."
+  },
+  {
+    q: "What is the homogeneous sphere diameter at the iso-center of a real MRI scanner?",
+    opts: ["20 cm", "40 cm", "60 cm", "80 cm"],
+    ans: 1,
+    exp: "In reality, there is only a homogenous sphere of 40 cm in diameter at the iso-center (center of the MRI bore) of the magnet."
+  },
+  {
+    q: "What is the Slice Encoding Gradient used for?",
+    opts: ["To determine frequency encoding within a slice", "To select a specific anatomical slice for imaging", "To measure T1 relaxation", "To suppress fat signal"],
+    ans: 1,
+    exp: "The Slice Encoding (or Slice Selection) Gradient is applied to spatially select a specific slice of the patient's body by creating different Larmor frequencies along the gradient direction."
+  },
+  {
+    q: "When is the slice selection gradient applied?",
+    opts: ["After the RF pulse", "Before the RF pulse", "At the same time as the RF pulse", "During signal readout"],
+    ans: 2,
+    exp: "The magnetic field gradient (e.g., Z-gradient) is temporarily applied at the same time as the RF pulse to achieve slice selection."
+  },
+  {
+    q: "In the lecture example with +Gz gradient, what happens to Larmor frequency in the head region?",
+    opts: ["It decreases to 63.5 MHz", "It stays at 63.6 MHz", "It increases to 63.7 MHz", "It becomes zero"],
+    ans: 2,
+    exp: "The +Gz gradient adds a slightly stronger B0 field in the head, causing higher Larmor frequency. The head protons spin at 63.7 MHz in this example."
+  },
+  {
+    q: "In the lecture example, what frequency do protons at the feet spin at when +Gz is applied?",
+    opts: ["63.7 MHz", "63.6 MHz", "63.5 MHz", "64.0 MHz"],
+    ans: 2,
+    exp: "With +Gz gradient, the feet are at a slightly weaker magnetic field than the iso-center, so protons there spin at 63.5 MHz."
+  },
+  {
+    q: "What RF pulse frequency would selectively excite only a thin slice in the head in the lecture example?",
+    opts: ["63.5 MHz", "63.6 MHz", "63.7 MHz", "63.9 MHz"],
+    ans: 2,
+    exp: "Applying an RF pulse at 63.7 MHz would selectively excite only the protons in the head slice, which are the only ones spinning at that frequency."
+  },
+  {
+    q: "What is another name for Slice-Encoding?",
+    opts: ["Frequency Encoding", "Phase Encoding", "Slice-Selection", "k-space filling"],
+    ans: 2,
+    exp: "Slice-Encoding is also called Slice-Selection — both terms refer to the process of selecting a specific slice using a gradient and targeted RF pulse."
+  },
+  {
+    q: "In which direction is the slice selection gradient usually applied?",
+    opts: ["X-axis (left-right)", "Y-axis (anterior-posterior)", "Z-axis (head-foot)", "Any diagonal direction"],
+    ans: 2,
+    exp: "Usually, the slice selection gradient is applied in the z-axis — the head-foot direction in the scanner."
+  },
+  {
+    q: "What is one major advantage of gradient-based slice selection in MRI?",
+    opts: ["Slices can only be acquired axially", "Slices may be acquired at literally any angle or orientation", "It eliminates the need for RF pulses", "It reduces scan time by 50%"],
+    ans: 1,
+    exp: "Because a gradient magnetic field may be applied in any orientation, slices may be acquired at literally any angle or orientation in the patient — this is one of MRI's major strengths."
+  },
+  {
+    q: "What does the slice thickness equation 'Thickness = BWtrans / γ₀ · Gs' show?",
+    opts: ["Slice thickness is independent of gradient strength", "Slice thickness depends on RF bandwidth and gradient strength", "Slice thickness depends only on magnetic field strength", "Slice thickness is fixed at 5 mm"],
+    ans: 1,
+    exp: "The equation shows that slice thickness is determined by the transmitted RF bandwidth (BWtrans) divided by the product of gyromagnetic ratio (γ₀) and gradient strength (Gs)."
+  },
+  {
+    q: "What does BWtrans represent in the slice thickness formula?",
+    opts: ["Magnetic field strength", "The transmitted RF bandwidth (range of frequencies)", "The gyromagnetic ratio", "The gradient field strength"],
+    ans: 1,
+    exp: "BWtrans is the transmitted RF bandwidth — the range of frequencies covered by the RF excitation pulse."
+  },
+  {
+    q: "What does γ₀ represent in the slice thickness formula?",
+    opts: ["Slice thickness", "Gradient strength", "Gyromagnetic ratio", "RF pulse duration"],
+    ans: 2,
+    exp: "γ₀ is the gyromagnetic ratio, which for protons is approximately 42.58 MHz/T."
+  },
+  {
+    q: "How can slice thickness be reduced? (Choose the most complete answer)",
+    opts: ["By decreasing gradient strength only", "By increasing RF bandwidth only", "By increasing gradient strength OR by decreasing RF pulse bandwidth", "By decreasing gradient strength OR by increasing RF bandwidth"],
+    ans: 2,
+    exp: "Slice thickness may be reduced by either increasing the gradient of the magnetic field or by decreasing the RF pulse width (transmit bandwidth)."
+  },
+  {
+    q: "What is the advantage of a thinner MRI slice?",
+    opts: ["Higher SNR", "Better anatomical detail and less partial volume effect", "Faster acquisition time", "Lower RF power needed"],
+    ans: 1,
+    exp: "A thinner slice produces better anatomical detail with less partial volume effect, but it takes longer to excite and has lower SNR."
+  },
+  {
+    q: "What is a typical slice thickness range in clinical MRI?",
+    opts: ["0.1–1 mm", "2–10 mm", "10–20 mm", "20–50 mm"],
+    ans: 1,
+    exp: "A typical slice thickness in clinical MRI is 2–10 mm."
+  },
+  {
+    q: "Why is a gap sometimes left between MRI slices?",
+    opts: ["To reduce scan time", "To prevent mild excitation of adjacent tissue by RF pulse sidebands from affecting the image", "To improve SNR", "To reduce gradient heating"],
+    ans: 1,
+    exp: "RF pulses inevitably contain energy at frequencies slightly beyond the intended bandwidth, mildly exciting adjacent tissue. A gap (about 10% of slice thickness) prevents this from affecting the image."
+  },
+  {
+    q: "When is a gap between slices NOT necessary?",
+    opts: ["When using high field magnets", "When the slices are interleaved", "When TR is very long", "When using spin echo sequences"],
+    ans: 1,
+    exp: "A gap between slices is not necessary when the slices are interleaved."
+  },
+  {
+    q: "For a 10 mm slice using a 10 mT/m gradient, what is the approximate transmitted RF bandwidth?",
+    opts: ["1.0 kHz", "2.5 kHz", "4.3 kHz", "10 kHz"],
+    ans: 2,
+    exp: "Using the formula with γ₀ = 42.58 MHz/T, a 10 mm slice at 10 mT/m gradient gives a transmitted RF bandwidth of approximately 4.3 kHz."
+  },
+  {
+    q: "What happens to SNR when slice thickness is reduced?",
+    opts: ["SNR increases", "SNR decreases (more noise)", "SNR stays the same", "SNR first increases then decreases"],
+    ans: 1,
+    exp: "Whenever slices are thinner, the noise increases and SNR decreases, while spatial resolution increases."
+  },
+  {
+    q: "What happens to SNR when slice thickness is increased?",
+    opts: ["SNR decreases", "SNR increases", "SNR is unaffected", "Spatial resolution increases"],
+    ans: 1,
+    exp: "Increasing slice thickness increases the signal-to-noise ratio (SNR) but reduces spatial resolution and increases partial volume effects."
+  },
+  {
+    q: "What is Spatial Resolution defined as in MRI?",
+    opts: ["The signal-to-noise ratio of the image", "The ability to distinguish one structure from another", "The speed of image acquisition", "The number of pixels in the image"],
+    ans: 1,
+    exp: "Spatial Resolution is defined as the ability to distinguish one structure from another in the final MRI image."
+  },
+  {
+    q: "How can the poor SNR of thin slices be addressed?",
+    opts: ["By decreasing the number of acquisitions", "By shortening TR", "By increasing the number of acquisitions or using a longer TR", "By reducing gradient strength"],
+    ans: 2,
+    exp: "The poorer SNR of thin slices can be addressed by increasing the number of acquisitions or using a longer TR, though this increases overall scan time."
+  },
+  {
+    q: "What determines the Slice Location in MRI?",
+    opts: ["The gradient strength", "The RF pulse shape", "The carrier frequency of the transmitted RF pulse", "The patient table position only"],
+    ans: 2,
+    exp: "The carrier frequency of the transmitted RF pulse determines which spins along the patient will resonate and therefore determines the slice location."
+  },
+  {
+    q: "Why is it preferable to image with the slice of interest at the iso-center?",
+    opts: ["The gradient is stronger there", "The main magnetic field is most homogeneous at the iso-center, giving better images", "RF pulses are stronger at the iso-center", "It reduces patient exposure"],
+    ans: 1,
+    exp: "Placing the section of interest at the iso-center is preferable because it is the part of the main magnetic field that is most homogeneous, resulting in better image quality."
+  },
+  {
+    q: "What is the Receiver Bandwidth in MRI?",
+    opts: ["The range of RF frequencies transmitted", "The range of frequencies collected by the MR system during frequency encoding", "The bandwidth of the gradient pulse", "The patient's resonance range"],
+    ans: 1,
+    exp: "The receiver bandwidth is the range of frequencies collected by an MR system during frequency encoding. It can be set automatically or changed by the operator."
+  },
+  {
+    q: "What is the effect of a wide receiver bandwidth?",
+    opts: ["Slower data acquisition and higher SNR", "Faster data acquisition but reduced SNR", "No effect on SNR", "Eliminates chemical shift artifacts completely"],
+    ans: 1,
+    exp: "A wide receiver bandwidth enables faster data acquisition and minimizes chemical shift artifacts, but reduces SNR because more noise is included."
+  },
+  {
+    q: "By approximately how much does halving the receiver bandwidth improve SNR?",
+    opts: ["10%", "20%", "30%", "50%"],
+    ans: 2,
+    exp: "Halving the receiver bandwidth improves SNR by about 30%, though it comes with trade-offs like more chemical shift artifacts."
+  },
+  {
+    q: "What is a disadvantage of using a narrow receiver bandwidth?",
+    opts: ["Lower SNR", "More chemical shift and motion artifacts, and limited slices per TR", "Faster acquisition", "Less partial volume effect"],
+    ans: 1,
+    exp: "With a narrow bandwidth, there will be more chemical shift and motion artifacts, and the number of slices that can be acquired for a given TR is limited."
+  },
+  {
+    q: "After slice selection with Gz, why is further encoding needed?",
+    opts: ["To determine slice thickness", "Because protons within the slice still have the same frequency and phase — we cannot determine their position within the slice", "To increase the signal strength", "To measure T2 relaxation"],
+    ans: 1,
+    exp: "After slice selection, all protons within the selected slice spin at the same frequency and have the same phase. Further encoding (frequency and phase encoding) is needed to determine the exact origin of signals within the slice."
+  },
+  {
+    q: "What shape is the RF excitation pulse in time for slice selection, and why?",
+    opts: ["Square shape, for simplicity", "Gaussian shape, to minimize power", "Sine (sinc) shape, to excite a discrete range of frequencies", "Triangular shape, to reduce bandwidth"],
+    ans: 2,
+    exp: "The shape of the RF excitation pulse in time is a sinc (sin(x)/x) shape — not a square shape — because to excite a discrete range of frequencies (a slice), a sinc pulse is needed."
+  },
+  {
+    q: "What does a stronger B₀ field result in for proton precession?",
+    opts: ["Lower Larmor frequency", "Higher Larmor frequency", "No change in Larmor frequency", "Longer T1 relaxation"],
+    ans: 1,
+    exp: "A stronger B₀ field means a higher Larmor frequency, as described by the Larmor equation: ω₀ = γ · B₀."
+  },
+  {
+    q: "What is the total magnetic field at position Z_SS during application of gradient Gz?",
+    opts: ["B₀ alone", "B₀ + Gz", "B₀ + Z_SS · Gz", "Z_SS · Gz only"],
+    ans: 2,
+    exp: "The total magnetic field at position Z_SS during application of Gz is given by: B₀ + Z_SS · Gz, which creates the position-dependent Larmor frequency used for slice selection."
+  },
+  {
+    q: "In Figure 32A (fixed RF bandwidth, variable gradient), what happens to slice thickness when gradient strength increases?",
+    opts: ["Slice thickness increases", "Slice thickness stays the same", "Slice thickness decreases", "Slice thickness becomes infinite"],
+    ans: 2,
+    exp: "With fixed RF bandwidth, increasing gradient strength (steeper gradient) results in smaller (thinner) slice thickness, as shown by the equation Thickness = BWtrans / γ₀ · Gs."
+  },
+  {
+    q: "In Figure 32B (fixed gradient, variable RF bandwidth), what happens to slice thickness when bandwidth is narrowed?",
+    opts: ["Slice thickness increases", "Slice thickness decreases", "Slice thickness is unaffected", "Slice thickness doubles"],
+    ans: 1,
+    exp: "With a fixed gradient, narrowing the RF bandwidth results in a thinner (smaller) slice thickness, as less frequency range is excited."
+  },
+  {
+    q: "What two parameters practically determine slice thickness in MRI?",
+    opts: ["T1 and T2 relaxation times", "Gradient steepness (Gss) and RF pulse bandwidth", "B₀ field and patient weight", "SNR and spatial resolution"],
+    ans: 1,
+    exp: "In practice, the slice thickness is determined by a combination of both gradient steepness (Gss) and the bandwidth of the 90° RF-pulse."
+  },
+  {
+    q: "What does the iso-center of the MRI scanner refer to?",
+    opts: ["The patient's abdomen", "The center of the MRI bore where the magnetic field is most homogeneous", "The RF coil location", "The gradient coil position"],
+    ans: 1,
+    exp: "The iso-center is the center of the MRI bore where the magnetic field is most homogeneous, and where imaging provides the best image quality."
+  },
+  {
+    q: "What determines the MRI signal bandwidth to be collected during readout?",
+    opts: ["The TR time", "The receiver bandwidth setting", "The slice thickness", "The patient's body composition"],
+    ans: 1,
+    exp: "The receiver bandwidth setting determines the range of frequencies (bandwidth) collected by the MR system during frequency encoding/readout."
+  },
+  {
+    q: "Which gradient axis is typically used for slice selection in axial brain imaging?",
+    opts: ["Gx (left-right)", "Gy (anterior-posterior)", "Gz (head-foot)", "All three simultaneously"],
+    ans: 2,
+    exp: "For axial brain imaging, the slice selection gradient is applied along the Gz axis (head-foot direction) to select axial slices."
+  },
+  {
+    q: "What is the gyromagnetic ratio (γ₀) for protons used in the lecture example?",
+    opts: ["63.6 MHz/T", "42.58 MHz/T", "1.5 MHz/T", "127.7 MHz/T"],
+    ans: 1,
+    exp: "The gyromagnetic ratio for protons is γ₀ = 42.58 MHz/T, as stated in the lecture example for calculating RF bandwidth."
+  },
+  {
+    q: "What is partial volume effect in MRI, and when is it increased?",
+    opts: ["A time artifact that increases with thin slices", "Signal averaging from multiple tissue types within a voxel, increased with thicker slices", "An artifact caused by patient movement", "Frequency aliasing from wide bandwidth"],
+    ans: 1,
+    exp: "The partial volume effect occurs when multiple tissue types are averaged within a single voxel. It increases with thicker slices, reducing the ability to distinguish small structures, and is less of a problem with thin slices."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let answered = [];
+let timerInterval = null;
+let seconds = 0;
+let quizStarted = false;
+
+function startQuiz() {
+  answered = new Array(questions.length).fill(null);
+  score = 0;
+  currentQ = 0;
+  seconds = 0;
+  document.getElementById('score-display').textContent = '0';
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-section').style.display = 'block';
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    document.getElementById('timer-display').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  const total = questions.length;
+
+  document.getElementById('q-num-label').textContent = `السؤال ${currentQ + 1} من ${total}`;
+  document.getElementById('q-counter').textContent = `السؤال ${currentQ + 1} من ${total}`;
+  document.getElementById('q-pct').textContent = `${Math.round(((currentQ) / total) * 100)}%`;
+  document.getElementById('progress-fill').style.width = `${((currentQ) / total) * 100}%`;
+
+  document.getElementById('q-text').textContent = q.q;
+
+  const list = document.getElementById('options-list');
+  list.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+
+  q.opts.forEach((opt, i) => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, btn);
+
+    if (answered[currentQ] !== null) {
+      btn.disabled = true;
+      if (i === q.ans) btn.classList.add('correct');
+      if (answered[currentQ] === i && i !== q.ans) btn.classList.add('wrong');
+    }
+
+    list.appendChild(li);
+    li.appendChild(btn);
+  });
+
+  const expBox = document.getElementById('explanation-box');
+  const expText = document.getElementById('explanation-text');
+  if (answered[currentQ] !== null && answered[currentQ] !== q.ans) {
+    expText.textContent = q.exp;
+    expBox.classList.add('show');
+  } else {
+    expBox.classList.remove('show');
+  }
+
+  document.getElementById('prev-btn').style.display = currentQ > 0 ? 'block' : 'none';
+  document.getElementById('next-btn').style.display = answered[currentQ] !== null ? 'block' : 'none';
+  document.getElementById('next-btn').textContent = currentQ === total - 1 ? 'عرض النتائج 🏆' : 'التالي ←';
+}
+
+function selectAnswer(idx, btn) {
+  if (answered[currentQ] !== null) return;
+  const q = questions[currentQ];
+  answered[currentQ] = idx;
+
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  if (idx === q.ans) {
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('score-display').textContent = score;
+    showToast('✅ إجابة صحيحة!', 'success-toast');
+  } else {
+    btn.classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+    const expText = document.getElementById('explanation-text');
+    expText.textContent = q.exp;
+    document.getElementById('explanation-box').classList.add('show');
+    showToast('❌ إجابة خاطئة!', 'error-toast');
+  }
+
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextQ() {
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function prevQ() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('progress-section').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+
+  const pct = Math.round((score / questions.length) * 100);
+  const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const s = String(seconds % 60).padStart(2, '0');
+
+  document.getElementById('res-correct').textContent = score;
+  document.getElementById('res-wrong').textContent = questions.length - score;
+  document.getElementById('res-time').textContent = `${m}:${s}`;
+  document.getElementById('ring-pct-text').textContent = `${pct}%`;
+
+  // Ring animation
+  const circumference = 314;
+  const offset = circumference - (pct / 100) * circumference;
+  setTimeout(() => {
+    document.getElementById('ring-fill').style.strokeDashoffset = offset;
+  }, 100);
+
+  let emoji = '😔', title = 'حاول مجدداً', sub = '';
+  if (pct >= 90) { emoji = '🏆'; title = 'ممتاز جداً!'; }
+  else if (pct >= 75) { emoji = '🥇'; title = 'أحسنت!'; }
+  else if (pct >= 60) { emoji = '👍'; title = 'جيد!'; }
+  else if (pct >= 50) { emoji = '📚'; title = 'تحتاج مراجعة'; }
+
+  sub = `حصلت على ${score} من ${questions.length} سؤال بنسبة ${pct}%`;
+  document.getElementById('results-emoji').textContent = emoji;
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-sub').textContent = sub;
+
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('q-pct').textContent = '100%';
+}
+
+function restartQuiz() {
+  document.getElementById('results-screen').style.display = 'none';
+  startQuiz();
+}
+
+function showToast(msg, cls) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${cls}`;
+  setTimeout(() => { t.className = ''; }, 2000);
+}
+</script>
+</body>
+</html>

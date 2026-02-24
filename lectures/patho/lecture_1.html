@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة الأولى - Bone and Cartilage Tumors</title>
+<!-- Offline fonts - no internet needed -->
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --card: #1a2236;
+    --accent: #3b82f6;
+    --accent2: #06b6d4;
+    --gold: #f59e0b;
+    --success: #10b981;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #1e3a5f;
+    --glow: rgba(59,130,246,0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+    overflow-x: hidden;
+  }
+
+  /* Background effect */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    position: relative;
+  }
+
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(22px, 4vw, 34px);
+    background: linear-gradient(135deg, #e2e8f0, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .header .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .credit-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
+    border: 1px solid rgba(245,158,11,0.4);
+    border-radius: 30px;
+    padding: 6px 18px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--gold);
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .credit-link:hover {
+    background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(245,158,11,0.1));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(245,158,11,0.2);
+  }
+
+  .credit-link .tg-icon {
+    font-size: 16px;
+  }
+
+  .credit-link a {
+    color: var(--gold);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .stat-card.questions::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .stat-card.score::before { background: linear-gradient(90deg, var(--gold), #f97316); }
+  .stat-card.timer::before { background: linear-gradient(90deg, var(--success), #34d399); }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+
+  .stat-card.questions .stat-value { color: var(--accent2); }
+  .stat-card.score .stat-value { color: var(--gold); }
+  .stat-card.timer .stat-value { color: var(--success); }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* Progress */
+  .progress-section {
+    margin-bottom: 24px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .progress-text { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.06);
+    border-radius: 100px;
+    height: 8px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+
+  .progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 30px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+    border-radius: 100px;
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.4s ease;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(6,182,212,0.1));
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 16px;
+  }
+
+  .question-text {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 28px;
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* Options */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    direction: ltr;
+    color: var(--text);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    background: rgba(59,130,246,0.1);
+    border-color: rgba(59,130,246,0.4);
+    transform: translateX(-3px);
+  }
+
+  .option-letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--muted);
+    transition: all 0.25s;
+    flex-shrink: 0;
+  }
+
+  .option-btn:hover:not(:disabled) .option-letter {
+    background: rgba(59,130,246,0.2);
+    border-color: var(--accent);
+    color: var(--accent2);
+  }
+
+  /* Answer states */
+  .option-btn.correct {
+    background: rgba(16,185,129,0.12);
+    border-color: var(--success);
+    color: #6ee7b7;
+    transform: none;
+    cursor: default;
+  }
+
+  .option-btn.correct .option-letter {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+  }
+
+  .option-btn.wrong {
+    background: rgba(239,68,68,0.12);
+    border-color: var(--danger);
+    color: #fca5a5;
+    cursor: default;
+  }
+
+  .option-btn.wrong .option-letter {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: white;
+  }
+
+  .option-btn.disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  /* Explanation */
+  .explanation {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.7;
+    direction: ltr;
+    text-align: left;
+    color: #bfdbfe;
+    display: none;
+  }
+
+  .explanation.show { display: block; animation: fadeIn 0.3s ease; }
+
+  .explanation strong { color: var(--accent2); }
+
+  .explanation-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    flex: 1;
+    min-width: 140px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(59,130,246,0.45); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent2); background: rgba(59,130,246,0.05); }
+
+  /* Result screen */
+  .result-screen {
+    display: none;
+    text-align: center;
+    padding: 50px 30px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-screen::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+  }
+
+  .result-emoji {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: bounce 1s ease infinite alternate;
+  }
+
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+  }
+
+  .result-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 32px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--gold), #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .result-score-big {
+    font-size: 70px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin: 20px 0 8px;
+  }
+
+  .result-out-of {
+    color: var(--muted);
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 16px;
+    margin: 30px 0;
+  }
+
+  .result-item {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 20px 16px;
+  }
+
+  .result-item-val {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .result-item-val.green { color: var(--success); }
+  .result-item-val.red { color: var(--danger); }
+  .result-item-val.blue { color: var(--accent2); }
+
+  .result-item-label { font-size: 12px; color: var(--muted); }
+
+  .btn-restart {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 40px;
+    background: linear-gradient(135deg, var(--gold), #f97316);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    box-shadow: 0 4px 20px rgba(245,158,11,0.35);
+  }
+
+  .btn-restart:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(245,158,11,0.5); }
+
+  /* Start screen */
+  .start-screen {
+    text-align: center;
+    padding: 50px 30px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .start-screen::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+  }
+
+  .start-icon { font-size: 70px; margin-bottom: 24px; }
+
+  .start-screen h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .start-screen p { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 460px; margin: 0 auto 30px; }
+
+  .info-chips {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .btn-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 24px rgba(59,130,246,0.4);
+  }
+
+  .btn-start:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(59,130,246,0.55); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .footer a { color: var(--gold); text-decoration: none; font-weight: 700; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    white-space: nowrap;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.correct-toast { border-color: var(--success); color: #6ee7b7; }
+  .toast.wrong-toast { border-color: var(--danger); color: #fca5a5; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
+    .stat-value { font-size: 22px; }
+    .question-card { padding: 22px 18px; }
+    .question-text { font-size: 15px; }
+    .result-grid { grid-template-columns: repeat(3,1fr); }
+    .result-score-big { font-size: 54px; }
+    .btn-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">📚 المحاضرة الأولى</div>
+    <h1>Bone and Cartilage Tumors</h1>
+    <div class="subtitle">اختبارات المحاضرة الأولى · من إنشاء الطالب محمد صبار</div>
+    <a href="https://t.me/mulimcq" target="_blank" class="credit-link">
+      <span class="tg-icon">✈️</span>
+      <a href="https://t.me/mulimcq" target="_blank" style="-webkit-text-fill-color: var(--gold); background: none;">محمد صبار</a>
+      &nbsp;· اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </a>
+  </div>
+
+  <!-- Start Screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-icon">🦴</div>
+    <h2>هل أنت مستعد للاختبار؟</h2>
+    <p>اختبار شامل يتضمن <strong>45 سؤالاً</strong> من محاضرة Bone and Cartilage Tumors. أجب عن كل الأسئلة واحصل على شرح لكل إجابة خاطئة.</p>
+    <div class="info-chips">
+      <div class="chip">📝 45 سؤال</div>
+      <div class="chip">⭐ نقطة لكل سؤال</div>
+      <div class="chip">💡 شرح تفاعلي</div>
+      <div class="chip">🎯 تتبع التقدم</div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">
+      ابدأ الاختبار الآن ←
+    </button>
+  </div>
+
+  <!-- Quiz Area -->
+  <div id="quizArea" style="display:none">
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-card questions">
+        <div class="stat-value" id="questionCounter">1/45</div>
+        <div class="stat-label">السؤال الحالي</div>
+      </div>
+      <div class="stat-card score">
+        <div class="stat-value" id="scoreDisplay">0</div>
+        <div class="stat-label">النقاط</div>
+      </div>
+      <div class="stat-card timer">
+        <div class="stat-value" id="timerDisplay">00:00</div>
+        <div class="stat-label">الوقت</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-text">التقدم في الاختبار</span>
+        <span class="progress-text" id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Question Card -->
+    <div class="question-card" id="questionCard">
+      <div class="q-number" id="qNumber">السؤال 1 من 45</div>
+      <div class="question-text" id="questionText"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="explanation" id="explanation">
+        <div class="explanation-label">💡 الشرح</div>
+        <span id="explanationText"></span>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="skipQuestion()">تخطي ⏭</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>السؤال التالي ←</button>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-emoji" id="resultEmoji">🏆</div>
+    <div class="result-title" id="resultTitle">نتيجتك النهائية</div>
+    <div class="result-score-big" id="resultScore">0</div>
+    <div class="result-out-of">نقطة من 45</div>
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="result-item-val green" id="correctCount">0</div>
+        <div class="result-item-label">✅ صحيح</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-val red" id="wrongCount">0</div>
+        <div class="result-item-label">❌ خطأ</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-val blue" id="skippedCount">0</div>
+        <div class="result-item-label">⏭ متخطى</div>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    من إنشاء الطالب <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a> · للمزيد من الاختبارات تابع قناة التيليغرام
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Primary bone tumors are considered:",
+    opts: ["Extremely common in the general population","Rare and often require disfiguring surgery for malignant types","Always benign and easily treated","Common and easily detected"],
+    ans: 1,
+    exp: "Primary bone tumors are rare, and malignant bone tumors often require disfiguring surgery, making this group especially challenging to manage."
+  },
+  {
+    q: "Osteosarcoma most commonly peaks during which age group?",
+    opts: ["Early childhood (1-5 years)","Adolescence","Middle age (40-50 years)","Old age (>60 years)"],
+    ans: 1,
+    exp: "Osteosarcoma peaks during adolescence and most frequently involves the knee area (distal femur and proximal tibia)."
+  },
+  {
+    q: "Which anatomic site does osteosarcoma most frequently involve?",
+    opts: ["The pelvis","The spine","The knee (distal femur / proximal tibia)","The skull"],
+    ans: 2,
+    exp: "Osteosarcoma most frequently involves the knee, specifically the metaphysis of the distal femur and proximal tibia."
+  },
+  {
+    q: "Chondrosarcoma most commonly affects which age group?",
+    opts: ["Children under 10","Adolescents","Older adults","Infants"],
+    ans: 2,
+    exp: "Chondrosarcoma affects older adults (typically 40-60 years) and arises most often in the pelvis and proximal extremities."
+  },
+  {
+    q: "Where does chondrosarcoma most commonly arise?",
+    opts: ["The skull and face","The pelvis and proximal extremities","The small bones of the hands and feet","The vertebral column"],
+    ans: 1,
+    exp: "Chondrosarcoma arises most often in the pelvis and proximal extremities, affecting older adults."
+  },
+  {
+    q: "Bone tumors are classified according to:",
+    opts: ["Their size only","The age of the patient","The normal cell types they recapitulate or the matrix they produce","The radiographic appearance only"],
+    ans: 2,
+    exp: "Bone tumors are classified according to the normal cell types they recapitulate or the matrix they produce (e.g., bone-forming, cartilage-forming, etc.)."
+  },
+  {
+    q: "What is the definitive method for diagnosing bone tumors in almost all cases?",
+    opts: ["Plain X-ray alone","CT scan","Biopsy","MRI"],
+    ans: 2,
+    exp: "Although radiographic imaging defines location and extent, biopsy is necessary for definitive diagnosis in almost all cases of bone tumors."
+  },
+  {
+    q: "Bone-forming tumors produce:",
+    opts: ["Hyaline cartilage matrix","Unmineralized osteoid or mineralized woven bone","Fibrous tissue only","Lipomatous tissue"],
+    ans: 1,
+    exp: "Bone-forming tumors produce unmineralized osteoid or mineralized woven bone as their defining characteristic."
+  },
+  {
+    q: "Osteoma is best described as:",
+    opts: ["A malignant bone tumor","A rare benign slow-growing lesion, considered by some as a hamartoma","A rapidly growing malignant lesion","A cartilaginous tumor"],
+    ans: 1,
+    exp: "Osteoma is a rare benign, slow-growing lesion, regarded by some as a hamartoma rather than a true neoplasm."
+  },
+  {
+    q: "Where is osteoma almost exclusively found?",
+    opts: ["Long bones of the extremities","Flat bones of the skull and face","The pelvis","The vertebral column"],
+    ans: 1,
+    exp: "Osteoma is almost exclusively restricted to flat bones of the skull and face, and may grow into paranasal sinuses or protrude into the orbit."
+  },
+  {
+    q: "The morphology of osteoma shows:",
+    opts: ["Sheets of small round cells","Well-differentiated mature lamellar bony trabeculae separated by fibrovascular tissue","Hyaline cartilage with chondrocytes","Hemorrhagic spaces with fibrous septa"],
+    ans: 1,
+    exp: "Osteoma is composed of well-differentiated mature lamellar bony trabeculae separated by fibrovascular tissue."
+  },
+  {
+    q: "Osteoid osteoma is defined by which size criterion?",
+    opts: ["Greater than 5 cm in diameter","Less than 2 cm in diameter","Between 2 and 5 cm in diameter","Greater than 2 cm in diameter"],
+    ans: 1,
+    exp: "By definition, osteoid osteomas are less than 2 cm in diameter. Larger lesions (>2 cm) are classified as osteoblastomas."
+  },
+  {
+    q: "Osteoid osteoma is most common in which demographic?",
+    opts: ["Elderly women","Young men","Middle-aged women","Infants"],
+    ans: 1,
+    exp: "Osteoid osteoma is most common in young men, with about 50% of cases involving the cortex of the femur or tibia."
+  },
+  {
+    q: "About 50% of osteoid osteoma cases involve:",
+    opts: ["The vertebral column","The cortex of the femur or tibia","The skull","The small bones of the hands"],
+    ans: 1,
+    exp: "About 50% of osteoid osteoma cases involve the cortex of the femur or tibia, and a thick rim of reactive cortical bone may be the only radiographic clue."
+  },
+  {
+    q: "The pain of osteoid osteoma is characteristically:",
+    opts: ["Mild and constant throughout the day","Severe nocturnal pain relieved by aspirin","Mild morning stiffness only","Associated with fever and chills"],
+    ans: 1,
+    exp: "Despite its small size, osteoid osteoma presents with severe nocturnal pain caused by prostaglandin E2 produced by osteoblasts, which is relieved by aspirin and other NSAIDs."
+  },
+  {
+    q: "The pain in osteoid osteoma is caused by:",
+    opts: ["Bone marrow compression","Prostaglandin E2 produced by osteoblasts","Nerve entrapment","Periosteal stretching"],
+    ans: 1,
+    exp: "The severe nocturnal pain in osteoid osteoma is probably caused by prostaglandin E2 produced by osteoblasts within the lesion."
+  },
+  {
+    q: "Osteoblastoma differs from osteoid osteoma in that it is:",
+    opts: ["Less than 1 cm in diameter","Larger than 2 cm and more frequently involves the posterior vertebral components","Associated with aspirin-responsive pain","More common in women"],
+    ans: 1,
+    exp: "Osteoblastomas are larger than 2 cm and more frequently involve the posterior components of the vertebrae (laminae and pedicles). The pain is unresponsive to aspirin."
+  },
+  {
+    q: "The treatment of choice for osteoid osteoma is:",
+    opts: ["Chemotherapy","Radiofrequency ablation","Radiation therapy","En bloc excision"],
+    ans: 1,
+    exp: "Osteoid osteoma can be treated by radiofrequency ablation, whereas osteoblastoma is usually curetted or removed by en bloc excision."
+  },
+  {
+    q: "On microscopy, osteoid osteoma and osteoblastoma show:",
+    opts: ["Sheets of malignant spindle cells","Delicate interconnecting trabeculae of woven bone rimmed by osteoblasts with loose vascular stroma","Dense lamellar bone without cellular elements","Hyaline cartilage nodules"],
+    ans: 1,
+    exp: "Both lesions show delicate interconnecting trabeculae of woven bone rimmed by a single layer of osteoblasts. The stroma consists of loose connective tissue with abundant dilated and congested capillaries."
+  },
+  {
+    q: "Cartilage-forming tumors are characterized by the formation of:",
+    opts: ["Woven bone","Lamellar bone","Hyaline cartilage","Fibrous tissue"],
+    ans: 2,
+    exp: "Cartilage-forming tumors are characterized by the formation of hyaline cartilage. Benign cartilaginous tumors are much more common than malignant ones."
+  },
+  {
+    q: "Osteochondroma is also known as:",
+    opts: ["Enchondroma","Exostosis","Chondroma","Chondroblastoma"],
+    ans: 1,
+    exp: "Osteochondroma, also known as exostosis, is a benign, cartilage-capped tumor that arises from the bone surface."
+  },
+  {
+    q: "What percentage of osteochondromas are solitary?",
+    opts: ["50%","65%","85%","95%"],
+    ans: 2,
+    exp: "About 85% of osteochondromas are solitary. The remaining 15% are seen as part of the multiple hereditary exostosis syndrome."
+  },
+  {
+    q: "When do solitary osteochondromas typically first present?",
+    opts: ["In early childhood","In late adolescence and early adulthood","In middle age","In old age"],
+    ans: 1,
+    exp: "Solitary osteochondromas are usually first diagnosed in late adolescence and early adulthood, whereas multiple osteochondromas present during childhood."
+  },
+  {
+    q: "The male to female ratio in osteochondroma is:",
+    opts: ["1:1","2:1","3:1","4:1"],
+    ans: 2,
+    exp: "Men are affected three times more often than women in osteochondroma (3:1 ratio)."
+  },
+  {
+    q: "Osteochondromas develop from bones of which origin and arise from which location?",
+    opts: ["Intramembranous origin; epiphysis","Endochondral origin; metaphysis near the growth plate","Endochondral origin; diaphysis","Intramembranous origin; diaphysis"],
+    ans: 1,
+    exp: "Osteochondromas develop in bones of endochondral origin and arise from the metaphysis near the growth plate of long tubular bones, especially near the knee."
+  },
+  {
+    q: "In multiple hereditary exostoses, the underlying bones may show:",
+    opts: ["Increased density only","Bowing and shortening due to epiphyseal growth disturbance","Pathological fractures only","No changes in bone shape"],
+    ans: 1,
+    exp: "In multiple hereditary exostoses, the underlying bones may be bowed and shortened, reflecting an associated disturbance in epiphyseal growth."
+  },
+  {
+    q: "The range of size for osteochondromas is:",
+    opts: ["0.5 to 5 cm","1 to 20 cm","2 to 10 cm","5 to 30 cm"],
+    ans: 1,
+    exp: "Osteochondromas range in size from 1 to 20 cm. The cap is composed of hyaline cartilage covered by perichondrium."
+  },
+  {
+    q: "In osteochondroma, the cortex of the stalk:",
+    opts: ["Is separated from the host bone by a fibrous layer","Merges with the cortex of the host bone creating medullary continuity","Forms a distinct capsule","Is composed of cartilage only"],
+    ans: 1,
+    exp: "The cortex of the stalk merges with the cortex of the host bone resulting in continuity between the medullary cavity of the osteochondroma and the host bone."
+  },
+  {
+    q: "Osteochondromas usually stop growing at the time of:",
+    opts: ["Puberty onset","Growth plate closure","Age 30","Menopause"],
+    ans: 1,
+    exp: "Osteochondromas usually stop growing at the time of growth plate closure, and when symptomatic, are cured by simple excision."
+  },
+  {
+    q: "Secondary chondrosarcoma developing from osteochondroma is most associated with:",
+    opts: ["Solitary osteochondromas","Multiple hereditary exostosis","Chondroblastoma","Enchondroma in small bones"],
+    ans: 1,
+    exp: "Secondary chondrosarcoma develops only rarely, and usually in tumors associated with multiple hereditary exostosis rather than solitary osteochondromas."
+  },
+  {
+    q: "Enchondromas are typically found in which location?",
+    opts: ["Epiphysis of long bones","Metaphyseal lesions of tubular bones of the hands and feet","Diaphysis of femur","Flat bones of the skull"],
+    ans: 1,
+    exp: "Enchondromas (intramedullary chondromas) are usually diagnosed in individuals 20-50 years of age and typically appear as solitary metaphyseal lesions of the tubular bones of the hands and feet."
+  },
+  {
+    q: "Radiographically, enchondromas show:",
+    opts: ["Dense sclerotic lesion without lucency","Circumscribed lucency with central irregular calcifications, sclerotic rim, and intact cortex","Cortical destruction and soft tissue mass","Periosteal reaction with sunburst pattern"],
+    ans: 1,
+    exp: "Radiographs of enchondromas show a circumscribed lucency with central irregular calcifications, a sclerotic rim, and an intact cortex."
+  },
+  {
+    q: "Which syndromes are characterized by the development of multiple enchondromas (enchondromatosis)?",
+    opts: ["Gardner syndrome and Peutz-Jeghers syndrome","Ollier disease and Maffucci syndrome","Li-Fraumeni syndrome and BRCA mutations","MEN1 and MEN2 syndromes"],
+    ans: 1,
+    exp: "Ollier disease and Maffucci syndrome are disorders characterized by the development of multiple enchondromas (enchondromatosis)."
+  },
+  {
+    q: "The gross appearance of chondromas is:",
+    opts: ["Red-brown hemorrhagic tissue","Gray-blue and translucent, usually smaller than 3 cm","Yellow fatty tissue","White chalky calcified mass"],
+    ans: 1,
+    exp: "Chondromas are usually smaller than 3 cm, gray-blue, and translucent. They are composed of benign-appearing chondrocytes in well-circumscribed nodules of hyaline cartilage."
+  },
+  {
+    q: "Regarding sarcomatous transformation of enchondromas:",
+    opts: ["Solitary enchondromas commonly undergo sarcomatous transformation","Enchondromas associated with enchondromatosis undergo sarcomatous transformation more frequently","All enchondromas inevitably become malignant","Transformation is equally common in solitary and multiple cases"],
+    ans: 1,
+    exp: "Solitary enchondromas rarely undergo sarcomatous transformation; by contrast, those associated with enchondromatosis (Ollier/Maffucci) do so more frequently."
+  },
+  {
+    q: "Chondroblastoma arises from which location?",
+    opts: ["Diaphysis of long bones","Epiphysis of long bones adjacent to the epiphyseal cartilage plate","Metaphysis of small hand bones","Flat bones of the pelvis"],
+    ans: 1,
+    exp: "Chondroblastoma is a relatively rare benign tumour arising from the epiphysis of long bones adjacent to the epiphyseal cartilage plate."
+  },
+  {
+    q: "Which bones are most commonly affected by chondroblastoma?",
+    opts: ["Small bones of the hands and feet","Upper tibia, lower femur, and upper humerus","Pelvis and sacrum","Skull and facial bones"],
+    ans: 1,
+    exp: "The most commonly affected bones in chondroblastoma are the upper tibia and lower femur (about the knee) and upper humerus."
+  },
+  {
+    q: "What is the typical age and sex predilection of chondroblastoma?",
+    opts: ["Patients over 50 years, female predominance","Patients under 20 years, male predominance (2:1)","Middle-aged adults, equal sex ratio","Elderly patients, female predominance"],
+    ans: 1,
+    exp: "Chondroblastoma usually occurs in patients under 20 years of age with male preponderance (male-female ratio 2:1)."
+  },
+  {
+    q: "The radiographic appearance of chondroblastoma is:",
+    opts: ["Dense sclerotic lesion with periosteal reaction","Sharply circumscribed lytic lesion with multiple small foci of calcification","Ill-defined lytic lesion with soft tissue mass","Ground-glass opacity with cortical expansion"],
+    ans: 1,
+    exp: "The radiographic appearance of chondroblastoma is of a sharply-circumscribed, lytic lesion with multiple small foci of calcification."
+  },
+  {
+    q: "The gross pathology (G/A) of chondroblastoma shows:",
+    opts: ["Hard sclerotic mass in the cortex","Well-defined mass up to 5 cm in the epiphysis with soft chondroid tissue, hemorrhage, necrosis, and calcification","Pedunculated mass on the bone surface","Large expansile cystic lesion with bloody fluid"],
+    ans: 1,
+    exp: "Grossly, chondroblastoma is a well-defined mass, up to 5 cm in diameter, lying in the epiphysis. The cut surface reveals a soft chondroid tumour with foci of haemorrhages, necrosis, and calcification."
+  },
+  {
+    q: "Microscopically (M/E), chondroblastoma is composed of:",
+    opts: ["Sheets of mature lamellar bone","Highly cellular tumor with small round to polygonal mononuclear cells resembling chondroblasts and multinucleate osteoclast-like giant cells","Dense fibrous tissue with sparse cells","Large pleomorphic malignant cells with atypical mitoses"],
+    ans: 1,
+    exp: "Microscopically, chondroblastoma is highly cellular and composed of small, round to polygonal mononuclear cells resembling chondroblasts along with multinucleate osteoclast-like giant cells."
+  },
+  {
+    q: "Giant cell tumor of bone is classified as a tumor of:",
+    opts: ["Cartilage-forming origin","Bone-forming origin","Unknown origin, benign behavior","Unknown origin, malignant behavior"],
+    ans: 2,
+    exp: "According to the classification table, giant cell tumor is categorized under 'Unknown origin' with benign behavior, affecting the epiphysis of long bones typically in patients aged 20-40 years."
+  },
+  {
+    q: "Aneurysmal bone cyst is characterized microscopically by:",
+    opts: ["Sheets of primitive small round cells","Hemorrhagic spaces separated by cellular fibrous septa","Dense lamellar bone formation","Hyaline cartilage nodules with calcification"],
+    ans: 1,
+    exp: "Aneurysmal bone cyst shows hemorrhagic spaces separated by cellular fibrous septa on microscopy. It most commonly affects the proximal tibia, distal femur, and vertebra."
+  },
+  {
+    q: "Ewing sarcoma is classified as a tumor of:",
+    opts: ["Cartilage-forming, malignant","Bone-forming, malignant","Unknown origin, malignant","Unknown origin, benign"],
+    ans: 2,
+    exp: "Ewing sarcoma is classified as a malignant tumor of unknown origin. It occurs in the diaphysis of long bones in the 10-20 year age group and shows sheets of primitive small round cells on microscopy."
+  },
+  {
+    q: "Conventional chondrosarcoma extends from the medullary canal and shows which histologic features?",
+    opts: ["Small round blue cells with no matrix","Chondrocytes with increased cellularity and atypia extending through the cortex into soft tissue","Spindle cells in a herringbone pattern","Mature lamellar bone with osteoblastic rimming"],
+    ans: 1,
+    exp: "Conventional chondrosarcoma extends from the medullary canal through the cortex into soft tissue, with chondrocytes showing increased cellularity and atypia."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let correctAns = 0;
+let wrongAns = 0;
+let skippedAns = 0;
+let answered = false;
+let startTime;
+let timerInterval;
+
+function startQuiz() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  startTime = Date.now();
+  timerInterval = setInterval(updateTimer, 1000);
+  loadQuestion();
+}
+
+function updateTimer() {
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+  const s = String(elapsed % 60).padStart(2, '0');
+  document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+}
+
+function loadQuestion() {
+  answered = false;
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('explanation').classList.remove('show');
+
+  const q = questions[currentQ];
+  const total = questions.length;
+
+  document.getElementById('qNumber').textContent = `السؤال ${currentQ + 1} من ${total}`;
+  document.getElementById('questionCounter').textContent = `${currentQ + 1}/${total}`;
+  document.getElementById('questionText').textContent = q.q;
+
+  const pct = Math.round((currentQ / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => selectAnswer(i, btn);
+    grid.appendChild(btn);
+  });
+
+  // Animate card
+  const card = document.getElementById('questionCard');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'slideUp 0.4s ease';
+}
+
+function selectAnswer(idx, btn) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[currentQ];
+  const allBtns = document.querySelectorAll('.option-btn');
+
+  allBtns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.ans) {
+      b.classList.add('correct');
+    } else if (i === idx && idx !== q.ans) {
+      b.classList.add('wrong');
+    } else {
+      b.classList.add('disabled');
+    }
+  });
+
+  if (idx === q.ans) {
+    score++;
+    correctAns++;
+    document.getElementById('scoreDisplay').textContent = score;
+    showToast('✅ إجابة صحيحة!', 'correct-toast');
+  } else {
+    wrongAns++;
+    showToast('❌ إجابة خاطئة!', 'wrong-toast');
+    const exp = document.getElementById('explanation');
+    document.getElementById('explanationText').innerHTML = `<strong>الإجابة الصحيحة:</strong> ${q.opts[q.ans]}<br><br>${q.exp}`;
+    exp.classList.add('show');
+  }
+
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function skipQuestion() {
+  if (answered) { nextQuestion(); return; }
+  skippedAns++;
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quizArea').style.display = 'none';
+  const rs = document.getElementById('resultScreen');
+  rs.style.display = 'block';
+  rs.style.animation = 'slideUp 0.5s ease';
+
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById('resultScore').textContent = score;
+  document.getElementById('correctCount').textContent = correctAns;
+  document.getElementById('wrongCount').textContent = wrongAns;
+  document.getElementById('skippedCount').textContent = skippedAns;
+
+  let emoji = '😔', title = 'استمر في المذاكرة';
+  if (pct >= 90) { emoji = '🏆'; title = 'ممتاز! أداء رائع'; }
+  else if (pct >= 75) { emoji = '🎯'; title = 'جيد جداً!'; }
+  else if (pct >= 60) { emoji = '👍'; title = 'جيد، يمكنك التحسن'; }
+  else if (pct >= 40) { emoji = '📚'; title = 'راجع المحاضرة مجدداً'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = `${title} (${pct}%)`;
+}
+
+function restartQuiz() {
+  currentQ = 0;
+  score = 0;
+  correctAns = 0;
+  wrongAns = 0;
+  skippedAns = 0;
+  document.getElementById('scoreDisplay').textContent = '0';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  startTime = Date.now();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(updateTimer, 1000);
+  loadQuestion();
+}
+
+function showToast(msg, cls) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${cls} show`;
+  setTimeout(() => { t.className = 'toast'; }, 2000);
+}
+</script>
+</body>
+</html>

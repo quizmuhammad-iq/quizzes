@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار الفيزياء الشعاعية / الرنين المغناطيسي - المحاضرة الثانية</title>
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card-hover: #1f2a42;
+    --accent: #3b82f6;
+    --accent-glow: rgba(59,130,246,0.3);
+    --success: #10b981;
+    --success-glow: rgba(16,185,129,0.3);
+    --error: #ef4444;
+    --error-glow: rgba(239,68,68,0.3);
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: rgba(59,130,246,0.2);
+    --border-light: rgba(255,255,255,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(16,185,129,0.05) 0%, transparent 50%);
+  }
+
+  /* HEADER */
+  header {
+    background: rgba(26,34,54,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .header-title h1 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+
+  .header-title p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .header-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid var(--accent);
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: all 0.3s;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .header-link:hover {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    padding: 14px 24px;
+    background: rgba(26,34,54,0.6);
+    border-bottom: 1px solid var(--border-light);
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+  }
+
+  .stat-icon { font-size: 1.1rem; }
+
+  .stat-value {
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 1rem;
+  }
+
+  .stat-label { color: var(--text-muted); }
+
+  /* PROGRESS BAR */
+  .progress-container {
+    padding: 0 24px 0;
+    background: rgba(26,34,54,0.6);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .progress-bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #6366f1);
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: 18px;
+    padding: 30px 28px;
+    margin-bottom: 0;
+    animation: fadeSlide 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), #6366f1, #8b5cf6);
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-number {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .question-number::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-light);
+  }
+
+  .question-text {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 24px;
+    font-weight: 400;
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* OPTIONS */
+  .options-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    direction: ltr;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.93rem;
+    color: var(--text);
+    width: 100%;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    background: var(--card-hover);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+    transform: translateX(-3px);
+  }
+
+  .option-letter {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: rgba(59,130,246,0.15);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    transition: all 0.25s;
+  }
+
+  .option-btn.correct {
+    background: rgba(16,185,129,0.12);
+    border-color: var(--success);
+    box-shadow: 0 0 20px var(--success-glow);
+  }
+
+  .option-btn.correct .option-letter {
+    background: var(--success);
+    color: white;
+  }
+
+  .option-btn.wrong {
+    background: rgba(239,68,68,0.12);
+    border-color: var(--error);
+    box-shadow: 0 0 20px var(--error-glow);
+  }
+
+  .option-btn.wrong .option-letter {
+    background: var(--error);
+    color: white;
+  }
+
+  .option-btn:disabled { cursor: not-allowed; }
+
+  /* EXPLANATION */
+  .explanation-box {
+    margin-top: 18px;
+    padding: 16px 18px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 12px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #fca5a5;
+    direction: ltr;
+    text-align: left;
+    animation: fadeSlide 0.3s ease;
+  }
+
+  .explanation-box .exp-label {
+    font-weight: 700;
+    color: var(--error);
+    margin-bottom: 6px;
+    font-size: 0.82rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* NAVIGATION */
+  .nav-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #6366f1);
+    color: white;
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--accent-glow);
+  }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-muted);
+    border: 1px solid var(--border-light);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text);
+  }
+
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  /* RESULTS SCREEN */
+  .results-screen {
+    text-align: center;
+    padding: 50px 20px;
+    animation: fadeSlide 0.5s ease;
+  }
+
+  .results-emoji { font-size: 4rem; margin-bottom: 16px; }
+
+  .results-score {
+    font-size: 4.5rem;
+    font-weight: 900;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    background: linear-gradient(135deg, var(--accent), #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .results-label {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 500px;
+    margin: 0 auto 36px;
+  }
+
+  .results-stat {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 20px 10px;
+  }
+
+  .results-stat .rs-val {
+    font-size: 1.8rem;
+    font-weight: 800;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+  }
+
+  .rs-correct .rs-val { color: var(--success); }
+  .rs-wrong .rs-val { color: var(--error); }
+  .rs-time .rs-val { color: var(--accent); }
+
+  .results-stat .rs-lbl {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    z-index: 999;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .toast.toast-correct {
+    background: var(--success);
+    color: white;
+    box-shadow: 0 8px 30px var(--success-glow);
+  }
+
+  .toast.toast-wrong {
+    background: var(--error);
+    color: white;
+    box-shadow: 0 8px 30px var(--error-glow);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid var(--border-light);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    background: rgba(26,34,54,0.5);
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  footer a:hover { text-decoration: underline; }
+
+  /* START SCREEN */
+  .start-screen {
+    text-align: center;
+    padding: 60px 20px;
+    animation: fadeSlide 0.5s ease;
+  }
+
+  .start-badge {
+    display: inline-block;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 6px 20px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+  }
+
+  .start-screen h2 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .start-screen p {
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .start-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    max-width: 500px;
+    margin: 30px auto;
+  }
+
+  .start-info-item {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 18px 12px;
+    text-align: center;
+  }
+
+  .start-info-item .sii-icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .start-info-item .sii-val { font-size: 1.3rem; font-weight: 800; color: var(--accent); font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; }
+  .start-info-item .sii-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+  @media (max-width: 600px) {
+    .question-card { padding: 22px 16px; }
+    .results-grid { grid-template-columns: 1fr 1fr 1fr; }
+    header { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-title">
+    <h1>🧲 الفيزياء الشعاعية / الرنين المغناطيسي</h1>
+    <p>المحاضرة الثانية • من إنشاء الطالب محمد صبار</p>
+  </div>
+  <a class="header-link" href="https://t.me/mulimcq" target="_blank">
+    <a href="https://t.me/mulimcq" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:700;">محمد صبار</a> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</header>
+
+<!-- STATS BAR (hidden until quiz starts) -->
+<div class="stats-bar" id="statsBar" style="display:none;">
+  <div class="stat-item">
+    <span class="stat-icon">⏱️</span>
+    <span class="stat-label">الوقت:</span>
+    <span class="stat-value" id="timerDisplay">00:00</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">✅</span>
+    <span class="stat-label">صحيح:</span>
+    <span class="stat-value" id="correctCount">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">❌</span>
+    <span class="stat-label">خطأ:</span>
+    <span class="stat-value" id="wrongCount">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">🎯</span>
+    <span class="stat-label">النقاط:</span>
+    <span class="stat-value" id="scoreDisplay">0</span>
+  </div>
+</div>
+
+<!-- PROGRESS BAR (hidden until quiz starts) -->
+<div class="progress-container" id="progressContainer" style="display:none;">
+  <div class="progress-label">
+    <span id="progressText">السؤال 1 من 45</span>
+    <span id="progressPct">0%</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+  <!-- START SCREEN -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-badge">MRI Hardware • Lecture 2</div>
+    <h2>اختبار المحاضرة الثانية<br>The Hardware of MRI</h2>
+    <p>أسئلة اختيار من متعدد شاملة لمحتوى المحاضرة الثانية</p>
+    <p style="color:var(--accent);font-weight:700;">من إنشاء الطالب: محمد صبار</p>
+
+    <div class="start-info-grid">
+      <div class="start-info-item">
+        <div class="sii-icon">❓</div>
+        <div class="sii-val">45</div>
+        <div class="sii-lbl">سؤال</div>
+      </div>
+      <div class="start-info-item">
+        <div class="sii-icon">🏆</div>
+        <div class="sii-val">45</div>
+        <div class="sii-lbl">نقطة كاملة</div>
+      </div>
+      <div class="start-info-item">
+        <div class="sii-icon">📚</div>
+        <div class="sii-val">MCQ</div>
+        <div class="sii-lbl">نوع الأسئلة</div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startQuiz()" style="margin:0 auto;display:inline-flex;padding:16px 50px;font-size:1.1rem;">
+      🚀 ابدأ الاختبار
+    </button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quizScreen" style="display:none;">
+    <div class="question-card" id="questionCard">
+      <div class="question-number" id="questionNum">السؤال 1 من 45</div>
+      <div class="question-text" id="questionText"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="explanation-box" id="explanationBox" style="display:none;">
+        <div class="exp-label">📖 Explanation</div>
+        <div id="explanationText"></div>
+      </div>
+    </div>
+    <div class="nav-area">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+        ◀ السابق
+      </button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none;">
+        التالي ▶
+      </button>
+      <button class="btn btn-primary" id="finishBtn" onclick="showResults()" style="display:none;">
+        🏁 إنهاء الاختبار
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="resultsScreen" style="display:none;" class="results-screen">
+    <div class="results-emoji" id="resultsEmoji">🎉</div>
+    <div class="results-score" id="finalScore">0/45</div>
+    <div class="results-label" id="resultsLabel">نتيجتك النهائية</div>
+    <div class="results-grid">
+      <div class="results-stat rs-correct">
+        <div class="rs-val" id="rCorrect">0</div>
+        <div class="rs-lbl">إجابات صحيحة</div>
+      </div>
+      <div class="results-stat rs-wrong">
+        <div class="rs-val" id="rWrong">0</div>
+        <div class="rs-lbl">إجابات خاطئة</div>
+      </div>
+      <div class="results-stat rs-time">
+        <div class="rs-val" id="rTime">0:00</div>
+        <div class="rs-lbl">وقت الاختبار</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="restartQuiz()" style="margin:0 auto;display:inline-flex;padding:14px 40px;">
+      🔄 إعادة الاختبار
+    </button>
+  </div>
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  <br><span style="opacity:0.5;font-size:0.75rem;margin-top:6px;display:block;">جامعة الهادي • كلية التقنيات الصحية والطبية • قسم تقنيات الأشعة - المرحلة الثالثة</span>
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "What does MRI stand for?",
+    opts: ["Magnetic Resonance Imaging", "Magnetic Radiation Imaging", "Medical Radiology Imaging", "Molecular Resonance Imaging"],
+    ans: 0,
+    exp: "MRI stands for Magnetic Resonance Imaging, a medical imaging technique that uses magnetic fields."
+  },
+  {
+    q: "Which of the following is NOT a type of MRI scanner magnet?",
+    opts: ["Permanent magnet", "Resistive magnet", "Superconducting magnet", "Radioactive magnet"],
+    ans: 3,
+    exp: "MRI scanners use permanent magnets, resistive magnets, and superconducting magnets. Radioactive magnets do not exist in MRI systems."
+  },
+  {
+    q: "What is the unit of magnetic field strength used in MRI?",
+    opts: ["Gauss", "Tesla", "Hertz", "Watt"],
+    ans: 1,
+    exp: "The unit for magnetic field strength is Tesla (T). 1 Tesla = 10,000 Gauss."
+  },
+  {
+    q: "How many Gauss equal 1 Tesla?",
+    opts: ["100", "1000", "10000", "100000"],
+    ans: 2,
+    exp: "1 Tesla = 10,000 Gauss. This is a fundamental unit conversion in MRI physics."
+  },
+  {
+    q: "What symbol is used to represent the static magnetic field in MRI?",
+    opts: ["B1", "Bo", "Br", "Bm"],
+    ans: 1,
+    exp: "The static magnetic field in MRI systems is represented by the symbol Bo."
+  },
+  {
+    q: "Permanent magnets in MRI are usually limited to a maximum field strength of:",
+    opts: ["0.2 T", "0.4 T", "1.0 T", "1.5 T"],
+    ans: 1,
+    exp: "Due to weight considerations, permanent magnets are usually limited to maximum field strengths of 0.4 T."
+  },
+  {
+    q: "Permanent magnets originate from which type of materials?",
+    opts: ["Paramagnetic", "Diamagnetic", "Permanently ferromagnetic", "Superconducting"],
+    ans: 2,
+    exp: "Permanent magnets originate from permanently ferromagnetic materials, which do not lose their magnetic field over time."
+  },
+  {
+    q: "Which design system do permanent magnets usually have?",
+    opts: ["Bore design", "Closed design", "Open design", "Tunnel design"],
+    ans: 2,
+    exp: "Permanent magnets usually have an open design system, which provides ample open space and is more comfortable for patients."
+  },
+  {
+    q: "Which type of patient benefits most from the open design of permanent MRI magnets?",
+    opts: ["Children only", "Patients with claustrophobia or large body structures", "Patients with metallic implants", "Patients with heart conditions"],
+    ans: 1,
+    exp: "The open design accommodates extremely large patients and dramatically reduces anxiety for patients with claustrophobic tendencies."
+  },
+  {
+    q: "Which of the following is an ADVANTAGE of permanent magnets?",
+    opts: ["High field strength", "Low power consumption", "High cryogen costs", "Motion artifacts"],
+    ans: 1,
+    exp: "Permanent magnets have advantages including low power consumption, low operating cost, small fringe field, and no cryogen needed."
+  },
+  {
+    q: "Which of the following is a DISADVANTAGE of permanent magnets?",
+    opts: ["High power consumption", "Requires cryogen", "Very heavy", "High capital cost"],
+    ans: 2,
+    exp: "Permanent magnets are very heavy, which limits their field strength to less than 0.3 T. They are also limited in field strength."
+  },
+  {
+    q: "The two categories of electromagnets used in MRI scanners are:",
+    opts: ["Permanent and resistive", "Resistive and superconducting", "Superconducting and ferromagnetic", "Open and bore"],
+    ans: 1,
+    exp: "Electromagnets used in MRI scanners are divided into two categories: Resistive magnets and Superconducting magnets."
+  },
+  {
+    q: "Resistive magnets are made from loops of wire wrapped around a:",
+    opts: ["Sphere", "Cube", "Cylinder", "Cone"],
+    ans: 2,
+    exp: "Resistive magnets are made from loops of wire wrapped around a cylinder through which a large electric current is passed."
+  },
+  {
+    q: "Resistive magnets are typically limited to maximum field strengths of:",
+    opts: ["0.2 T", "0.4 T", "0.6 T", "1.5 T"],
+    ans: 2,
+    exp: "Resistive magnets are typically limited to maximum field strengths up to 0.6 Tesla."
+  },
+  {
+    q: "Resistive magnets produce a lot of heat due to:",
+    opts: ["High helium consumption", "Natural resistance of the wire", "Superconducting coils", "High magnetic field"],
+    ans: 1,
+    exp: "Because of the natural resistance of the wire, large current values cause significant heat production, requiring cooling of the magnet coils."
+  },
+  {
+    q: "The two general categories of resistive magnets are:",
+    opts: ["Open-core and bore-core", "Iron-core and air-core", "Copper-core and steel-core", "Permanent and electromagnet"],
+    ans: 1,
+    exp: "Resistive magnets come in two general categories: iron-core and air-core."
+  },
+  {
+    q: "Hitachi's Airis system is an example of which type of magnet at 0.3 Tesla?",
+    opts: ["Iron-core resistive", "Air-core resistive", "Permanent magnet", "Superconducting"],
+    ans: 1,
+    exp: "Hitachi's Airis 0.3 Tesla system is an air-core resistive magnet system."
+  },
+  {
+    q: "Which of the following is a DISADVANTAGE of resistive magnets?",
+    opts: ["Limited field strength (<0.2T)", "Low power consumption", "No cooling required", "Small size"],
+    ans: 0,
+    exp: "Resistive magnets have disadvantages including high power consumption, limited field strength (<0.2T), water cooling required, and large fringe field."
+  },
+  {
+    q: "Which is an ADVANTAGE of resistive magnets?",
+    opts: ["High field strength", "Low capital cost", "No cooling required", "High SNR"],
+    ans: 1,
+    exp: "Resistive magnets have advantages of low capital cost, light weight, and the ability to be shut off."
+  },
+  {
+    q: "Which type of magnet is most commonly used in modern MRI systems?",
+    opts: ["Permanent magnets", "Resistive magnets", "Superconducting magnets", "Ferromagnetic magnets"],
+    ans: 2,
+    exp: "Superconducting magnets are today's most commonly used magnets in MRI systems."
+  },
+  {
+    q: "Which materials are used to make coil windings for superconducting magnets?",
+    opts: ["Copper and aluminum", "Niobium-tin and niobium-titanium", "Iron and steel", "Gold and silver"],
+    ans: 1,
+    exp: "Superconductors such as niobium-tin and niobium-titanium are used to make the coil windings for superconducting magnets."
+  },
+  {
+    q: "What coolant is used in superconducting magnets to reduce electrical resistance?",
+    opts: ["Liquid nitrogen", "Liquid oxygen", "Liquid helium", "Liquid argon"],
+    ans: 2,
+    exp: "The wire in superconducting magnets is surrounded with liquid helium as a coolant to reduce the electric resistance of the wire."
+  },
+  {
+    q: "At what temperature does the electric wire in a superconducting magnet lose its resistance?",
+    opts: ["0 Kelvin", "4 Kelvin (-269°C)", "-100°C", "77 Kelvin"],
+    ans: 1,
+    exp: "At 4 Kelvin (-269°C), electric wire loses its resistance, enabling superconductivity."
+  },
+  {
+    q: "Superconducting magnets can achieve field strengths of up to:",
+    opts: ["0.6 T", "1.5 T", "3 T", "12 T"],
+    ans: 3,
+    exp: "Superconductivity allows for systems with very high field strengths up to 12 Tesla."
+  },
+  {
+    q: "The most commonly used superconducting magnets in clinical environments run at:",
+    opts: ["0.3 T", "0.6 T", "1.5 T", "3.0 T"],
+    ans: 2,
+    exp: "The superconducting magnets most used in clinical environments run at 1.5 Tesla."
+  },
+  {
+    q: "Most superconducting magnets are which design type?",
+    opts: ["Open design", "Bore type", "U-shaped", "Flat design"],
+    ans: 1,
+    exp: "Most superconducting magnets are bore type magnets."
+  },
+  {
+    q: "What are the vacuum vessels around a superconducting magnet's core used for?",
+    opts: ["Generating the magnetic field", "Acting as temperature shields", "Storing the coolant", "Amplifying the signal"],
+    ans: 1,
+    exp: "A number of vacuum vessels act as temperature shields to prevent the helium from boiling off too quickly."
+  },
+  {
+    q: "Which of the following is an ADVANTAGE of superconducting magnets?",
+    opts: ["Low capital cost", "No acoustic noise", "High magnetic field homogeneity", "Can be shut off easily"],
+    ans: 2,
+    exp: "High magnetic field homogeneity is one of the key advantages of superconducting magnets."
+  },
+  {
+    q: "Which of the following is a DISADVANTAGE of superconducting magnets?",
+    opts: ["Low field strength", "High cryogen costs", "Low SNR", "Limited applications"],
+    ans: 1,
+    exp: "Superconducting magnets have disadvantages including high capital costs, high cryogen costs, acoustic noise, motion artifacts, and technical complexity."
+  },
+  {
+    q: "In 1997, which company introduced the world's first open superconducting magnet?",
+    opts: ["Siemens", "GE", "Toshiba", "Philips"],
+    ans: 2,
+    exp: "In 1997, Toshiba introduced the world's first open superconducting magnet."
+  },
+  {
+    q: "Toshiba's OPART system operates at which field strength?",
+    opts: ["0.2 T", "0.35 T", "0.5 T", "1.0 T"],
+    ans: 1,
+    exp: "Toshiba's OPART system operates at 0.35 Tesla, combining an open design with superconducting magnet advantages."
+  },
+  {
+    q: "What is the current trend in MRI magnet design?",
+    opts: ["High field open design only", "Low field bore design only", "Low field open design versus high field bore design", "Permanent magnets only"],
+    ans: 2,
+    exp: "The current trend in magnet design is low field open design versus high field bore design."
+  },
+  {
+    q: "The choice of MRI magnet is mainly governed by:",
+    opts: ["Patient weight", "What you intend to do and the cost", "Room size", "Technician preference"],
+    ans: 1,
+    exp: "The choice of magnet is mainly governed by what you intend to do and the cost."
+  },
+  {
+    q: "Which magnet type offers high quality image, better and faster scanning?",
+    opts: ["Low field magnets", "Permanent magnets", "High field magnets", "Resistive magnets"],
+    ans: 2,
+    exp: "High field magnets offer better quality images, faster scanning, and a wider range of applications, though at higher cost."
+  },
+  {
+    q: "Permanent magnets have NO quench possibility. What does this mean?",
+    opts: ["They cannot be turned off", "They cannot suddenly lose their magnetic field", "They do not generate heat", "They do not require cooling"],
+    ans: 1,
+    exp: "No quench possibility means the permanent magnet cannot suddenly and catastrophically lose its magnetic field, unlike superconducting magnets."
+  },
+  {
+    q: "Which property of superconducting magnets helps improve image quality?",
+    opts: ["High weight", "High acoustic noise", "High magnetic field homogeneity", "Low SNR"],
+    ans: 2,
+    exp: "High magnetic field homogeneity in superconducting magnets contributes to better image quality."
+  },
+  {
+    q: "Which type of magnet requires significant cooling of the magnet coils?",
+    opts: ["Permanent magnets", "Resistive magnets", "Both permanent and superconducting", "None of the above"],
+    ans: 1,
+    exp: "Resistive magnets produce a lot of heat due to wire resistance, which requires significant cooling of the magnet coils."
+  },
+  {
+    q: "Superconducting magnets use which special property to maintain the magnetic field once energized?",
+    opts: ["Permanent magnetism", "Superconductivity - zero electrical resistance", "Electromagnetic induction", "Radiofrequency excitation"],
+    ans: 1,
+    exp: "Once energized, superconducting magnets exploit superconductivity (zero electrical resistance) to maintain the magnetic field without power loss."
+  },
+  {
+    q: "Which magnet type is described as having 'small fringe field' as an advantage?",
+    opts: ["Resistive magnet", "Superconducting magnet", "Permanent magnet", "Iron-core magnet"],
+    ans: 2,
+    exp: "Small fringe field is listed as an advantage of permanent magnets, along with low power consumption and no cryogen."
+  },
+  {
+    q: "Which MRI magnet type has 'large fringe field' as a disadvantage?",
+    opts: ["Permanent magnet", "Resistive magnet", "Superconducting magnet", "Open design magnet"],
+    ans: 1,
+    exp: "Resistive magnets have large fringe field listed as a disadvantage, along with high power consumption and limited field strength."
+  },
+  {
+    q: "What happens to the magnetic field of a superconducting MRI magnet once energized?",
+    opts: ["It gradually decreases", "It fluctuates with temperature", "It will not lose its magnetic field", "It requires constant power"],
+    ans: 2,
+    exp: "Once a superconducting system is energized, it won't lose its magnetic field, making it highly stable."
+  },
+  {
+    q: "Which open MRI system is shown in Figure 1 of the lecture?",
+    opts: ["Hitachi AIRIS", "Toshiba OPART", "Open MRI system 'OPER'", "Siemens OPEN"],
+    ans: 2,
+    exp: "Figure 1 in the lecture shows the Open MRI system called 'OPER'."
+  },
+  {
+    q: "Resistive magnets utilize the principles of which phenomenon to generate magnetic field?",
+    opts: ["Nuclear fission", "Electromagnetism", "Superconductivity", "Permanent magnetism"],
+    ans: 1,
+    exp: "Resistive magnets are very large and utilize the principles of electromagnetism to generate the magnetic field."
+  },
+  {
+    q: "The Toshiba OPART system uses a special metal alloy that conducts the low temperature needed for superconductivity. What is the main advantage of this?",
+    opts: ["Higher field strength", "The system does not need any helium refills", "Better image quality", "Smaller magnet size"],
+    ans: 1,
+    exp: "The advantage of Toshiba's special alloy is that the system does not need any helium refills, dramatically reducing running costs."
+  },
+  {
+    q: "Combining low field open design with high field bore design in MRI is currently described as:",
+    opts: ["Already achieved in most hospitals", "Desirable but depends on manufacturing costs and technical limitations", "Impossible due to physics", "Standard practice since 2000"],
+    ans: 1,
+    exp: "It would be desirable to combine the two designs, but only time will tell whether this can be done within reasonable manufacturing costs and technical/structural limitations."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let correct = 0;
+let wrong = 0;
+let answered = [];
+let timer;
+let seconds = 0;
+let quizStarted = false;
+
+function startQuiz() {
+  answered = new Array(questions.length).fill(null);
+  currentQ = 0;
+  score = 0;
+  correct = 0;
+  wrong = 0;
+  seconds = 0;
+
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('statsBar').style.display = 'flex';
+  document.getElementById('progressContainer').style.display = 'block';
+
+  timer = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    document.getElementById('timerDisplay').textContent = m + ':' + s;
+  }, 1000);
+
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  const total = questions.length;
+  const pct = Math.round(((currentQ) / total) * 100);
+
+  document.getElementById('questionNum').textContent = `السؤال ${currentQ + 1} من ${total}`;
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('progressText').textContent = `السؤال ${currentQ + 1} من ${total}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+
+  const letters = ['A', 'B', 'C', 'D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => selectAnswer(i);
+
+    if (answered[currentQ] !== null) {
+      btn.disabled = true;
+      if (i === q.ans) btn.classList.add('correct');
+      if (i === answered[currentQ] && answered[currentQ] !== q.ans) btn.classList.add('wrong');
+    }
+
+    grid.appendChild(btn);
+  });
+
+  // Explanation
+  const expBox = document.getElementById('explanationBox');
+  if (answered[currentQ] !== null && answered[currentQ] !== q.ans) {
+    expBox.style.display = 'block';
+    document.getElementById('explanationText').textContent = q.exp;
+  } else {
+    expBox.style.display = 'none';
+  }
+
+  // Prev button
+  document.getElementById('prevBtn').disabled = currentQ === 0;
+
+  // Next / Finish
+  if (answered[currentQ] !== null) {
+    if (currentQ < questions.length - 1) {
+      document.getElementById('nextBtn').style.display = 'flex';
+      document.getElementById('finishBtn').style.display = 'none';
+    } else {
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('finishBtn').style.display = 'flex';
+    }
+  } else {
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('finishBtn').style.display = 'none';
+  }
+}
+
+function selectAnswer(idx) {
+  if (answered[currentQ] !== null) return;
+  answered[currentQ] = idx;
+
+  const q = questions[currentQ];
+  const isCorrect = idx === q.ans;
+
+  if (isCorrect) {
+    correct++;
+    score++;
+    showToast('✅ إجابة صحيحة!', 'correct');
+  } else {
+    wrong++;
+    showToast('❌ إجابة خاطئة!', 'wrong');
+  }
+
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('wrongCount').textContent = wrong;
+  document.getElementById('scoreDisplay').textContent = score;
+
+  renderQuestion();
+}
+
+function nextQuestion() {
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    renderQuestion();
+    document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  clearInterval(timer);
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('statsBar').style.display = 'none';
+  document.getElementById('progressContainer').style.display = 'none';
+
+  const pct = Math.round((score / questions.length) * 100);
+  let emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+
+  document.getElementById('resultsEmoji').textContent = emoji;
+  document.getElementById('finalScore').textContent = `${score}/${questions.length}`;
+  document.getElementById('resultsLabel').textContent = `نتيجتك النهائية • ${pct}%`;
+  document.getElementById('rCorrect').textContent = correct;
+  document.getElementById('rWrong').textContent = wrong;
+  const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const s = String(seconds % 60).padStart(2, '0');
+  document.getElementById('rTime').textContent = m + ':' + s;
+
+  document.getElementById('resultsScreen').style.display = 'block';
+}
+
+function restartQuiz() {
+  document.getElementById('resultsScreen').style.display = 'none';
+  startQuiz();
+}
+
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = `toast toast-${type} show`;
+  setTimeout(() => { toast.className = 'toast'; }, 2000);
+}
+</script>
+</body>
+</html>

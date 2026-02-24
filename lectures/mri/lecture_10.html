@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الفيزياء الشعاعية / الرنين المغناطيسي - المحاضرة العاشرة</title>
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #141929;
+    --accent: #3b82f6;
+    --accent2: #6366f1;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3a52;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 20%, #1a2a4a33 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 80%, #3b82f611 0%, transparent 60%);
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1526 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .header-logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .header-logo .icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .header-title { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .header-sub { font-size: 12px; color: var(--text-muted); }
+  .header-link a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+    background: #3b82f611;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #3b82f633;
+    transition: all 0.2s;
+  }
+  .header-link a:hover { background: #3b82f622; }
+  .header-link span { font-size: 11px; color: var(--text-muted); display: block; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex; gap: 16px; align-items: center;
+    padding: 14px 24px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card);
+    padding: 8px 16px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    border: 1px solid var(--border);
+  }
+  .stat-icon { font-size: 16px; }
+  .stat-val { color: var(--accent); font-size: 15px; }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 12px 24px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  .progress-bar-bg {
+    height: 6px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* MAIN */
+  main { max-width: 820px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  /* INTRO CARD */
+  .intro-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .intro-card h1 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .intro-card .sub { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+  .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+  .info-box {
+    background: var(--card2);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--border);
+  }
+  .info-box .num { font-size: 26px; font-weight: 800; color: var(--accent); }
+  .info-box .lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .btn-start {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    padding: 14px 48px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px #3b82f644;
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 30px #3b82f655; }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    display: none;
+    animation: fadeIn 0.35s ease;
+  }
+  .q-card.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .q-number {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .q-text {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    direction: ltr;
+    text-align: left;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: left;
+    direction: ltr;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 15px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #3b82f611; }
+  .option-btn .opt-label {
+    width: 28px; height: 28px; min-width: 28px;
+    background: var(--border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+    transition: all 0.2s;
+  }
+  .option-btn.correct { border-color: var(--success) !important; background: #10b98115 !important; }
+  .option-btn.correct .opt-label { background: var(--success); color: #fff; }
+  .option-btn.wrong { border-color: var(--danger) !important; background: #ef444415 !important; }
+  .option-btn.wrong .opt-label { background: var(--danger); color: #fff; }
+  .option-btn:disabled { cursor: not-allowed; }
+
+  .explanation {
+    margin-top: 20px;
+    background: #1e293b;
+    border-right: 4px solid var(--warning);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 14px;
+    color: #cbd5e1;
+    direction: ltr;
+    text-align: left;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--warning); }
+
+  .q-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 28px;
+  }
+  .btn-nav {
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    padding: 10px 24px;
+    border-radius: 10px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-nav.primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; color: #fff;
+    box-shadow: 0 4px 15px #3b82f433;
+  }
+  .btn-nav.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px #3b82f444; }
+  .btn-nav:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  /* RESULT CARD */
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 36px;
+    text-align: center;
+    display: none;
+  }
+  .result-card.show { display: block; animation: fadeIn 0.5s ease; }
+  .result-score-ring {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) 0deg, transparent 0deg);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+  .result-score-ring::before {
+    content: '';
+    position: absolute;
+    width: 110px; height: 110px;
+    background: var(--card);
+    border-radius: 50%;
+  }
+  .result-score-text { position: relative; z-index: 1; }
+  .result-score-text .big { font-size: 32px; font-weight: 800; color: var(--accent); }
+  .result-score-text .sm { font-size: 13px; color: var(--text-muted); }
+  .result-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .result-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
+  .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+  .result-box {
+    background: var(--card2);
+    border-radius: 12px; padding: 18px;
+    border: 1px solid var(--border);
+  }
+  .result-box .rnum { font-size: 28px; font-weight: 800; }
+  .result-box .rlbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .result-box.green .rnum { color: var(--success); }
+  .result-box.red .rnum { color: var(--danger); }
+  .result-box.blue .rnum { color: var(--accent); }
+  .btn-restart {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; border: none;
+    padding: 14px 40px; border-radius: 12px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
+    padding: 12px 28px; border-radius: 50px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif; font-size: 15px; font-weight: 700;
+    z-index: 9999; transition: all 0.3s ease;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 30px #0005;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { background: var(--success); color: #fff; }
+  .toast.error { background: var(--danger); color: #fff; }
+
+  /* FOOTER */
+  footer {
+    background: var(--card2);
+    border-top: 1px solid var(--border);
+    padding: 20px 24px;
+    text-align: center;
+    margin-top: 40px;
+  }
+  footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
+  footer .footer-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 600px) {
+    .info-grid, .result-grid { grid-template-columns: 1fr 1fr; }
+    header { flex-direction: column; gap: 12px; }
+    .stats-bar { gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-logo">
+    <div class="icon">🧲</div>
+    <div>
+      <div class="header-title">الفيزياء الشعاعية / الرنين المغناطيسي</div>
+      <div class="header-sub">المحاضرة العاشرة | قسم تقنيات الأشعة | المرحلة الثالثة</div>
+    </div>
+  </div>
+  <div class="header-link">
+    <a href="https://t.me/mulimcq" target="_blank">
+      <div>
+        <strong>محمد صبار</strong>
+        <span>اضغط هنا للحصول على اختبارات باقي المحاضرات</span>
+      </div>
+      <span>📲</span>
+    </a>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="statsBar" style="display:none">
+  <div class="stat-item">⏱ <span>الوقت:</span> <span class="stat-val" id="timerDisplay">00:00</span></div>
+  <div class="stat-item">✅ <span>صحيح:</span> <span class="stat-val" id="correctCount">0</span></div>
+  <div class="stat-item">❌ <span>خطأ:</span> <span class="stat-val" id="wrongCount">0</span></div>
+  <div class="stat-item">🏆 <span>النقاط:</span> <span class="stat-val" id="scoreDisplay">0</span></div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap" id="progressWrap" style="display:none">
+  <div class="progress-info">
+    <span id="progressText">السؤال 0 من 45</span>
+    <span id="progressPct">0%</span>
+  </div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <!-- INTRO -->
+  <div class="intro-card" id="introCard">
+    <div style="font-size:50px;margin-bottom:16px;">🧲</div>
+    <h1>اختبار المحاضرة العاشرة</h1>
+    <p style="font-family:'Roboto';direction:ltr;font-size:14px;color:var(--text-muted);margin:4px 0 4px;">Frequency Encoding Gradient & Phase Encoding Gradient</p>
+    <p class="sub">من إنشاء الطالب: <strong style="color:var(--accent)">محمد صبار</strong></p>
+    <div class="info-grid">
+      <div class="info-box"><div class="num">45</div><div class="lbl">سؤال</div></div>
+      <div class="info-box"><div class="num">10</div><div class="lbl">نقطة لكل إجابة صحيحة</div></div>
+      <div class="info-box"><div class="num">MCQ</div><div class="lbl">اختيار من متعدد</div></div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">🚀 ابدأ الاختبار</button>
+  </div>
+
+  <!-- QUESTIONS CONTAINER -->
+  <div id="quizContainer"></div>
+
+  <!-- RESULT -->
+  <div class="result-card" id="resultCard">
+    <div id="resultEmoji" style="font-size:60px;margin-bottom:16px;">🏆</div>
+    <div class="result-score-ring" id="scoreRing">
+      <div class="result-score-text">
+        <div class="big" id="finalPct">0%</div>
+        <div class="sm">النتيجة</div>
+      </div>
+    </div>
+    <h2 class="result-title" id="resultTitle">أحسنت!</h2>
+    <p class="result-sub" id="resultSub"></p>
+    <div class="result-grid">
+      <div class="result-box green"><div class="rnum" id="rCorrect">0</div><div class="rlbl">✅ إجابات صحيحة</div></div>
+      <div class="result-box red"><div class="rnum" id="rWrong">0</div><div class="rlbl">❌ إجابات خاطئة</div></div>
+      <div class="result-box blue"><div class="rnum" id="rScore">0</div><div class="rlbl">🏆 إجمالي النقاط</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+    <div style="margin-top:20px;font-size:13px;color:var(--text-muted)">
+      <a href="https://t.me/mulimcq" target="_blank" style="color:var(--accent);font-weight:700;">محمد صبار</a> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    إنشاء: <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+  </div>
+  <div class="footer-sub">جامعة الهادي | كلية التقنيات الصحية والطبية | قسم تقنيات الأشعة | المرحلة الثالثة</div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const questions = [
+  {
+    q: "What is the primary purpose of the Frequency Encoding Gradient (Gx) in MRI?",
+    opts: ["To select the imaging slice", "To encode spatial information in the left-right direction", "To excite protons with RF pulses", "To measure T1 relaxation"],
+    ans: 1,
+    exp: "The Gx gradient creates an additional magnetic field in the left-right direction, causing protons to spin at different frequencies depending on their position, allowing left-right spatial encoding."
+  },
+  {
+    q: "After slice selection using the Gz gradient, protons within the selected slice have:",
+    opts: ["Different frequencies and different phases", "The same frequency and the same phase", "Different frequencies and the same phase", "The same frequency and different phases"],
+    ans: 1,
+    exp: "Immediately after slice selection, all protons within the slice share the same Larmor frequency and the same phase — further encoding is needed to distinguish their positions."
+  },
+  {
+    q: "The frequency encoding gradient is described as which type of field?",
+    opts: ["Pulsed gradient field", "Static gradient field", "Radiofrequency field", "Oscillating magnetic field"],
+    ans: 1,
+    exp: "The frequency encoding gradient is a static gradient field, similar in nature to the slice selection magnetic field gradient."
+  },
+  {
+    q: "According to the Larmor equation, what does the frequency encoding gradient cause?",
+    opts: ["Equal Larmor frequencies throughout the slice", "A range of Larmor frequencies in the direction it is applied", "Phase differences only, not frequency differences", "T2 decay of the MRI signal"],
+    ans: 1,
+    exp: "The frequency encoding gradient causes a range of Larmor frequencies to exist along the direction it is applied, as dictated by the Larmor equation (ω = γB)."
+  },
+  {
+    q: "In the left-right frequency encoding scheme, which protons spin at a lower frequency?",
+    opts: ["Protons on the right-hand side", "Protons in the center", "Protons on the left-hand side", "All protons spin at the same frequency"],
+    ans: 2,
+    exp: "With the Gx gradient, protons on the left-hand side experience a weaker magnetic field and therefore spin at a lower Larmor frequency than those on the right."
+  },
+  {
+    q: "Which mathematical tool is used to separate the different frequencies in the mixed MRI signal?",
+    opts: ["Laplace transform", "Fourier transform", "Wavelet transform", "Z-transform"],
+    ans: 1,
+    exp: "The Fourier transform is used to decompose the mixed MRI signal (which contains contributions from all positions) into its individual frequency components, enabling spatial localization."
+  },
+  {
+    q: "When must the frequency encoding gradient be applied relative to MRI signal recording?",
+    opts: ["Before the RF pulse", "After signal recording is complete", "At the same time as measuring the MRI signal", "During slice selection"],
+    ans: 2,
+    exp: "The frequency encoding gradient must be applied simultaneously during the recording of the MRI signal; otherwise all columns produce the same frequency and cannot be separated."
+  },
+  {
+    q: "If the frequency encoding gradient is NOT applied during signal measurement, what happens?",
+    opts: ["Signals from different columns will have different frequencies", "Signals from different columns will all have the same frequency", "The image will be clearer", "Phase encoding becomes unnecessary"],
+    ans: 1,
+    exp: "Without the frequency encoding gradient during readout, all columns within the slice emit at the same Larmor frequency, making it impossible to use Fourier transform for spatial separation."
+  },
+  {
+    q: "What does the frequency encoding gradient cause with respect to net magnetizations within the slice?",
+    opts: ["It makes all magnetizations precess at the same rate", "It causes precession to be position-dependent in the gradient direction", "It stops magnetization precession entirely", "It rotates magnetization into the z-axis"],
+    ans: 1,
+    exp: "The frequency encoding gradient causes the precession frequency of net magnetizations to depend on their position along the gradient direction — this is the basis of frequency encoding."
+  },
+  {
+    q: "In an MRI pulse sequence diagram, the frequency encoding gradient (Gf) is applied:",
+    opts: ["Simultaneously with the RF pulse", "After the echo is fully recorded", "During echo/signal readout", "Before slice selection gradient"],
+    ans: 2,
+    exp: "As shown in Figure 37, Gf is switched on during the echo (signal readout) phase of the pulse sequence, concurrent with data acquisition."
+  },
+  {
+    q: "The Phase Encoding Gradient is denoted by which symbol?",
+    opts: ["Gz", "Gx", "Gf", "Gph"],
+    ans: 3,
+    exp: "The phase encoding gradient is denoted Gph (also written as Gy when applied in the y-direction)."
+  },
+  {
+    q: "Along which direction is the Phase Encoding Gradient typically applied?",
+    opts: ["x-direction only", "z-direction only", "y-direction (though z or x are also possible)", "It can only be applied in the z-direction"],
+    ans: 2,
+    exp: "The phase encoding gradient is typically applied along the y-direction (Anterior-Posterior), although it can be applied along z or x depending on the imaging plane."
+  },
+  {
+    q: "When is the Phase Encoding Gradient applied relative to the other gradients?",
+    opts: ["During signal readout, simultaneously with frequency encoding", "After frequency encoding", "After slice selection and excitation, but before frequency encoding", "Before the RF pulse"],
+    ans: 2,
+    exp: "The phase encoding gradient is applied after slice selection and RF excitation, but before the frequency encoding gradient — it is applied orthogonally to the other two gradients."
+  },
+  {
+    q: "The spatial resolution in MRI phase encoding direction is directly related to:",
+    opts: ["The strength of the main magnetic field B0", "The number of phase encoding steps (gradients)", "The echo time (TE)", "The repetition time (TR)"],
+    ans: 1,
+    exp: "Spatial resolution in the phase encoding direction is directly related to the number of phase encoding steps used — more steps yield higher resolution."
+  },
+  {
+    q: "How is the phase encoding gradient applied across multiple repetitions?",
+    opts: ["Always at the same strength", "Randomly varying strengths", "Each time increasing by an equidistant amount", "Decreasing strength each time"],
+    ans: 2,
+    exp: "The phase encoding gradient must be applied multiple times, with the gradient strength incrementing by an equidistant amount each time to sample k-space uniformly."
+  },
+  {
+    q: "What effect does switching on the phase encoding gradient have on magnetization in outer voxels compared to central voxels?",
+    opts: ["Outer voxels precess at the same rate as central voxels", "Outer voxels precess either faster or slower relative to central voxels", "Only central voxels are affected", "Outer voxels stop precessing"],
+    ans: 1,
+    exp: "When the phase encoding gradient is briefly switched on, voxels away from the center (outer voxels) precess faster or slower than central voxels, accumulating a phase difference."
+  },
+  {
+    q: "What does 'linear phase encoding' refer to?",
+    opts: ["Encoding from the center outward (0, 1, -1, 2, -2...)", "Going through phase encoding steps from bottom to top or top to bottom", "Encoding only the central k-space lines", "Random ordering of phase encoding steps"],
+    ans: 1,
+    exp: "Linear phase encoding means acquiring phase encoding steps sequentially from one extreme to the other (top to bottom or bottom to top of the phase encoding table)."
+  },
+  {
+    q: "What does 'low-high phase encoding' refer to?",
+    opts: ["Encoding from maximum to minimum gradient", "Going from the middle and outward: 0, 1, -1, 2, -2...", "Encoding only low-frequency k-space data", "Random encoding order"],
+    ans: 1,
+    exp: "Low-high phase encoding starts from the center (zero gradient) and moves outward in both directions: 0, 1, -1, 2, -2, etc. The first step applies no gradient at all."
+  },
+  {
+    q: "In the example given, the phase encoding table consists of how many steps?",
+    opts: ["16 steps", "64 steps", "32 steps", "128 steps"],
+    ans: 2,
+    exp: "The example in Figure 38 shows a phase encoding table with 32 steps, each lasting 0.250 ms with an increment of 0.734085 mT/m."
+  },
+  {
+    q: "What is the increment between phase encoding steps in the given example?",
+    opts: ["1.0 mT/m", "0.734085 mT/m", "0.250 mT/m", "15 mT/m"],
+    ans: 1,
+    exp: "The phase encoding increment in the example is 0.734085 mT/m (milliTesla per meter), with each step lasting 0.250 ms."
+  },
+  {
+    q: "Each voxel in MRI has a unique combination of:",
+    opts: ["T1 and T2 relaxation times", "Frequency and phase", "Slice thickness and bandwidth", "RF pulse flip angle and TR"],
+    ans: 1,
+    exp: "After both frequency and phase encoding, each voxel has a unique combination of frequency (from frequency encoding) and phase (from phase encoding), allowing precise spatial localization."
+  },
+  {
+    q: "What determines the signal amplitude (strength) from each voxel?",
+    opts: ["The voxel's position in the scanner bore", "The number of protons (spin density) in each voxel", "The applied gradient strength", "The echo time only"],
+    ans: 1,
+    exp: "The amplitude (brightness) of the signal from each voxel is determined by the number of protons (proton density) it contains, along with T1 and T2 weighting."
+  },
+  {
+    q: "The '2DFT' mentioned in the lecture stands for:",
+    opts: ["Two-Dimensional Field Transform", "Two-Dimensional Fourier Transform", "Two-Direction Frequency Transform", "Two-Dimensional Fast Transform"],
+    ans: 1,
+    exp: "2DFT stands for Two-Dimensional Fourier Transform — the mathematical process used by the MRI computer to convert k-space data into a spatial image."
+  },
+  {
+    q: "Approximately how long does the computer take to analyze the MRI data and create an image using 2DFT?",
+    opts: ["10 seconds", "5 minutes", "About 0.25 seconds", "Several hours"],
+    ans: 2,
+    exp: "According to the lecture, the computer can analyze the massive amount of MRI data and create an image in approximately 0.25 seconds using the 2DFT."
+  },
+  {
+    q: "The readout gradient (GRO) in frequency encoding produces:",
+    opts: ["A uniform magnetic field", "An additional linearly varying magnetic field", "A pulsed RF field", "A static B0 field"],
+    ans: 1,
+    exp: "GRO produces an additional, linearly varying magnetic field; due to proportionality between field and frequency, the precession frequency also varies linearly along the readout direction."
+  },
+  {
+    q: "In frequency encoding, each detected frequency is related to:",
+    opts: ["A specific T1 relaxation value", "A specific position along the readout axis", "The total number of protons in the slice", "The flip angle of the RF pulse"],
+    ans: 1,
+    exp: "Each frequency component in the received signal corresponds to a specific spatial position along the readout (frequency encoding) axis."
+  },
+  {
+    q: "The intensity of MRI radiation at a given frequency is proportional to:",
+    opts: ["The gradient field strength at that position", "The number of spins emitting at that position", "The distance from the magnet isocenter", "The echo time"],
+    ans: 1,
+    exp: "The intensity of the MRI signal at a particular frequency is proportional to the number of spins (protons) that are emitting at the corresponding spatial position."
+  },
+  {
+    q: "The phase encoding gradient is applied orthogonally to:",
+    opts: ["Only the slice selection gradient", "Only the frequency encoding gradient", "Both slice selection and frequency encoding gradients", "The main B0 field only"],
+    ans: 2,
+    exp: "The phase encoding gradient is applied orthogonally to both the slice selection gradient (Gz) and the frequency encoding gradient (Gx/Gf) — all three gradients are mutually perpendicular."
+  },
+  {
+    q: "What is the direction of the additional gradient magnetic field created during phase encoding (Gy)?",
+    opts: ["Left-right direction", "Superior-inferior direction", "Anterior-Posterior direction", "Along the B0 field"],
+    ans: 2,
+    exp: "During phase encoding, the Gy gradient creates an additional magnetic field in the Anterior-Posterior direction."
+  },
+  {
+    q: "After the phase encoding gradient is switched off, what happens to the phase difference it created?",
+    opts: ["It disappears immediately", "It remains preserved throughout subsequent steps", "It reverses direction", "It converts to a frequency difference"],
+    ans: 1,
+    exp: "A crucial point: the phase difference created by the phase encoding gradient remains (is preserved) even after the gradient is switched off. This is why phase encoding works."
+  },
+  {
+    q: "What is the relationship between gradient switching time and the type of spatial encoding?",
+    opts: ["Gradients switched before data acquisition → frequency encoding; during → phase encoding", "Gradients switched before data acquisition → phase encoding; during → frequency encoding", "Both gradients are always switched simultaneously", "Timing does not differentiate the two encodings"],
+    ans: 1,
+    exp: "Phase encoding: gradient applied briefly BEFORE data acquisition. Frequency encoding: gradient (GRO) switched ON DURING data acquisition. This timing difference defines each encoding type."
+  },
+  {
+    q: "How many total gradient fields are used in standard MRI spatial encoding?",
+    opts: ["One", "Two", "Three", "Four"],
+    ans: 2,
+    exp: "Three gradients are used: Gz (slice selection), Gph/Gy (phase encoding), and Gf/Gx (frequency encoding) — each encoding a different spatial dimension."
+  },
+  {
+    q: "The signal received by the MRI coil from a slice contains:",
+    opts: ["A single pure frequency from one location", "A complex mix of frequencies, phases, and amplitudes from different voxels", "Only phase information with no frequency variation", "A simple sine wave"],
+    ans: 1,
+    exp: "The received signal is a complex mixture of frequencies, phases, and amplitudes, each contribution coming from a different voxel location within the imaged volume."
+  },
+  {
+    q: "Voxels at the image edges along the phase encoding direction are characterized by:",
+    opts: ["Lower 'frequency' of magnetization vector rotation", "Higher 'frequency' of magnetization vector rotation", "No change in magnetization rotation rate", "The same rotation rate as central voxels"],
+    ans: 1,
+    exp: "Edge voxels (far from center along phase encoding direction) have experienced stronger phase encoding gradients, giving their magnetization vectors a higher apparent 'frequency' of rotation across encoding steps."
+  },
+  {
+    q: "When plotting the x- or y-component of the MRI signal as a function of phase encoding step number n, the signal varies:",
+    opts: ["Linearly", "Exponentially", "Sinusoidally", "Randomly"],
+    ans: 2,
+    exp: "The signal component varies sinusoidally as a function of the phase encoding step number — fast oscillation at image edges and slow oscillation at the center."
+  },
+  {
+    q: "The phase encoding gradient allows encoding of spatial location along a second dimension by means of:",
+    opts: ["Different spin frequencies", "Different spin phases", "Different T1 relaxation rates", "Different proton densities"],
+    ans: 1,
+    exp: "The phase encoding gradient encodes spatial location in a second dimension by imparting different phase shifts (different spin phases) to protons at different positions."
+  },
+  {
+    q: "In the context of MRI, a 'voxel' refers to:",
+    opts: ["A pixel in the final 2D image", "A small three-dimensional volume element in the imaging slice", "The entire imaging field of view", "A single proton in the tissue"],
+    ans: 1,
+    exp: "A voxel (volume element) is a small 3D volume within the imaging slice. Each voxel's position is uniquely defined by its frequency and phase after the encoding gradients are applied."
+  },
+  {
+    q: "The phase encoding direction can be chosen or exchanged with frequency encoding direction in order to:",
+    opts: ["Improve T1 contrast", "Control wrap-around (aliasing) artifacts", "Increase the number of slices", "Reduce scan time only"],
+    ans: 1,
+    exp: "Exchanging frequency and phase encoding directions is a technique used to control wrap-around (aliasing) artifacts, particularly useful when acquiring oblique MR images."
+  },
+  {
+    q: "In the MRI sequence diagram (Figure 37), which signal line shows the echo?",
+    opts: ["RF line", "Gs line", "Gf line", "Echo line"],
+    ans: 3,
+    exp: "In the pulse sequence diagram, the 'Echo' line shows the oscillating MRI signal (gradient echo) that is recorded while Gf is applied."
+  },
+  {
+    q: "What happens to the Gy phase encoding gradient after it is briefly switched on?",
+    opts: ["It stays on throughout signal readout", "It is switched off before signal readout begins", "It gradually increases during readout", "It is replaced by Gz"],
+    ans: 1,
+    exp: "The Gy phase encoding gradient is switched on very briefly and then switched off before signal readout. The phase imparted to the spins is 'frozen' and remains during readout."
+  },
+  {
+    q: "Which of the following correctly describes the order of gradient application in a standard MRI spin-echo sequence?",
+    opts: ["Frequency encoding → Phase encoding → Slice selection", "Slice selection → Phase encoding → Frequency encoding", "Phase encoding → Slice selection → Frequency encoding", "All three applied simultaneously"],
+    ans: 1,
+    exp: "The standard order is: (1) Slice selection (Gz) with RF pulse, (2) Phase encoding (Gy) briefly applied, (3) Frequency encoding (Gx/Gf) applied during signal readout."
+  },
+  {
+    q: "After all three encodings are complete, spatial information has been encoded in how many dimensions?",
+    opts: ["One dimension only", "Two dimensions only", "Three dimensions", "Four dimensions"],
+    ans: 2,
+    exp: "All three dimensions are encoded: slice position (z), phase direction (y), and frequency/readout direction (x) — giving full 3D spatial information."
+  },
+  {
+    q: "The exact spatial reconstruction of each signal component is possible because:",
+    opts: ["Each component has experienced a different RF flip angle", "Each component has experienced a different phase encoding gradient pulse", "All components have identical phase shifts", "The main field B0 is inhomogeneous"],
+    ans: 1,
+    exp: "Because each signal component has experienced a unique phase encoding gradient pulse (different strength), Fourier transformation can precisely locate its spatial origin."
+  },
+  {
+    q: "What is the bandwidth in the context of frequency encoding gradients?",
+    opts: ["The flip angle of the RF pulse", "The range of frequencies produced by the frequency encoding gradient across the field of view", "The thickness of the selected slice", "The repetition time between RF pulses"],
+    ans: 1,
+    exp: "Bandwidth refers to the range of Larmor frequencies created by the frequency encoding gradient across the field of view — as shown in Figure 35, it spans the frequencies from left to right."
+  },
+  {
+    q: "Which of the following statements about phase and frequency encoding is CORRECT?",
+    opts: [
+      "Phase encoding is applied during readout; frequency encoding is applied before readout",
+      "Both phase and frequency encoding are applied during readout simultaneously",
+      "Phase encoding is applied before readout; frequency encoding is applied during readout",
+      "Phase encoding uses the Gx gradient; frequency encoding uses the Gy gradient"
+    ],
+    ans: 2,
+    exp: "Phase encoding (Gy) is applied briefly BEFORE signal readout, while frequency encoding (Gx/Gf) is applied DURING signal readout. This timing distinction is fundamental to MRI spatial encoding."
+  },
+  {
+    q: "What is the ultimate role of the Two-Dimensional Fourier Transform (2DFT) in MRI image reconstruction?",
+    opts: [
+      "It applies the gradient fields to the patient",
+      "It calculates the exact location and intensity (brightness) of each voxel",
+      "It generates the radiofrequency pulses",
+      "It measures the T2 relaxation time"
+    ],
+    ans: 1,
+    exp: "The 2DFT enables the computer to calculate the exact spatial location and signal intensity (brightness) of every voxel in the image, transforming raw k-space data into a meaningful image."
+  }
+];
+
+let current = 0;
+let score = 0;
+let correct = 0;
+let wrong = 0;
+let answered = [];
+let timerInterval = null;
+let seconds = 0;
+
+function startQuiz() {
+  document.getElementById('introCard').style.display = 'none';
+  document.getElementById('statsBar').style.display = 'flex';
+  document.getElementById('progressWrap').style.display = 'block';
+  answered = new Array(questions.length).fill(null);
+  current = 0; score = 0; correct = 0; wrong = 0; seconds = 0;
+  updateStats();
+  buildQuestions();
+  showQuestion(0);
+  startTimer();
+}
+
+function buildQuestions() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  questions.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = `q${i}`;
+
+    const optLetters = ['A', 'B', 'C', 'D'];
+    const optHtml = q.opts.map((o, oi) =>
+      `<button class="option-btn" id="opt${i}_${oi}" onclick="selectAnswer(${i}, ${oi})">
+        <span class="opt-label">${optLetters[oi]}</span>
+        <span>${o}</span>
+      </button>`
+    ).join('');
+
+    card.innerHTML = `
+      <div class="q-number">📝 السؤال ${i + 1} من ${questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optHtml}</div>
+      <div class="explanation" id="exp${i}">
+        <strong>💡 الشرح:</strong> ${q.exp}
+      </div>
+      <div class="q-nav">
+        <button class="btn-nav" onclick="navigate(-1)" ${i === 0 ? 'disabled' : ''}>⬅ السابق</button>
+        <span style="font-size:13px;color:var(--text-muted)">${i + 1} / ${questions.length}</span>
+        ${i < questions.length - 1
+          ? `<button class="btn-nav primary" onclick="navigate(1)">التالي ➡</button>`
+          : `<button class="btn-nav primary" onclick="showResult()">إنهاء الاختبار 🏁</button>`
+        }
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function showQuestion(idx) {
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+  const card = document.getElementById(`q${idx}`);
+  if (card) card.classList.add('active');
+  updateProgress();
+}
+
+function selectAnswer(qIdx, optIdx) {
+  if (answered[qIdx] !== null) return;
+  answered[qIdx] = optIdx;
+  const q = questions[qIdx];
+  const isCorrect = optIdx === q.ans;
+
+  if (isCorrect) {
+    correct++;
+    score += 10;
+    showToast('✅ إجابة صحيحة! +10 نقاط', 'success');
+  } else {
+    wrong++;
+    showToast('❌ إجابة خاطئة!', 'error');
+    document.getElementById(`opt${qIdx}_${optIdx}`).classList.add('wrong');
+    document.getElementById(`exp${qIdx}`).classList.add('show');
+  }
+  document.getElementById(`opt${qIdx}_${q.ans}`).classList.add('correct');
+
+  // Disable all options for this question
+  for (let i = 0; i < q.opts.length; i++) {
+    document.getElementById(`opt${qIdx}_${i}`).disabled = true;
+  }
+  updateStats();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < questions.length) {
+    current = next;
+    showQuestion(current);
+  }
+}
+
+function updateStats() {
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('wrongCount').textContent = wrong;
+  document.getElementById('scoreDisplay').textContent = score;
+}
+
+function updateProgress() {
+  const answeredCount = answered.filter(a => a !== null).length;
+  const pct = Math.round((answeredCount / questions.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `السؤال ${current + 1} من ${questions.length}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quizContainer').innerHTML = '';
+  document.getElementById('statsBar').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+
+  const pct = Math.round((correct / questions.length) * 100);
+  document.getElementById('finalPct').textContent = pct + '%';
+  document.getElementById('rCorrect').textContent = correct;
+  document.getElementById('rWrong').textContent = wrong;
+  document.getElementById('rScore').textContent = score;
+
+  // Update ring
+  const deg = (pct / 100) * 360;
+  document.getElementById('scoreRing').style.background =
+    `conic-gradient(var(--accent) ${deg}deg, #2d3a52 ${deg}deg)`;
+
+  let emoji = '🏆', title = 'ممتاز! أداء رائع!', sub = 'تفوقت في هذا الاختبار!';
+  if (pct < 50) { emoji = '📚'; title = 'تحتاج إلى مراجعة'; sub = 'راجع المحاضرة وأعد المحاولة.'; }
+  else if (pct < 70) { emoji = '👍'; title = 'جيد!'; sub = 'يمكنك تحسين نتيجتك أكثر.'; }
+  else if (pct < 90) { emoji = '🌟'; title = 'جيد جداً!'; sub = 'أداء ممتاز! استمر هكذا.'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent = sub + ` | الوقت: ${document.getElementById('timerDisplay').textContent}`;
+  document.getElementById('resultCard').classList.add('show');
+}
+
+function restartQuiz() {
+  document.getElementById('resultCard').classList.remove('show');
+  document.getElementById('introCard').style.display = 'block';
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.className = 'toast', 2000);
+}
+</script>
+</body>
+</html>
