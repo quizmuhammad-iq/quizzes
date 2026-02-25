@@ -20,42 +20,196 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: 'Tajawal', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-/* شاشة القفل */
+/* ======= LOCK SCREEN ======= */
 #lockScreen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: radial-gradient(ellipse at 30% 20%, #00c9a715 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, #0ea5e915 0%, transparent 60%), var(--bg); }
-.lock-logo { width: 110px; height: 110px; border-radius: 28px; object-fit: cover; margin-bottom: 20px; box-shadow: 0 0 40px #00c9a733; }
-.lock-title { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 6px; }
-.lock-sub { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 32px; }
+.lock-logo { width: 90px; height: 90px; border-radius: 22px; object-fit: cover; margin-bottom: 15px; box-shadow: 0 0 30px #00c9a722; }
+.lock-title { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 4px; }
+.lock-sub { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 25px; }
+
+/* بوكس رقم الجهاز الجديد (بالأعلى) */
+.id-container { width: 100%; max-width: 400px; background: var(--card); border: 1.5px solid var(--accent); border-radius: 20px; padding: 16px; margin-bottom: 20px; text-align: center; }
+.id-label { font-size: 11px; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
+.id-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #00000044; padding: 10px 15px; border-radius: 12px; }
+#displayId { font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: 1px; }
+.copy-btn { background: var(--accent); color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; font-family: 'Tajawal'; transition: 0.2s; }
+.copy-btn:active { transform: scale(0.9); opacity: 0.8; }
+
 .lock-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 28px; width: 100%; max-width: 400px; }
 .price-badge { background: linear-gradient(135deg, #f59e0b22, #f59e0b11); border: 1px solid #f59e0b44; border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 24px; }
 .price-badge .amount { font-size: 32px; font-weight: 800; color: var(--gold); }
 .input-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; display: block; }
-.code-input { width: 100%; background: var(--card2); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 20px; font-weight: 700; color: var(--text); text-align: center; letter-spacing: 4px; outline: none; margin-bottom: 16px; transition: border-color 0.2s; }
-.code-input:focus { border-color: var(--accent); }
-.btn-activate { width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 12px; padding: 15px; font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 16px; }
-.device-id-box { margin-top: 20px; font-size: 12px; color: var(--accent); text-align: center; background: #00c9a710; padding: 10px; border-radius: 10px; border: 1px dashed var(--accent); }
+.code-input { width: 100%; background: var(--card2); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 20px; font-weight: 700; color: var(--text); text-align: center; letter-spacing: 4px; outline: none; margin-bottom: 16px; }
+.btn-activate { width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 12px; padding: 15px; font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 16px; font-family: 'Tajawal'; }
+.btn-tg { width: 100%; background: #0088cc22; border: 1px solid #0088cc44; color: #0088cc; border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 700; text-decoration: none; display: block; text-align: center; font-family: 'Tajawal'; }
 .err-msg { color: var(--danger); font-size: 13px; text-align: center; margin-top: 10px; display: none; }
 
-/* التطبيق الرئيسي */
+/* ======= MAIN APP ======= */
 #mainApp { display: none; }
 header { background: var(--card); border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
-header img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; }
 .header-text h1 { font-size: 15px; font-weight: 800; }
-
 .section { padding: 20px 16px 8px; }
 .section-title { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .section-title::before { content: ''; width: 3px; height: 16px; border-radius: 2px; display: inline-block; background: var(--accent); }
-
 .lecture-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; cursor: pointer; text-decoration: none; color: var(--text); }
 .lec-num { width: 40px; height: 40px; min-width: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; background: #00c9a722; color: var(--accent); }
 .lec-info { flex: 1; }
 .lec-name { font-size: 14px; font-weight: 600; }
 .lec-sub { font-size: 11px; color: var(--muted); }
+.tab-content { display: none; padding-bottom: 100px; }
+.tab-content.active { display: block; }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+.nav-btn { flex: 1; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; border: none; background: none; color: var(--muted); font-size: 11px; font-family: 'Tajawal'; }
+.nav-btn.active { color: var(--accent); }
 
-/* قسم عن التطبيق */
+/* About */
 .about-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin: 16px; text-align: center; }
-.about-logo { width: 90px; height: 90px; border-radius: 22px; margin: 0 auto 16px; display: block; box-shadow: 0 4px 20px #00c9a733; }
+.about-logo { width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 15px; display: block; }
 .about-text { font-size: 14px; color: var(--muted); line-height: 1.8; }
-.social-btn { display: inline-block; background: #0088cc22; color: #0088cc; border-radius: 12px; padding: 12px 24px; text-decoration: none; font-weight: 700; margin-top: 15px; border: 1px solid #0088cc44; }
+</style>
+</head>
+<body>
 
-/* القائمة السفلية */
-.bottom-nav { position: fixed; bottom:
+<div id="lockScreen">
+  <img class="lock-logo" src="icon.jpg">
+  <div class="lock-title">كوزات المرحلة الثالثة الوزارية</div>
+  <div class="lock-sub">قسم تقنيات الأشعة</div>
+
+  <div class="id-container">
+    <div class="id-label">رقم تعريف الجهاز (انسخه وأرسله للمطور للتفعيل)</div>
+    <div class="id-row">
+      <span id="displayId">جاري التحميل...</span>
+      <button class="copy-btn" onclick="copyDeviceId()">نسخ الرقم</button>
+    </div>
+  </div>
+
+  <div class="lock-card">
+    <div class="price-badge"><div class="amount">1,000 دينار</div></div>
+    <label class="input-label">أدخل كود التفعيل</label>
+    <input class="code-input" id="codeInput" type="text" placeholder="XXXX-XXXX" maxlength="9">
+    <button class="btn-activate" onclick="tryActivate()">🔓 تفعيل الكوزات</button>
+    <a class="btn-tg" href="https://t.me/f_8e5" target="_blank">✈️ تواصل معنا للدفع والتفعيل</a>
+    <div class="err-msg" id="errMsg">❌ الكود غير صحيح، تأكد منه</div>
+  </div>
+</div>
+
+<div id="mainApp">
+  <header>
+    <img src="icon.jpg">
+    <div class="header-text"><h1>كوزات المرحلة الثالثة</h1><p>الوزارية — تقنيات الأشعة</p></div>
+  </header>
+  <div class="tab-content active" id="tabQuizzes">
+    <div class="section patho"><div class="section-title">🔬 الباثولوجي</div><div id="pathoList"></div></div>
+    <div class="section mri"><div class="section-title">🧲 فيزياء الرنين</div><div id="mriList"></div></div>
+  </div>
+  <div class="tab-content" id="tabAbout">
+    <div class="about-card">
+      <img class="about-logo" src="icon.jpg">
+      <div class="about-title">حول التطبيق</div>
+      <p class="about-text"><br>تطبيق مخصص لاختبارات طلبة تقنيات الأشعة.<br><br>🧑🏻‍💻 المطور: محمد صبار</p>
+      <a class="btn-tg" style="margin-top:20px" href="https://t.me/f_8e5" target="_blank">✈️ تيليجرام المطور</a>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="btnQuizzes" onclick="switchTab('Quizzes')"><span>📚</span>الكوزات</button>
+    <button class="nav-btn" id="btnAbout" onclick="switchTab('About')"><span>ℹ️</span>عن التطبيق</button>
+  </nav>
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    reg.onupdatefound = () => {
+      const install = reg.installing;
+      install.onstatechange = () => { if (install.state === 'installed' && navigator.serviceWorker.controller) window.location.reload(); };
+    };
+  });
+}
+
+const SALT = "QUIZZES_3RD_YEAR_2025_WAZARIA_SECRET";
+
+function getDeviceId() {
+  let id = localStorage.getItem('device_id');
+  if (!id) {
+    id = Math.random().toString(16).substr(2, 8).toUpperCase();
+    localStorage.setItem('device_id', id);
+  }
+  return id;
+}
+
+// عرض الرقم فوراً
+const devId = getDeviceId();
+document.getElementById('displayId').innerText = devId;
+
+// وظيفة النسخ
+function copyDeviceId() {
+  const idText = document.getElementById('displayId').innerText;
+  navigator.clipboard.writeText(idText).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.innerText = "تم النسخ ✅";
+    btn.style.background = "#f59e0b";
+    setTimeout(() => {
+      btn.innerText = "نسخ الرقم";
+      btn.style.background = "#00c9a7";
+    }, 2000);
+  });
+}
+
+async function sha256(msg) {
+  const buf = new TextEncoder().encode(msg);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function tryActivate() {
+  const entered = document.getElementById('codeInput').value.trim().toUpperCase();
+  const hash = await sha256(devId + SALT);
+  const correct = hash.substring(0, 4).toUpperCase() + '-' + hash.substring(4, 8).toUpperCase();
+  if (entered === correct) {
+    localStorage.setItem('activated', 'true');
+    localStorage.setItem('act_hash', btoa(devId + SALT));
+    showApp();
+  } else {
+    document.getElementById('errMsg').style.display = 'block';
+  }
+}
+
+function showApp() {
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  if (!document.getElementById('pathoList').hasChildNodes()) {
+    buildList(7, 'pathoList', 'patho');
+    buildList(15, 'mriList', 'mri');
+  }
+}
+
+function buildList(count, containerId, folder) {
+  const container = document.getElementById(containerId);
+  for (let i = 1; i <= count; i++) {
+    const div = document.createElement('div');
+    div.className = 'lecture-card';
+    div.innerHTML = `<div class="lec-num">${i}</div><div class="lec-info"><div class="lec-name">محاضرة ${i}</div><div class="lec-sub">${folder==='patho'?'الباثولوجي':'فيزياء الرنين'}</div></div>`;
+    div.onclick = () => window.location.href = `quiz.html?folder=${folder}&num=${i}`;
+    container.appendChild(div);
+  }
+}
+
+function switchTab(name) {
+  document.getElementById('tabQuizzes').classList.remove('active');
+  document.getElementById('tabAbout').classList.remove('active');
+  document.getElementById('btnQuizzes').classList.remove('active');
+  document.getElementById('btnAbout').classList.remove('active');
+  document.getElementById('tab' + name).classList.add('active');
+  document.getElementById('btn' + name).classList.add('active');
+}
+
+if (localStorage.getItem('activated') === 'true') showApp();
+
+document.getElementById('codeInput').addEventListener('input', function(e) {
+  let val = e.target.value.replace(/[^A-Z0-9]/g, '');
+  if (val.length > 4) val = val.substring(0,4) + '-' + val.substring(4,8);
+  e.target.value = val;
+});
+</script>
+</body>
+</html>
