@@ -19,6 +19,8 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: 'Tajawal', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+/* ======= LOCK SCREEN ======= */
 #lockScreen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: radial-gradient(ellipse at 30% 20%, #00c9a715 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, #0ea5e915 0%, transparent 60%), var(--bg); }
 .lock-logo { width: 110px; height: 110px; border-radius: 28px; object-fit: cover; margin-bottom: 20px; box-shadow: 0 0 40px #00c9a733; }
 .lock-title { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 6px; }
@@ -33,15 +35,19 @@ body { background: var(--bg); color: var(--text); font-family: 'Tajawal', sans-s
 .btn-activate { width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 12px; padding: 15px; font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 16px; }
 .btn-tg { width: 100%; background: #0088cc22; border: 1px solid #0088cc44; color: #0088cc; border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 700; text-decoration: none; display: block; text-align: center; }
 .err-msg { color: var(--danger); font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+
+/* ======= MAIN APP ======= */
 #mainApp { display: none; }
 header { background: var(--card); border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
 header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; }
 .header-text h1 { font-size: 15px; font-weight: 800; }
-.section { padding: 20px 16px 80px; }
+
+.section { padding: 20px 16px 8px; }
 .section-title { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .section-title::before { content: ''; width: 3px; height: 16px; border-radius: 2px; display: inline-block; }
 .patho .section-title::before { background: var(--accent); }
 .mri .section-title::before { background: var(--gold); }
+
 .lecture-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; cursor: pointer; text-decoration: none; color: var(--text); }
 .lec-num { width: 40px; height: 40px; min-width: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
 .patho .lec-num { background: #00c9a722; color: var(--accent); }
@@ -49,10 +55,20 @@ header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; 
 .lec-info { flex: 1; }
 .lec-name { font-size: 14px; font-weight: 600; }
 .lec-sub { font-size: 11px; color: var(--muted); }
+
+/* ======= ABOUT SECTION ======= */
+.about-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin: 16px; text-align: center; }
+.about-logo { width: 90px; height: 90px; border-radius: 22px; object-fit: cover; margin: 0 auto 16px; display: block; box-shadow: 0 4px 20px #00c9a733; }
+.about-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+.about-text { font-size: 14px; color: var(--muted); line-height: 1.8; text-align: center; }
+.about-divider { height: 1px; background: var(--border); margin: 20px 0; }
+.social-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: #0088cc22; border: 1px solid #0088cc44; color: #0088cc; border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 700; text-decoration: none; margin-top: 12px; }
+
+/* ======= BOTTOM NAV ======= */
 .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; padding-bottom: env(safe-area-inset-bottom); }
-.nav-btn { flex: 1; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; border: none; background: none; color: var(--muted); font-size: 11px; }
+.nav-btn { flex: 1; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; border: none; background: none; color: var(--muted); font-size: 11px; transition: color 0.2s; }
 .nav-btn.active { color: var(--accent); }
-.tab-content { display: none; }
+.tab-content { display: none; padding-bottom: 80px; }
 .tab-content.active { display: block; }
 </style>
 </head>
@@ -77,6 +93,7 @@ header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; 
     <img src="icon.jpg">
     <div class="header-text"><h1>كوزات المرحلة الثالثة</h1><p>الوزارية — تقنيات الأشعة</p></div>
   </header>
+
   <div class="tab-content active" id="tabQuizzes">
     <div class="section patho">
       <div class="section-title">🔬 الباثولوجي — 7 محاضرات</div>
@@ -87,19 +104,35 @@ header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; 
       <div id="mriList"></div>
     </div>
   </div>
+
+  <div class="tab-content" id="tabAbout">
+    <div class="about-card">
+      <img class="about-logo" src="icon.jpg">
+      <div class="about-title">كوزات المرحلة الثالثة الوزارية</div>
+      <div class="about-divider"></div>
+      <div class="about-text">
+        هذه اختبارات لمادتي الباثو وفيزياء الرنين المغناطيسي الوزارية للمرحلة الثالثة قسم تقنيات الأشعة
+        <br><br>
+        جامعة الهادي | الكلية التقنية الصحية والطبية | قسم تقنيات الأشعة | المرحلة الثالثة
+        <br><br>
+        🧑🏻‍💻 المطور : محمد صبار
+      </div>
+      <div class="about-divider"></div>
+      <a class="social-btn" href="https://t.me/f_8e5" target="_blank">✈️ تيليجرام</a>
+    </div>
+  </div>
+
   <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="switchTab('Quizzes', this)"><span>📚</span>الكوزات</button>
-    <button class="nav-btn" onclick="alert('قريباً')"><span>ℹ️</span>عن التطبيق</button>
+    <button class="nav-btn active" id="btnQuizzes" onclick="switchTab('Quizzes')"><span>📚</span>الكوزات</button>
+    <button class="nav-btn" id="btnAbout" onclick="switchTab('About')"><span>ℹ️</span>عن التطبيق</button>
   </nav>
 </div>
 
 <script>
-// --- Service Worker Registration ---
+// Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then(reg => {
-      console.log('SW Registered');
-    }).catch(err => console.log('SW Failed', err));
+    navigator.serviceWorker.register('sw.js');
   });
 }
 
@@ -138,8 +171,10 @@ async function tryActivate() {
 function showApp() {
   document.getElementById('lockScreen').style.display = 'none';
   document.getElementById('mainApp').style.display = 'block';
-  buildList(7, 'pathoList', 'patho', 'patho');
-  buildList(15, 'mriList', 'mri', 'mri');
+  if (!document.getElementById('pathoList').hasChildNodes()) {
+      buildList(7, 'pathoList', 'patho', 'patho');
+      buildList(15, 'mriList', 'mri', 'mri');
+  }
 }
 
 function buildList(count, containerId, folder, colorClass) {
@@ -147,10 +182,17 @@ function buildList(count, containerId, folder, colorClass) {
   for (let i = 1; i <= count; i++) {
     const div = document.createElement('div');
     div.className = 'lecture-card ' + colorClass;
-    div.innerHTML = `<div class="lec-num">${i}</div><div class="lec-info"><div class="lec-name">محاضرة ${i}</div><div class="lec-sub">${folder}</div></div><div>›</div>`;
+    div.innerHTML = `<div class="lec-num">${i}</div><div class="lec-info"><div class="lec-name">محاضرة ${i}</div><div class="lec-sub">${folder === 'patho' ? 'الباثولوجي' : 'فيزياء الرنين'}</div></div><div>›</div>`;
     div.onclick = () => window.location.href = `quiz.html?folder=${folder}&num=${i}`;
     container.appendChild(div);
   }
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab' + name).classList.add('active');
+  document.getElementById('btn' + name).classList.add('active');
 }
 
 if (localStorage.getItem('activated') === 'true') showApp();
