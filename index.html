@@ -29,11 +29,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Tajawal', sans-s
 .price-badge { background: linear-gradient(135deg, #f59e0b22, #f59e0b11); border: 1px solid #f59e0b44; border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 24px; }
 .price-badge .amount { font-size: 32px; font-weight: 800; color: var(--gold); }
 .input-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; display: block; }
-.code-input { width: 100%; background: var(--card2); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 20px; font-weight: 700; color: var(--text); text-align: center; letter-spacing: 4px; outline: none; margin-bottom: 16px; transition: border-color 0.2s; }
-.code-input:focus { border-color: var(--accent); }
-.code-input.error { border-color: var(--danger); }
+.code-input { width: 100%; background: var(--card2); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 20px; font-weight: 700; color: var(--text); text-align: center; letter-spacing: 4px; outline: none; margin-bottom: 16px; }
 .btn-activate { width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 12px; padding: 15px; font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 16px; }
 .btn-tg { width: 100%; background: #0088cc22; border: 1px solid #0088cc44; color: #0088cc; border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 700; text-decoration: none; display: block; text-align: center; }
+.device-id-box { margin-top: 20px; font-size: 11px; color: var(--muted); text-align: center; background: #00000033; padding: 8px; border-radius: 8px; border: 1px dashed var(--border); }
 .err-msg { color: var(--danger); font-size: 13px; text-align: center; margin-top: 10px; display: none; }
 
 /* ======= MAIN APP ======= */
@@ -65,10 +64,11 @@ header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; 
 .social-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: #0088cc22; border: 1px solid #0088cc44; color: #0088cc; border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 700; text-decoration: none; margin-top: 12px; }
 
 /* ======= BOTTOM NAV ======= */
-.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; padding-bottom: env(safe-area-inset-bottom); }
-.nav-btn { flex: 1; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; border: none; background: none; color: var(--muted); font-size: 11px; transition: color 0.2s; }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; padding-bottom: env(safe-area-inset-bottom); z-index: 1000; }
+.nav-btn { flex: 1; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; border: none; background: none; color: var(--muted); font-size: 11px; font-family: 'Tajawal'; }
 .nav-btn.active { color: var(--accent); }
-.tab-content { display: none; padding-bottom: 80px; }
+
+.tab-content { display: none; padding-bottom: 100px; }
 .tab-content.active { display: block; }
 </style>
 </head>
@@ -85,6 +85,7 @@ header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; 
     <button class="btn-activate" onclick="tryActivate()">🔓 تفعيل</button>
     <a class="btn-tg" href="https://t.me/f_8e5" target="_blank">✈️ تواصل معنا للدفع</a>
     <div class="err-msg" id="errMsg">❌ الكود غير صحيح</div>
+    <div class="device-id-box">رقم جهازك: <span id="displayId">جاري التحميل...</span></div>
   </div>
 </div>
 
@@ -118,7 +119,7 @@ header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; 
         🧑🏻‍💻 المطور : محمد صبار
       </div>
       <div class="about-divider"></div>
-      <a class="social-btn" href="https://t.me/f_8e5" target="_blank">✈️ تيليجرام</a>
+      <a class="social-btn" href="https://t.me/f_8e5" target="_blank">✈️ تيليجرام التواصل</a>
     </div>
   </div>
 
@@ -131,17 +132,15 @@ header img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; 
 <script>
 // Service Worker
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js');
-  });
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); });
 }
 
-const SECRET_SALT = "QUIZZES_3RD_YEAR_2025_WAZARIA_SECRET";
+const SALT = "QUIZZES_3RD_YEAR_2025_WAZARIA_SECRET";
 
-async function sha256(message) {
-  const msgBuffer = new TextEncoder().encode(message);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+async function sha256(msg) {
+  const buf = new TextEncoder().encode(msg);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 function getDeviceId() {
@@ -153,15 +152,18 @@ function getDeviceId() {
   return id;
 }
 
+// إظهار رقم الجهاز فور التحميل
+document.getElementById('displayId').innerText = getDeviceId();
+
 async function tryActivate() {
   const entered = document.getElementById('codeInput').value.trim().toUpperCase();
-  const deviceId = getDeviceId();
-  const hash = await sha256(deviceId + SECRET_SALT);
+  const devId = getDeviceId();
+  const hash = await sha256(devId + SALT);
   const correct = hash.substring(0, 4).toUpperCase() + '-' + hash.substring(4, 8).toUpperCase();
 
   if (entered === correct) {
     localStorage.setItem('activated', 'true');
-    localStorage.setItem('act_hash', btoa(deviceId + SECRET_SALT));
+    localStorage.setItem('act_hash', btoa(devId + SALT));
     showApp();
   } else {
     document.getElementById('errMsg').style.display = 'block';
@@ -172,25 +174,30 @@ function showApp() {
   document.getElementById('lockScreen').style.display = 'none';
   document.getElementById('mainApp').style.display = 'block';
   if (!document.getElementById('pathoList').hasChildNodes()) {
-      buildList(7, 'pathoList', 'patho', 'patho');
-      buildList(15, 'mriList', 'mri', 'mri');
+    buildList(7, 'pathoList', 'patho');
+    buildList(15, 'mriList', 'mri');
   }
 }
 
-function buildList(count, containerId, folder, colorClass) {
+function buildList(count, containerId, folder) {
   const container = document.getElementById(containerId);
   for (let i = 1; i <= count; i++) {
     const div = document.createElement('div');
-    div.className = 'lecture-card ' + colorClass;
-    div.innerHTML = `<div class="lec-num">${i}</div><div class="lec-info"><div class="lec-name">محاضرة ${i}</div><div class="lec-sub">${folder === 'patho' ? 'الباثولوجي' : 'فيزياء الرنين'}</div></div><div>›</div>`;
+    div.className = 'lecture-card ' + folder;
+    div.innerHTML = `<div class="lec-num">${i}</div><div class="lec-info"><div class="lec-name">محاضرة ${i}</div><div class="lec-sub">${folder==='patho'?'الباثولوجي':'فيزياء الرنين'}</div></div><div>›</div>`;
     div.onclick = () => window.location.href = `quiz.html?folder=${folder}&num=${i}`;
     container.appendChild(div);
   }
 }
 
 function switchTab(name) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  // إخفاء الكل
+  document.getElementById('tabQuizzes').classList.remove('active');
+  document.getElementById('tabAbout').classList.remove('active');
+  document.getElementById('btnQuizzes').classList.remove('active');
+  document.getElementById('btnAbout').classList.remove('active');
+  
+  // إظهار المختار
   document.getElementById('tab' + name).classList.add('active');
   document.getElementById('btn' + name).classList.add('active');
 }
