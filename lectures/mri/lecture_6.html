@@ -942,6 +942,9 @@ function showResults() {
 
   const total = questions.length;
   const pct = Math.round((correctCount / total) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('scorePct').textContent = pct + '%';
   document.getElementById('scoreCircle').style.setProperty('--pct', `${pct}% `);
   document.getElementById('rCorrect').textContent = correctCount;
