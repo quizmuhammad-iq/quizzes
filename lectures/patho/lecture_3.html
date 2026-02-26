@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liver Diseases (1) - Quiz | محمد صبار</title>
+<!-- Offline fonts - no internet needed -->
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e3a5f;
+    --accent: #1d8cf8;
+    --accent2: #00e5c7;
+    --correct: #00c97a;
+    --wrong: #ff4d6d;
+    --warn: #f7b731;
+    --text: #e8edf7;
+    --text-muted: #7a8ba8;
+    --gold: #f7c948;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(29,140,248,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 35% at 80% 90%, rgba(0,229,199,0.08) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 24px 16px; position: relative; z-index: 1; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 36px 24px 28px;
+    background: linear-gradient(135deg, #0d1b2e 60%, #0a2040);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .header-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(22px, 4vw, 32px);
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    direction: ltr;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .header .creator {
+    font-size: 13px;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .stat-card .stat-val {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-card .stat-lbl { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .stat-card.score .stat-val { color: var(--gold); }
+  .stat-card.progress-stat .stat-val { color: var(--accent); }
+  .stat-card.remaining .stat-val { color: var(--accent2); }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+  }
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .progress-bar {
+    height: 10px;
+    background: var(--bg);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 24px 22px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.35s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; width: 4px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    border-radius: 0 20px 20px 0;
+  }
+  .q-number {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    direction: ltr;
+  }
+  .q-text {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 22px;
+    direction: ltr;
+  }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 11px; }
+  .option-btn {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 18px;
+    text-align: right;
+    cursor: pointer;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 14.5px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    position: relative;
+    direction: ltr;
+    text-align: left;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(29,140,248,0.1);
+    transform: translateX(-3px);
+  }
+  .option-btn .opt-letter {
+    min-width: 32px;
+    height: 32px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option-btn.correct {
+    border-color: var(--correct);
+    background: rgba(0,201,122,0.12);
+    color: #b8ffd9;
+  }
+  .option-btn.correct .opt-letter {
+    background: var(--correct);
+    border-color: var(--correct);
+    color: #fff;
+  }
+  .option-btn.wrong {
+    border-color: var(--wrong);
+    background: rgba(255,77,109,0.12);
+    color: #ffc2cc;
+  }
+  .option-btn.wrong .opt-letter {
+    background: var(--wrong);
+    border-color: var(--wrong);
+    color: #fff;
+  }
+  .option-btn.highlight {
+    border-color: var(--correct);
+    background: rgba(0,201,122,0.08);
+  }
+  .option-btn:disabled { cursor: default; }
+
+  /* Explanation */
+  .explanation {
+    display: none;
+    margin-top: 16px;
+    background: rgba(29,140,248,0.08);
+    border: 1px solid rgba(29,140,248,0.3);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #c8ddf5;
+    direction: ltr;
+  }
+  .explanation.show { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  .explanation strong { color: var(--accent2); }
+
+  /* Feedback badge */
+  .feedback-badge {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-top: 14px;
+  }
+  .feedback-badge.show { display: flex; animation: fadeIn 0.3s ease; }
+  .feedback-badge.correct-fb { background: rgba(0,201,122,0.12); border: 1px solid var(--correct); color: var(--correct); }
+  .feedback-badge.wrong-fb { background: rgba(255,77,109,0.12); border: 1px solid var(--wrong); color: var(--wrong); }
+
+  /* Navigation */
+  .nav-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+    min-width: 120px;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #0e70d4);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(29,140,248,0.3);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 25px rgba(29,140,248,0.5); transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-success {
+    background: linear-gradient(135deg, var(--correct), #00a362);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(0,201,122,0.3);
+  }
+
+  /* Results screen */
+  .results-screen {
+    display: none;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .results-screen::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--warn));
+  }
+  .results-screen.show { display: block; animation: slideIn 0.4s ease; }
+  .trophy { font-size: 72px; margin-bottom: 16px; display: block; }
+  .results-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 28px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .results-subtitle { font-size: 15px; color: var(--text-muted); margin-bottom: 28px; }
+  .score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: conic-gradient(var(--correct) 0%, var(--correct) var(--pct), var(--surface2) var(--pct));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+  .score-circle-inner {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-circle-inner .big { font-size: 28px; font-weight: 900; color: var(--correct); }
+  .score-circle-inner .small { font-size: 11px; color: var(--text-muted); }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .res-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 8px;
+  }
+  .res-card .val { font-size: 22px; font-weight: 900; }
+  .res-card .lbl { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .res-card.green .val { color: var(--correct); }
+  .res-card.red .val { color: var(--wrong); }
+  .res-card.blue .val { color: var(--accent); }
+
+  /* Telegram footer */
+  .telegram-footer {
+    text-align: center;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-top: 20px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+  }
+  .telegram-footer a {
+    color: var(--accent2);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14.5px;
+  }
+  .telegram-footer a:hover { text-decoration: underline; }
+  .tg-icon { font-size: 20px; vertical-align: middle; margin-left: 6px; }
+
+  /* Quiz number nav dots */
+  .dot-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-muted);
+  }
+  .dot.current { border-color: var(--accent); color: var(--accent); background: rgba(29,140,248,0.15); }
+  .dot.answered-correct { background: rgba(0,201,122,0.2); border-color: var(--correct); color: var(--correct); }
+  .dot.answered-wrong { background: rgba(255,77,109,0.2); border-color: var(--wrong); color: var(--wrong); }
+
+  @media(max-width:480px) {
+    .stats-bar { grid-template-columns: repeat(3,1fr); }
+    .results-grid { grid-template-columns: repeat(3,1fr); }
+    .q-text { font-size: 15px; }
+    .option-btn { font-size: 13.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">Systemic Pathology — 3rd Stage</div>
+    <h1>Liver Diseases (1)</h1>
+    <div class="subtitle">Al-Hadi University - Department of Radiology Technology </div>
+    <div class="creator">إعداد الطالب: محمد صبار &nbsp;|&nbsp; 45 سؤال اختياري</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card score">
+      <div class="stat-val" id="scoreVal">0</div>
+      <div class="stat-lbl">النقاط</div>
+    </div>
+    <div class="stat-card progress-stat">
+      <div class="stat-val" id="questionNum">1</div>
+      <div class="stat-lbl">السؤال الحالي</div>
+    </div>
+    <div class="stat-card remaining">
+      <div class="stat-val" id="remainingNum">45</div>
+      <div class="stat-lbl">المتبقية</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span>مستوى التقدم</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- Dot navigation -->
+  <div class="dot-nav" id="dotNav"></div>
+
+  <!-- Question card -->
+  <div class="question-card" id="questionCard">
+    <div class="q-number" id="qNumber">QUESTION 1 OF 45</div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="optionsContainer"></div>
+    <div class="feedback-badge" id="feedbackBadge"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav-row">
+    <button class="btn btn-secondary" id="prevBtn" onclick="navigate(-1)">→ السابق</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="navigate(1)">التالي ←</button>
+  </div>
+
+  <!-- Results -->
+  <div class="results-screen" id="resultsScreen">
+    <span class="trophy" id="trophyEmoji">🏆</span>
+    <div class="results-title" id="resultsTitle">نتيجتك النهائية</div>
+    <div class="results-subtitle" id="resultsSubtitle"></div>
+    <div class="score-circle" id="scoreCircle" style="--pct:0%">
+      <div class="score-circle-inner">
+        <span class="big" id="circlePct">0%</span>
+        <span class="small">النسبة</span>
+      </div>
+    </div>
+    <div class="results-grid">
+      <div class="res-card green"><div class="val" id="correctCount">0</div><div class="lbl">إجابات صحيحة</div></div>
+      <div class="res-card red"><div class="val" id="wrongCount">0</div><div class="lbl">إجابات خاطئة</div></div>
+      <div class="res-card blue"><div class="val" id="finalScore">0</div><div class="lbl">النقاط</div></div>
+    </div>
+    <button class="btn btn-success" style="max-width:300px;margin:0 auto;" onclick="restartQuiz()">إعادة الاختبار من البداية 🔄</button>
+    <div class="telegram-footer" style="margin-top:20px;">
+      للحصول على اختبارات باقي المحاضرات — اضغط على اسم منشئ الاختبار 👇
+      <br><br>
+      <a href="https://t.me/mulimcq" target="_blank">🔗 محمد صبار</a>
+      &nbsp;&nbsp;اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </div>
+  </div>
+
+  <!-- Telegram footer -->
+  <div class="telegram-footer">
+    <span class="tg-icon">✈️</span>
+    <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+    &nbsp; اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  // ─── HEPATIC INJURY PATTERNS ───
+  {
+    q: "Which type of cell death is commonly seen following hepatic injury caused by hypoxia and ischemia?",
+    opts: ["Apoptosis", "Necrosis", "Autophagy", "Ferroptosis"],
+    ans: 1,
+    exp: "Necrosis is commonly seen following hepatic injury caused by hypoxia and ischemia. Apoptotic cell death predominates in viral, autoimmune, and drug/toxin-induced hepatitides."
+  },
+  {
+    q: "Apoptotic cell death in the liver predominantly occurs in which of the following conditions?",
+    opts: ["Ischemic hepatitis", "Congestive heart failure", "Viral hepatitis", "Fatty liver disease alone"],
+    ans: 2,
+    exp: "Apoptotic cell death predominates in viral, autoimmune, and drug- and toxin-induced hepatitides."
+  },
+  {
+    q: "What term describes widespread hepatocyte death that 'bridges' central veins and portal tracts?",
+    opts: ["Focal necrosis", "Confluent necrosis", "Spotty necrosis", "Lobular necrosis"],
+    ans: 1,
+    exp: "With increasing severity of injury, necrosis 'bridges' central veins and portal tracts — this pattern is termed confluent necrosis."
+  },
+  {
+    q: "Regeneration of hepatocytes after injury takes place primarily by:",
+    opts: ["Stem cell differentiation from bone marrow", "Migration of hepatocytes from the spleen", "Mitotic replication of hepatocytes adjacent to those that died", "De novo hepatogenesis from portal cells"],
+    ans: 2,
+    exp: "Regeneration to replace lost hepatocytes takes place primarily by mitotic replication of hepatocytes adjacent to those that have died."
+  },
+  {
+    q: "Which acute-phase reactant is described as a key regulator of iron metabolism and secreted during systemic inflammation involving the liver?",
+    opts: ["C-reactive protein", "Serum amyloid A protein", "Hepcidin", "Fibrinogen"],
+    ans: 2,
+    exp: "Hepcidin is described as a key regulator of iron metabolism among the acute-phase reactants whose secretion is increased during systemic liver inflammation."
+  },
+  {
+    q: "Serum amyloid A protein is a precursor of:",
+    opts: ["Primary biliary cirrhosis", "Some forms of amyloid", "Hepatocellular carcinoma", "Conjugated bilirubin"],
+    ans: 1,
+    exp: "Serum amyloid A protein is mentioned as a precursor of some forms of amyloid, and is an acute-phase reactant whose secretion is increased by systemic inflammation acting on the liver."
+  },
+  // ─── LIVER FAILURE ───
+  {
+    q: "Acute hepatic failure due to massive necrosis of liver cells is also called:",
+    opts: ["Silent hepatic failure", "Fulminant hepatic failure", "Compensated liver failure", "Chronic hepatic failure"],
+    ans: 1,
+    exp: "Severe acute injury with massive necrosis of liver cells is termed acute (fulminant) hepatic failure."
+  },
+  {
+    q: "The most frequent cause of acute (fulminant) hepatic failure is:",
+    opts: ["Mushroom poisoning", "Drug toxicity", "Acute viral hepatitis", "Wilson's disease"],
+    ans: 2,
+    exp: "Acute (fulminant) hepatic failure occurs most frequently in acute viral hepatitis."
+  },
+  {
+    q: "Which of the following is a cause of CHRONIC hepatic failure?",
+    opts: ["Anaesthetic agent toxicity", "Acute alcoholic hepatitis", "Mushroom poisoning", "Cirrhosis"],
+    ans: 3,
+    exp: "Chronic hepatic failure is most often due to cirrhosis. Other causes include chronic active hepatitis, chronic cholestasis, and Wilson's disease."
+  },
+  {
+    q: "Hepatic encephalopathy is believed to be caused by:",
+    opts: ["Elevated serum iron levels", "Low albumin levels", "Elevated ammonia levels", "Decreased bilirubin metabolism"],
+    ans: 2,
+    exp: "Hepatic encephalopathy is believed to be caused by elevated ammonia levels, which correlate with impaired neuronal function and cerebral edema."
+  },
+  {
+    q: "Hepatorenal syndrome involves renal failure in which of the following settings?",
+    opts: ["Intrinsic renal pathology such as glomerulonephritis", "No intrinsic renal pathology — in the setting of liver failure", "Obstructive uropathy from bladder stones", "Autoimmune renal disease"],
+    ans: 1,
+    exp: "Hepatorenal syndrome is a form of renal failure in individuals with liver failure in whom there is NO intrinsic renal pathology to account for renal dysfunction."
+  },
+  {
+    q: "In hepatorenal syndrome, how does liver failure cause decreased renal perfusion?",
+    opts: ["By causing systemic vasoconstriction", "By producing vasodilators like nitric oxide that increase abdominal visceral flow, reducing renal perfusion pressure", "By directly damaging renal tubules", "By blocking the renal artery"],
+    ans: 1,
+    exp: "Liver failure produces vasodilators such as nitric oxide that increase blood flow in the abdominal viscera, causing decreased renal perfusion pressure and reduced glomerular filtration rate."
+  },
+  {
+    q: "The first sign of onset of hepatorenal syndrome is typically:",
+    opts: ["Rising serum bilirubin", "Ascites formation", "Decrease in urine output", "Hypoglycemia"],
+    ans: 2,
+    exp: "The syndrome's onset begins with a decrease in urine output and rising blood urea nitrogen and creatinine levels (azotemia)."
+  },
+  {
+    q: "Coagulation defects in liver failure occur because the liver normally produces:",
+    opts: ["Erythropoietin", "Insulin", "Coagulation factors", "Complement proteins only"],
+    ans: 2,
+    exp: "The liver produces a number of coagulation factors whose levels decline in liver failure, leading to easy bruising and bleeding."
+  },
+  {
+    q: "Which of the following is NOT listed as a manifestation of hepatic failure?",
+    opts: ["Jaundice", "Coagulation defects", "Hypertension", "Ascites and oedema"],
+    ans: 2,
+    exp: "Hypertension is not listed. Manifestations of hepatic failure include jaundice, hepatic encephalopathy, hyperkinetic circulation, hepatorenal syndrome, hepatopulmonary syndrome, coagulation defects, ascites/oedema, and endocrine/skin changes."
+  },
+  // ─── CIRRHOSIS ───
+  {
+    q: "Cirrhosis of the liver is described as one of the top how many leading causes of death in the Western world?",
+    opts: ["Five", "Ten", "Fifteen", "Twenty"],
+    ans: 1,
+    exp: "Cirrhosis of the liver is one of the ten leading causes of death in the Western world."
+  },
+  {
+    q: "Which of the following is NOT a characteristic feature of cirrhosis?",
+    opts: ["Involvement of the entire liver", "Formation of nodules separated by bands of fibrosis", "Normal lobular architecture is preserved", "Alternate areas of necrosis and regenerative nodules"],
+    ans: 2,
+    exp: "In cirrhosis the normal lobular architecture of hepatic parenchyma is DISorganised — its preservation is not a feature."
+  },
+  {
+    q: "The process in cirrhosis in which surviving hepatocytes proliferate within fibrous nodules is called:",
+    opts: ["Fibrogenesis", "Vascular reorganization", "Regenerative nodule formation", "Stellate cell activation"],
+    ans: 2,
+    exp: "Surviving hepatocytes act as stimulants for growth under influence of growth factors. This compensatory proliferation restricted within fibrous nodules forms regenerative nodules."
+  },
+  {
+    q: "In vascular reorganization during cirrhosis, new vessels in fibrous septa connect to portal triad vessels and drain into the hepatic vein. This means blood:",
+    opts: ["Flows normally through hepatic parenchyma", "Bypasses the hepatic parenchyma", "Returns to the portal vein", "Flows retrograde into the spleen"],
+    ans: 1,
+    exp: "The blood bypasses the hepatic parenchyma. Blood connects from portal triad vessels through new vessels in fibrous septa directly to the hepatic vein, skipping functional liver tissue."
+  },
+  {
+    q: "Approximately what percentage of individuals with cirrhosis are asymptomatic until the most advanced stages?",
+    opts: ["10%", "20%", "40%", "60%"],
+    ans: 2,
+    exp: "About 40% of individuals with cirrhosis are asymptomatic until the most advanced stages of the disease."
+  },
+  {
+    q: "Pruritus (itching) in chronic severe jaundice is related to:",
+    opts: ["Elevated ammonia levels", "Accumulation of bile salts in the body", "High conjugated bilirubin in the skin", "Histamine release from mast cells"],
+    ans: 1,
+    exp: "Pruritus is seen in cholestatic disorders and is suggested to be related to the accumulation of bile salts in the body, though its precise pathogenesis remains unknown."
+  },
+  {
+    q: "Portal hypertension in chronic liver failure stems from:",
+    opts: ["Decreased cardiac output alone", "Increased vascular resistance coupled with increased portal blood flow", "Renal retention of sodium", "Decreased hepatic artery flow"],
+    ans: 1,
+    exp: "Portal hypertension stems from increased vascular resistance coupled with increased portal blood flow."
+  },
+  {
+    q: "Portosystemic shunts develop due to:",
+    opts: ["Decreased portal blood flow", "Dilated sinusoids", "Sustained portal hypertension causing dilation of collateral vessels", "Formation of new portal veins"],
+    ans: 2,
+    exp: "Portosystemic shunts develop due to sustained portal hypertension. They are produced principally by dilation of collateral vessels."
+  },
+  {
+    q: "What percentage of ascites cases are caused by portal hypertension due to cirrhosis?",
+    opts: ["50%", "65%", "75%", "85%"],
+    ans: 3,
+    exp: "About 85% of cases of ascites are caused by portal hypertension due to cirrhosis."
+  },
+  {
+    q: "The fluid in ascites caused by portal hypertension is classified as a:",
+    opts: ["Exudate", "Transudate", "Chylous fluid", "Purulent fluid"],
+    ans: 1,
+    exp: "The fluid in ascites due to portal hypertension is a transudate (low protein content, due to hydrostatic pressure differences)."
+  },
+  {
+    q: "Long-standing portal hypertension may cause:",
+    opts: ["Hepatic atrophy", "Congestive splenomegaly", "Thyroid enlargement", "Pulmonary fibrosis"],
+    ans: 1,
+    exp: "Long-standing portal hypertension may cause congestive splenomegaly."
+  },
+  {
+    q: "In male patients with chronic liver failure, hyperestrogenemia leads to all of the following EXCEPT:",
+    opts: ["Palmar erythema", "Spider angiomas", "Gynecomastia", "Hepatomegaly"],
+    ans: 3,
+    exp: "Hyperestrogenemia in male patients causes palmar erythema, spider angiomas, hypogonadism, and gynecomastia. Hepatomegaly is not listed as a consequence of hyperestrogenemia."
+  },
+  {
+    q: "Most chronic liver diseases predispose to the development of:",
+    opts: ["Gastric cancer", "Cholangiocarcinoma only", "Hepatocellular carcinoma", "Pancreatic cancer"],
+    ans: 2,
+    exp: "Most chronic liver diseases predispose to development of hepatocellular carcinoma."
+  },
+  // ─── JAUNDICE ───
+  {
+    q: "Jaundice is particularly noticeable in which type of tissue?",
+    opts: ["Tissues rich in collagen", "Tissues rich in elastin", "Adipose tissue", "Muscle tissue"],
+    ans: 1,
+    exp: "Bilirubin has high affinity for elastic tissue; hence jaundice is particularly noticeable in tissues rich in elastin, such as the sclera."
+  },
+  {
+    q: "Normal serum bilirubin concentration ranges from:",
+    opts: ["0.1–0.5 mg/dl", "0.3–1.3 mg/dl", "1.5–2.5 mg/dl", "2.0–3.0 mg/dl"],
+    ans: 1,
+    exp: "Normal serum bilirubin concentration ranges from 0.3–1.3 mg/dl, about 80% of which is unconjugated."
+  },
+  {
+    q: "Jaundice becomes clinically evident when total serum bilirubin exceeds:",
+    opts: ["1 mg/dl", "1.5 mg/dl", "2 mg/dl", "3 mg/dl"],
+    ans: 2,
+    exp: "Jaundice becomes clinically evident when the total serum bilirubin exceeds 2 mg/dl."
+  },
+  {
+    q: "A rise of serum bilirubin between normal and 2 mg/dl without visible jaundice is called:",
+    opts: ["Subclinical jaundice", "Latent jaundice", "Silent jaundice", "Chemical jaundice"],
+    ans: 1,
+    exp: "A rise of serum bilirubin between the normal and 2 mg/dl generally not accompanied by visible jaundice is called latent jaundice."
+  },
+  {
+    q: "Which mechanism causes jaundice in hemolytic anemias?",
+    opts: ["Decreased hepatic conjugation", "Decreased hepatic uptake", "Increased bilirubin production", "Decreased excretion into bile"],
+    ans: 2,
+    exp: "Hemolytic anemias cause jaundice through increased bilirubin production."
+  },
+  {
+    q: "Drug interference with membrane carrier systems causes jaundice through which mechanism?",
+    opts: ["Increased bilirubin production", "Decreased hepatic uptake", "Decreased hepatic conjugation", "Decreased bile excretion"],
+    ans: 1,
+    exp: "Drug interference with membrane carrier systems leads to decreased hepatic uptake of bilirubin."
+  },
+  {
+    q: "Physiologic jaundice of the newborn is due to:",
+    opts: ["Increased RBC production", "Decreased hepatic conjugation", "Biliary atresia", "Hemolytic disease"],
+    ans: 1,
+    exp: "Physiologic jaundice of the newborn results from decreased hepatic conjugation as the hepatic machinery for conjugating bilirubin does not fully mature until about 2 weeks of age."
+  },
+  {
+    q: "External compression by carcinoma of the pancreas causes jaundice through:",
+    opts: ["Increased bilirubin production", "Decreased hepatic conjugation", "Decreased hepatic uptake", "Decreased excretion of bilirubin into bile"],
+    ans: 3,
+    exp: "External compression (e.g., carcinoma of the pancreas) obstructs bile flow, leading to decreased excretion of bilirubin into bile — conjugated hyperbilirubinemia."
+  },
+  {
+    q: "The presence of bilirubin in the urine indicates:",
+    opts: ["Unconjugated hyperbilirubinemia", "Conjugated hyperbilirubinemia", "Normal bilirubin metabolism", "Hemolytic jaundice"],
+    ans: 1,
+    exp: "The presence of bilirubin in the urine is evidence of conjugated hyperbilirubinemia, since only conjugated bilirubin (water-soluble) is filtered by the kidney."
+  },
+  {
+    q: "In the traditional classification, 'pre-hepatic' jaundice corresponds to:",
+    opts: ["Cholestatic jaundice", "Haemolytic jaundice", "Drug-induced jaundice", "Obstructive jaundice"],
+    ans: 1,
+    exp: "Pre-hepatic jaundice corresponds to haemolytic jaundice — caused by excessive breakdown of red blood cells."
+  },
+  // ─── NEONATAL JAUNDICE ───
+  {
+    q: "Jaundice in neonates appears when total serum bilirubin is more than:",
+    opts: ["1 mg/dl", "2 mg/dl", "3 mg/dl", "5 mg/dl"],
+    ans: 2,
+    exp: "Jaundice appears in neonates when the total serum bilirubin is more than 3 mg/dl."
+  },
+  {
+    q: "Physiologic jaundice of the newborn is transient because:",
+    opts: ["Breast milk contains conjugating enzymes", "The hepatic machinery for conjugating bilirubin matures by about 2 weeks of age", "The spleen enlarges to compensate", "Renal excretion increases to clear bilirubin"],
+    ans: 1,
+    exp: "The hepatic machinery for conjugating and excreting bilirubin does not fully mature until about 2 weeks of age — so the transient unconjugated hyperbilirubinemia resolves as it matures."
+  },
+  {
+    q: "Breastfeeding may exacerbate physiologic jaundice in neonates due to:",
+    opts: ["High fat content blocking bilirubin uptake", "The action of bilirubin-deconjugating enzymes in breast milk", "Maternal IgG antibodies attacking neonatal RBCs", "Low protein content of breast milk"],
+    ans: 1,
+    exp: "Physiologic jaundice may be exacerbated by breastfeeding due to the action of bilirubin-deconjugating enzymes present in breast milk."
+  },
+  {
+    q: "Phototherapy for neonatal jaundice uses blue light, which:",
+    opts: ["Destroys excess red blood cells", "Converts bilirubin to a soluble isomer excreted in urine", "Stimulates liver conjugation enzymes", "Breaks down bile salts in the intestine"],
+    ans: 1,
+    exp: "Blue light phototherapy converts bilirubin to a soluble isomer that is readily excreted in the urine, keeping bilirubin within safe range until hepatic conjugation matures."
+  },
+  {
+    q: "Which of the following causes UNCONJUGATED hyperbilirubinemia in neonates?",
+    opts: ["Biliary atresia", "Neonatal hepatitis", "Reye's syndrome", "Hemolytic disease of the newborn"],
+    ans: 3,
+    exp: "Hemolytic disease of the newborn causes unconjugated hyperbilirubinemia (excessive RBC destruction → increased bilirubin production)."
+  },
+  {
+    q: "Which of the following is a cause of CONJUGATED hyperbilirubinemia in neonates?",
+    opts: ["Gilbert's syndrome", "Physiologic jaundice", "Biliary atresia", "Congenital hemolytic disorders"],
+    ans: 2,
+    exp: "Biliary atresia (both intrahepatic and extrahepatic) is a cause of conjugated hyperbilirubinemia in neonates."
+  },
+  {
+    q: "Alpha-1-antitrypsin deficiency in neonates causes which type of hyperbilirubinemia?",
+    opts: ["Unconjugated", "Conjugated", "Mixed", "No hyperbilirubinemia"],
+    ans: 1,
+    exp: "Alpha-1-antitrypsin deficiency is listed under metabolic causes of conjugated hyperbilirubinemia in neonates."
+  },
+  {
+    q: "Reye's syndrome is classified under causes of which type of neonatal hyperbilirubinemia?",
+    opts: ["Unconjugated hyperbilirubinemia", "Conjugated hyperbilirubinemia", "Both types equally", "Neither type"],
+    ans: 1,
+    exp: "Reye's syndrome is listed under conjugated hyperbilirubinemia causes in neonates."
+  },
+  {
+    q: "The accumulation of fat (lipid droplets) within hepatocytes is specifically termed:",
+    opts: ["Cholestasis", "Steatosis", "Hemosiderosis", "Lipomatosis"],
+    ans: 1,
+    exp: "Accumulation of fat within injured hepatocytes is called steatosis. Cholestasis refers to bilirubin accumulation."
+  },
+  {
+    q: "Scar formation after liver injury occurs most often as a reaction to:",
+    opts: ["Acute severe single-episode injury only", "Chronic injury", "Viral infection specifically", "Surgical trauma"],
+    ans: 1,
+    exp: "Scar formation may follow severe acute injury but occurs more often as a reaction to chronic injury."
+  }
+];
+
+// ─── State ───
+let current = 0;
+let score = 0;
+let answers = new Array(questions.length).fill(null); // null=unanswered, true=correct, false=wrong
+
+function buildDots() {
+  const nav = document.getElementById('dotNav');
+  nav.innerHTML = '';
+  for (let i = 0; i < questions.length; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.textContent = i + 1;
+    if (i === current) d.classList.add('current');
+    if (answers[i] === true) d.classList.add('answered-correct');
+    if (answers[i] === false) d.classList.add('answered-wrong');
+    d.addEventListener('click', () => { current = i; renderQuestion(); });
+    nav.appendChild(d);
+  }
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('qNumber').textContent = `QUESTION ${current + 1} OF ${questions.length}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('questionNum').textContent = current + 1;
+  document.getElementById('remainingNum').textContent = questions.length - current;
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  const opts = document.getElementById('optionsContainer');
+  opts.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+    btn.addEventListener('click', () => selectAnswer(i));
+    if (answers[current] !== null) {
+      // already answered
+      btn.disabled = true;
+      if (i === q.ans) btn.classList.add('correct');
+      else if (answers[current] === false && i === current_selected) btn.classList.add('wrong');
+    }
+    opts.appendChild(btn);
+  });
+
+  // If already answered, show explanation and feedback
+  const fb = document.getElementById('feedbackBadge');
+  const exp = document.getElementById('explanation');
+  if (answers[current] !== null) {
+    showFeedback(answers[current]);
+    exp.innerHTML = `<strong>📖 الشرح:</strong> ${q.exp}`;
+    exp.classList.add('show');
+  } else {
+    fb.className = 'feedback-badge';
+    fb.textContent = '';
+    exp.className = 'explanation';
+    exp.innerHTML = '';
+  }
+
+  buildDots();
+  // Hide/show nav buttons
+  document.getElementById('prevBtn').style.opacity = current === 0 ? '0.4' : '1';
+  document.getElementById('nextBtn').textContent = current === questions.length - 1 ? 'إنهاء الاختبار ✓' : 'التالي ←';
+}
+
+let current_selected = -1;
+function selectAnswer(idx) {
+  if (answers[current] !== null) return;
+  const q = questions[current];
+  const correct = idx === q.ans;
+  current_selected = idx;
+  answers[current] = correct;
+  if (correct) score++;
+  document.getElementById('scoreVal').textContent = score;
+
+  // Style buttons
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.ans) btn.classList.add('correct');
+    else if (i === idx && !correct) btn.classList.add('wrong');
+  });
+
+  showFeedback(correct);
+  const exp = document.getElementById('explanation');
+  exp.innerHTML = `<strong>📖 الشرح:</strong> ${q.exp}`;
+  exp.classList.add('show');
+  buildDots();
+}
+
+function showFeedback(correct) {
+  const fb = document.getElementById('feedbackBadge');
+  fb.className = 'feedback-badge show ' + (correct ? 'correct-fb' : 'wrong-fb');
+  fb.textContent = correct ? '✅ إجابة صحيحة!' : '❌ إجابة خاطئة — راجع الشرح أدناه';
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next < 0) return;
+  if (next >= questions.length) {
+    showResults();
+    return;
+  }
+  current = next;
+  renderQuestion();
+}
+
+function showResults() {
+  document.getElementById('questionCard').style.display = 'none';
+  document.querySelectorAll('.nav-row').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.dot-nav').forEach(el => el.style.display = 'none');
+  const screen = document.getElementById('resultsScreen');
+  screen.classList.add('show');
+
+  const total = questions.length;
+  const correct = answers.filter(a => a === true).length;
+  const wrong = answers.filter(a => a === false).length;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressPct').textContent = '100%';
+
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('wrongCount').textContent = wrong;
+  document.getElementById('finalScore').textContent = correct;
+  document.getElementById('circlePct').textContent = pct + '%';
+  document.getElementById('scoreCircle').style.setProperty('--pct', pct + '%');
+
+  let title, emoji;
+  if (pct >= 90) { title = 'ممتاز! أداء رائع 🌟'; emoji = '🏆'; }
+  else if (pct >= 75) { title = 'جيد جداً! استمر 💪'; emoji = '🥈'; }
+  else if (pct >= 60) { title = 'جيد — يمكنك التحسين 📚'; emoji = '🥉'; }
+  else { title = 'تحتاج إلى مراجعة المحاضرة ⚠️'; emoji = '📖'; }
+
+  document.getElementById('resultsTitle').textContent = title;
+  document.getElementById('trophyEmoji').textContent = emoji;
+  document.getElementById('resultsSubtitle').textContent = `أجبت بشكل صحيح على ${correct} من أصل ${total} سؤال`;
+  if (window.parent && window.parent.saveScore) { window.parent.saveScore(pct); }
+}
+
+function restartQuiz() {
+  current = 0;
+  score = 0;
+  answers = new Array(questions.length).fill(null);
+  current_selected = -1;
+  document.getElementById('scoreVal').textContent = 0;
+  document.getElementById('questionCard').style.display = '';
+  document.querySelectorAll('.nav-row').forEach(el => el.style.display = '');
+  document.querySelectorAll('.dot-nav').forEach(el => el.style.display = '');
+  document.getElementById('resultsScreen').classList.remove('show');
+  renderQuestion();
+}
+
+// Init
+renderQuestion();
+</script>
+</body>
+</html>
