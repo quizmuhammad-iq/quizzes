@@ -819,7 +819,10 @@ function showResult() {
   const rs = document.getElementById('resultScreen');
   rs.classList.add('show');
 
-  const pct = Math.round((correctCount / TOTAL) * 100);
+  const pct = Math.round((score / TOTAL) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('resultScoreBig').textContent = score + ' نقطة';
   document.getElementById('rCorrect').textContent = correctCount;
   document.getElementById('rWrong').textContent = wrongCount;
