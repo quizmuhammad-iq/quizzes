@@ -858,6 +858,9 @@ function showResults() {
   const res = document.getElementById('results');
   res.classList.add('show');
   const pct = Math.round((correct / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('res-score').textContent = `${correct} / ${questions.length}`;
   document.getElementById('rg-correct').textContent = correct;
   document.getElementById('rg-wrong').textContent = wrong;
