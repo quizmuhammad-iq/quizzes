@@ -931,6 +931,9 @@ function showResult() {
   document.getElementById('progress-container').style.display = 'none';
 
   const pct = Math.round((score / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('result-score').textContent = score;
   document.getElementById('r-correct').textContent = correctCount;
   document.getElementById('r-wrong').textContent = wrongCount;
