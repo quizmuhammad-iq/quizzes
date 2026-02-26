@@ -1119,6 +1119,9 @@ function showResult() {
   rs.style.display = 'block';
 
   const pct = Math.round((correctCount / 45) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('resultPct').textContent = pct + '%';
   document.getElementById('resCorrect').textContent = correctCount;
   document.getElementById('resWrong').textContent = wrongCount;
