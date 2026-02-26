@@ -895,6 +895,9 @@ function showResult() {
   document.getElementById('prog-wrap').style.display = 'none';
 
   const pct = Math.round((score / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('result-score-big').textContent = `${score} / ${questions.length}`;
   document.getElementById('rs-correct').textContent = correctCount;
   document.getElementById('rs-wrong').textContent = wrongCount;
