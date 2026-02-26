@@ -5,21 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>كوز</title>
 <style>
-body { background: #0a0e1a; color: #e2e8f0; font-family: sans-serif; margin: 0; }
+body { background: #0a0e1a; color: #e2e8f0; font-family: sans-serif; margin: 0; overflow: hidden; }
 .top-bar { background: #111827; padding: 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1e2d45; }
-.btn-back { background: #1e2d45; border: none; color: #fff; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+.btn-back { background: #1e2d45; border: none; color: #fff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: sans-serif; }
 #quizFrame { width: 100%; height: calc(100vh - 60px); border: none; }
 </style>
 </head>
 <body>
-<div class="top-bar"><button class="btn-back" onclick="history.back()">عودة</button><div id="title">جاري التحميل...</div></div>
+<div class="top-bar">
+    <button class="btn-back" onclick="history.back()">‹ عودة</button>
+    <div id="title" style="font-weight: bold;">جاري التحميل...</div>
+</div>
 <iframe id="quizFrame"></iframe>
+
 <script>
 const params = new URLSearchParams(window.location.search);
 const folder = params.get('folder');
 const num = params.get('num');
 document.getElementById('title').textContent = `محاضرة ${num}`;
 document.getElementById('quizFrame').src = `lectures/${folder}/lecture_${num}.html`;
+
+// وظيفة حفظ الدرجة (الجسر البرمجي)
+window.saveScore = function(score) {
+    // 1. جلب الدرجات الحالية
+    let allScores = JSON.parse(localStorage.getItem('user_scores') || '{}');
+    let key = `${folder}_${num}`;
+
+    // 2. حفظ الدرجة فقط إذا كانت أعلى من الدرجة القديمة
+    if (!allScores[key] || score > allScores[key]) {
+        allScores[key] = score;
+        localStorage.setItem('user_scores', JSON.stringify(allScores));
+    }
+};
+
+// استقبال الرسائل من الكوز (في حال كان الكوز يرسل البيانات عبر postMessage)
+window.addEventListener('message', function(event) {
+    if (event.data.type === 'SET_SCORE') {
+        window.saveScore(event.data.score);
+    }
+});
 </script>
 </body>
 </html>
