@@ -835,6 +835,9 @@ function showResults() {
   const rs = document.getElementById('results-screen');
   rs.classList.add('show');
   const pct = Math.round(score/45*100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('result-pct').textContent = pct+'%';
   document.getElementById('result-circle').style.setProperty('--pct', pct+'%');
   document.getElementById('rs-correct').textContent = score;
