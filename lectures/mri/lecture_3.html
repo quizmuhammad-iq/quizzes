@@ -1137,6 +1137,9 @@ function showResults() {
   resultsScreen.style.display = 'block';
 
   const pct = Math.round((score / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('scoreCircle').style.setProperty('--pct', pct + '%');
   document.getElementById('scoreNum').textContent = score;
   document.getElementById('rCorrect').textContent = correct;
