@@ -927,6 +927,9 @@ function showResults() {
   document.getElementById('resultsScreen').classList.remove('hidden');
 
   const pct = Math.round((correct / 45) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('scorePercent').textContent = pct + '%';
   document.getElementById('scoreCircle').style.setProperty('--pct', pct + '%');
   document.getElementById('rCorrect').textContent = correct;
