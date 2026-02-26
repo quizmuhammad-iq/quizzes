@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joint Diseases - اختبار أمراض المفاصل</title>
+<!-- Offline fonts - no internet needed -->
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #131929;
+    --surface2: #1a2236;
+    --border: #1e3a5f;
+    --accent: #00c6ff;
+    --accent2: #0072ff;
+    --gold: #f5c842;
+    --success: #00e676;
+    --danger: #ff1744;
+    --text: #e8f0fe;
+    --muted: #7a8ba0;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: 
+      radial-gradient(ellipse at 20% 50%, rgba(0,114,255,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(0,198,255,0.06) 0%, transparent 40%),
+      radial-gradient(ellipse at 60% 80%, rgba(245,200,66,0.04) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #app {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+  }
+
+  /* =================== HEADER =================== */
+  .quiz-header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 30px;
+  }
+
+  .quiz-header .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .quiz-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .quiz-header .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .creator-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,200,66,0.1);
+    border: 1px solid rgba(245,200,66,0.3);
+    border-radius: 30px;
+    padding: 8px 18px;
+    font-size: 13px;
+    color: var(--gold);
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .creator-link:hover {
+    background: rgba(245,200,66,0.2);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245,200,66,0.15);
+  }
+
+  .creator-link .tg-icon {
+    font-size: 16px;
+  }
+
+  .creator-link .cta {
+    font-size: 11px;
+    opacity: 0.8;
+    border-right: 1px solid rgba(245,200,66,0.4);
+    padding-right: 8px;
+    margin-right: 0;
+  }
+
+  /* =================== PROGRESS BAR =================== */
+  .progress-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .progress-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+  }
+
+  .q-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .progress-bar-wrap {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.07);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(0,198,255,0.4);
+  }
+
+  .score-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,198,255,0.08);
+    border: 1px solid rgba(0,198,255,0.2);
+    border-radius: 30px;
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .score-badge .star { color: var(--gold); }
+
+  /* =================== QUESTION CARD =================== */
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 20px;
+    animation: slideIn 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, var(--accent2), var(--accent));
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-size: clamp(1rem, 2.2vw, 1.15rem);
+    font-weight: 500;
+    line-height: 1.7;
+    color: #d0ddf0;
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* =================== OPTIONS =================== */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    direction: ltr;
+    color: var(--text);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(0,198,255,0.06);
+    transform: translateX(-3px);
+    box-shadow: 0 4px 15px rgba(0,114,255,0.15);
+  }
+
+  .option-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(0,198,255,0.1);
+    border: 1px solid rgba(0,198,255,0.2);
+    border-radius: 5px;
+    padding: 2px 8px;
+    min-width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.25s;
+  }
+
+  .option-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Correct */
+  .option-btn.correct {
+    border-color: var(--success);
+    background: rgba(0,230,118,0.08);
+    animation: correctPulse 0.4s ease;
+  }
+  .option-btn.correct .option-label {
+    background: var(--success);
+    color: #000;
+    border-color: var(--success);
+  }
+  @keyframes correctPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+
+  /* Wrong */
+  .option-btn.wrong {
+    border-color: var(--danger);
+    background: rgba(255,23,68,0.07);
+    animation: wrongShake 0.4s ease;
+  }
+  .option-btn.wrong .option-label {
+    background: var(--danger);
+    color: #fff;
+    border-color: var(--danger);
+  }
+  @keyframes wrongShake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  /* Reveal correct when wrong chosen */
+  .option-btn.reveal {
+    border-color: var(--success);
+    background: rgba(0,230,118,0.05);
+    opacity: 0.8;
+  }
+  .option-btn.reveal .option-label {
+    background: rgba(0,230,118,0.15);
+    color: var(--success);
+    border-color: var(--success);
+  }
+
+  .option-btn:disabled {
+    cursor: not-allowed;
+  }
+
+  /* =================== FEEDBACK BOX =================== */
+  .feedback-box {
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    animation: fadeIn 0.3s ease;
+    display: none;
+    direction: rtl;
+  }
+
+  .feedback-box.correct-fb {
+    background: rgba(0,230,118,0.08);
+    border: 1px solid rgba(0,230,118,0.3);
+    color: var(--success);
+  }
+
+  .feedback-box.wrong-fb {
+    background: rgba(255,23,68,0.07);
+    border: 1px solid rgba(255,23,68,0.25);
+  }
+
+  .feedback-box .fb-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .feedback-box.correct-fb .fb-title { color: var(--success); }
+  .feedback-box.wrong-fb .fb-title { color: var(--danger); }
+
+  .feedback-box .fb-body {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    direction: ltr;
+    text-align: left;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* =================== BUTTONS =================== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(0,114,255,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,114,255,0.4);
+  }
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  .action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* =================== RESULT SCREEN =================== */
+  .result-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: slideIn 0.5s ease;
+  }
+
+  .result-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 3px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 0 40px rgba(0,198,255,0.2), 0 0 80px rgba(0,114,255,0.1);
+    position: relative;
+  }
+
+  .result-circle::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) var(--pct), transparent 0);
+    z-index: -1;
+    padding: 6px;
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
+    mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
+  }
+
+  .result-score-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .result-score-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .result-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2rem;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .result-msg {
+    color: var(--muted);
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 22px;
+    min-width: 110px;
+  }
+
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  .stat-num.correct-color { color: var(--success); }
+  .stat-num.wrong-color { color: var(--danger); }
+  .stat-num.score-color { color: var(--gold); }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* =================== SPLASH SCREEN =================== */
+  .splash-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    text-align: center;
+    padding: 40px 20px;
+    animation: slideIn 0.5s ease;
+  }
+
+  .splash-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .splash-screen h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+
+  .splash-screen p {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 30px;
+    max-width: 450px;
+    line-height: 1.7;
+  }
+
+  .info-chips {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .chip span { color: var(--accent); font-weight: 700; }
+
+  /* =================== FOOTER =================== */
+  .quiz-footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .footer-link:hover {
+    color: #fff;
+    text-shadow: 0 0 12px rgba(245,200,66,0.5);
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .progress-section { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .question-card { padding: 20px 16px; }
+    .action-row { flex-direction: column-reverse; }
+    .btn { width: 100%; }
+    .result-stats { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="quiz-header">
+    <div class="badge">محاضرة 2 · علم الأمراض الوظيفي</div>
+    <h1>Joint Diseases</h1>
+    <div class="subtitle">اختبار المحاضرة الثانية من إنشاء محمد صبار</div>
+    <a class="creator-link" href="https://t.me/mulimcq" target="_blank">
+      <span class="tg-icon">✈️</span>
+      <span class="cta">اضغط هنا للحصول على اختبارات باقي المحاضرات</span>
+      <strong>محمد صبار</strong>
+    </a>
+  </div>
+
+  <!-- SPLASH -->
+  <div class="splash-screen" id="splash">
+    <div class="splash-icon">🦴</div>
+    <h2>أمراض المفاصل — Joint Diseases</h2>
+    <p>اختبر معلوماتك بـ <strong>45 سؤالاً</strong> متعدد الخيارات باللغة الإنجليزية شاملاً جميع محاور المحاضرة. ستظهر لك شرح الإجابة الصحيحة عند الخطأ.</p>
+    <div class="info-chips">
+      <div class="chip">📋 <span>45</span> سؤال</div>
+      <div class="chip">🎯 4 خيارات لكل سؤال</div>
+      <div class="chip">✅ شرح فوري</div>
+      <div class="chip">📊 متابعة مستوى التقدم</div>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()">🚀 ابدأ الاختبار الآن</button>
+  </div>
+
+  <!-- QUIZ AREA -->
+  <div id="quizArea" style="display:none;">
+
+    <!-- PROGRESS -->
+    <div class="progress-section">
+      <div class="progress-info">
+        <div class="q-counter" id="qCounter">السؤال 1 / 45</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="score-badge"><span class="star">⭐</span> النقاط: <span id="scoreDisplay">0</span></div>
+    </div>
+
+    <!-- QUESTION -->
+    <div class="question-card" id="questionCard">
+      <div class="q-number" id="qNum">QUESTION 01</div>
+      <div class="q-text" id="qText"></div>
+    </div>
+
+    <!-- OPTIONS -->
+    <div class="options-grid" id="optionsGrid"></div>
+
+    <!-- FEEDBACK -->
+    <div class="feedback-box" id="feedbackBox">
+      <div class="fb-title" id="fbTitle"></div>
+      <div class="fb-body" id="fbBody"></div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="action-row">
+      <button class="btn btn-ghost" onclick="restartQuiz()">🔄 إعادة البداية</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>التالي ←</button>
+    </div>
+
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-circle" id="resultCircle">
+      <div class="result-score-num" id="resultPct">0%</div>
+      <div class="result-score-label">النتيجة</div>
+    </div>
+    <div class="result-title" id="resultTitle">أحسنت!</div>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="result-stats">
+      <div class="stat-box">
+        <div class="stat-num correct-color" id="resCorrect">0</div>
+        <div class="stat-label">إجابات صحيحة ✅</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num wrong-color" id="resWrong">0</div>
+        <div class="stat-label">إجابات خاطئة ❌</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num score-color" id="resScore">0</div>
+        <div class="stat-label">النقاط ⭐</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <button class="btn btn-primary" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+      <a class="btn btn-ghost" href="https://t.me/mulimcq" target="_blank">✈️ محمد صبار — المزيد</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="quiz-footer">
+    <a class="footer-link" href="https://t.me/mulimcq" target="_blank">
+      ✈️ <strong>محمد صبار</strong> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </a>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Arthritis is defined as:",
+    opts: ["Degeneration of bone", "Inflammation of joints", "Infection of cartilage", "Fracture of synovium"],
+    ans: 1,
+    exp: "Arthritis is inflammation of joints. The most common forms are osteoarthritis and rheumatoid arthritis."
+  },
+  {
+    q: "Which of the following is the most common form of arthritis?",
+    opts: ["Septic arthritis", "Gouty arthritis", "Osteoarthritis and Rheumatoid arthritis", "Pseudogout"],
+    ans: 2,
+    exp: "Osteoarthritis (OA) and Rheumatoid arthritis (RA) are the most common forms, differing in pathogenesis and clinical manifestations."
+  },
+  {
+    q: "Primary osteoarthritis (OA) most commonly occurs in:",
+    opts: ["Children under 10 years", "Adolescents", "The elderly, more commonly in women", "Young males aged 20–30"],
+    ans: 2,
+    exp: "Primary OA occurs in the elderly, more commonly in women than in men, beginning by the end of the 4th decade."
+  },
+  {
+    q: "All of the following contribute to primary OA EXCEPT:",
+    opts: ["Wear and tear with repeated minor trauma", "Heredity and obesity", "Autoimmune destruction of cartilage", "Ageing"],
+    ans: 2,
+    exp: "Autoimmunity is the primary pathogenic mechanism in Rheumatoid Arthritis, NOT in primary OA. OA involves wear and tear, heredity, obesity, and ageing."
+  },
+  {
+    q: "Secondary OA differs from primary OA in that it:",
+    opts: ["Only affects women", "Can appear at any age following previous joint injury", "Is caused by autoimmunity", "Only involves the spine"],
+    ans: 1,
+    exp: "Secondary OA may appear at any age and results from previous wear and tear phenomena such as prior injury, fracture, inflammation, or loose bodies."
+  },
+  {
+    q: "Which joints are most commonly involved in OA?",
+    opts: ["Small joints of the hands", "Shoulder and elbow", "Weight-bearing joints such as hips, knees, and vertebrae", "Temporomandibular joints"],
+    ans: 2,
+    exp: "OA primarily affects weight-bearing joints like hips, knees, and vertebrae, though interphalangeal joints of fingers may also be affected."
+  },
+  {
+    q: "In OA, the earliest change in articular cartilage is:",
+    opts: ["Osteophyte formation", "Loss of cartilaginous matrix", "Synovial hyperplasia", "Subchondral cyst formation"],
+    ans: 1,
+    exp: "Initially, there is loss of cartilaginous matrix. Further progression causes loosening, flaking, and fissuring of articular cartilage."
+  },
+  {
+    q: "The denuded subchondral bone in OA appears:",
+    opts: ["Red and inflamed", "Soft and spongy", "Like polished ivory (eburnation)", "Necrotic and black"],
+    ans: 2,
+    exp: "The denuded subchondral bone in OA appears like polished ivory — a process called eburnation — due to superficial osteocyte death and increased osteoclastic activity."
+  },
+  {
+    q: "Osteophytes (bone spurs) in OA are formed at:",
+    opts: ["The center of articular cartilage", "The synovial membrane", "The margins of joints in response to cartilage damage", "The ligament insertions"],
+    ans: 2,
+    exp: "The margins of the joints respond to cartilage damage by osteophyte (spur) formation. Loosened osteophytes may become free loose bodies."
+  },
+  {
+    q: "Which of the following is TRUE about synovial changes in OA?",
+    opts: ["Severe synovitis occurs early in the disease", "The synovium shows autoimmune inflammatory pannus", "Initially no pathologic changes; in advanced cases low-grade chronic synovitis occurs", "Synovial destruction is the hallmark of OA"],
+    ans: 2,
+    exp: "Initially there are no pathologic changes in the synovium, but in advanced OA there is low-grade chronic synovitis and villous hypertrophy."
+  },
+  {
+    q: "The primary pathogenic abnormality in Osteoarthritis is:",
+    opts: ["Autoimmunity", "Infection", "Mechanical injury to articular cartilage", "Crystal deposition"],
+    ans: 2,
+    exp: "The primary pathogenic abnormality in OA is mechanical injury to articular cartilage, unlike RA which is driven by autoimmunity."
+  },
+  {
+    q: "Which serum antibodies are characteristically found in Rheumatoid Arthritis but NOT in OA?",
+    opts: ["Anti-dsDNA", "ACPA and rheumatoid factor", "ANA", "Anti-Smith"],
+    ans: 1,
+    exp: "RA is associated with various serum antibodies including ACPA (anti-citrullinated protein antibodies) and rheumatoid factor, while OA has none."
+  },
+  {
+    q: "Inflammatory pannus invading and destroying cartilage is a pathological feature of:",
+    opts: ["Osteoarthritis", "Gout", "Rheumatoid arthritis", "Pseudogout"],
+    ans: 2,
+    exp: "Inflammatory pannus invading and destroying cartilage, severe chronic inflammation, and joint fusion (ankylosis) are characteristic features of RA."
+  },
+  {
+    q: "Rheumatoid Arthritis differs from OA in that RA:",
+    opts: ["Only involves weight-bearing joints", "Does not involve systemic organs", "Often begins with small joints of fingers and may involve lungs and heart", "Is caused by mechanical wear"],
+    ans: 2,
+    exp: "RA often begins with small joints of fingers and can involve multiple joints and other organs including lungs and heart, unlike OA which is limited to joints."
+  },
+  {
+    q: "Gout is characterized by:",
+    opts: ["Autoimmune destruction of cartilage", "Bacterial infection of joints", "Transient attacks of acute arthritis due to urate crystal deposition", "Calcium pyrophosphate deposits in menisci"],
+    ans: 2,
+    exp: "Gout is marked by transient attacks of acute arthritis initiated by urate crystals deposited within and around joints."
+  },
+  {
+    q: "What percentage of gout cases are primary (idiopathic)?",
+    opts: ["50%", "70%", "90%", "100%"],
+    ans: 2,
+    exp: "Gout is primary (idiopathic) in approximately 90% of cases, while 10% are secondary to underlying diseases."
+  },
+  {
+    q: "Hyperuricemia is defined as plasma urate level above:",
+    opts: ["4.5 mg/dL", "5.5 mg/dL", "6.8 mg/dL", "8.0 mg/dL"],
+    ans: 2,
+    exp: "Hyperuricemia is defined as plasma urate level above 6.8 mg/dL. It is necessary but not sufficient for gout development."
+  },
+  {
+    q: "In primary gout, elevated uric acid most commonly results from:",
+    opts: ["Overproduction due to enzyme defects", "Reduced renal excretion", "Increased dietary purine intake", "Hemolytic anemia"],
+    ans: 1,
+    exp: "In primary gout, elevated uric acid most commonly results from reduced excretion, the basis of which is unknown in most patients."
+  },
+  {
+    q: "Which of the following is a risk factor for developing symptomatic gout?",
+    opts: ["Female sex before menopause", "Vegetarian diet", "Alcohol consumption and obesity", "Regular aerobic exercise"],
+    ans: 2,
+    exp: "Risk factors for symptomatic gout include duration of hyperuricemia, genetic predisposition, alcohol consumption, obesity, and certain drugs (e.g., thiazides)."
+  },
+  {
+    q: "Thiazide diuretics contribute to gout by:",
+    opts: ["Increasing uric acid production", "Promoting inflammation", "Reducing renal excretion of urate", "Blocking xanthine oxidase"],
+    ans: 2,
+    exp: "Thiazide diuretics reduce renal excretion of urate, thereby increasing serum uric acid levels and predisposing to gout."
+  },
+  {
+    q: "Gout usually appears after how many years of hyperuricemia?",
+    opts: ["1–5 years", "5–10 years", "20–30 years", "Only immediately after onset"],
+    ans: 2,
+    exp: "Gout usually appears after 20 to 30 years of hyperuricemia, indicating the duration of elevated urate is a key contributing factor."
+  },
+  {
+    q: "Acute gouty arthritis is histologically characterized by:",
+    opts: ["Granulomatous inflammation with giant cells only", "Intense inflammatory infiltrate rich in neutrophils", "Lymphocytic infiltration of synovium", "Fibrinous exudate with no cellular response"],
+    ans: 1,
+    exp: "Acute gouty arthritis is characterized by an intense inflammatory infiltrate rich in neutrophils that permeates the synovium and synovial fluid."
+  },
+  {
+    q: "Tophi are pathognomonic of gout. They are composed of:",
+    opts: ["Calcium pyrophosphate crystals with fibrous tissue", "Large aggregates of urate crystals surrounded by foreign body giant cell reaction", "Necrotic bone with inflammatory cells", "Cholesterol deposits with macrophages"],
+    ans: 1,
+    exp: "Tophi — pathognomonic of gout — are formed by large aggregates of urate crystals surrounded by an intense foreign body giant cell reaction. They occur in cartilage, ligaments, tendons, and bursae."
+  },
+  {
+    q: "Gouty nephropathy refers to:",
+    opts: ["Autoimmune glomerulonephritis", "Renal complications caused by deposition of urate crystals in the renal medullary interstitium", "Bacterial pyelonephritis unrelated to gout", "Nephrotic syndrome from amyloid deposits"],
+    ans: 1,
+    exp: "Gouty nephropathy refers to renal complications (e.g., uric acid nephrolithiasis, pyelonephritis) caused by deposition of urate crystals or tophi in the renal medullary interstitium or tubules."
+  },
+  {
+    q: "The first clinical stage of gout begins with:",
+    opts: ["Acute arthritis of the big toe", "Chronic tophaceous deposits", "Asymptomatic hyperuricemia starting around puberty in men", "Renal failure"],
+    ans: 2,
+    exp: "The first stage is asymptomatic hyperuricemia, which begins around puberty in men and after menopause in women."
+  },
+  {
+    q: "The most common joint involved in the first attack of acute gout is:",
+    opts: ["Knee", "Hip", "Metatarsophalangeal joint of the big toe", "Wrist"],
+    ans: 2,
+    exp: "50% of first attacks of acute gout occur in the metatarsophalangeal joint of the big toe (podagra). Most first attacks are monoarticular."
+  },
+  {
+    q: "Chronic tophaceous gout develops on average after:",
+    opts: ["1 year from first attack", "3 years from first attack", "10 years after the initial acute attack", "20 years from onset of hyperuricemia"],
+    ans: 2,
+    exp: "Chronic tophaceous gout develops on average about 10 years after the initial acute attack."
+  },
+  {
+    q: "Which medication class reduces inflammation in acute gout?",
+    opts: ["Xanthine oxidase inhibitors", "NSAIDs and colchicine", "Uricosuric drugs", "Thiazide diuretics"],
+    ans: 1,
+    exp: "Treatment of acute gout inflammation includes NSAIDs and colchicine, while xanthine oxidase inhibitors lower serum urate levels and uricosuric drugs increase renal uric acid excretion."
+  },
+  {
+    q: "Xanthine oxidase inhibitors are used in gout to:",
+    opts: ["Block inflammation in joints", "Lower serum urate levels", "Increase renal uric acid excretion", "Dissolve existing tophi"],
+    ans: 1,
+    exp: "Xanthine oxidase inhibitors (e.g., allopurinol) lower serum urate levels by reducing uric acid production."
+  },
+  {
+    q: "Generally, gout:",
+    opts: ["Significantly shortens life span", "Leads to joint fusion (ankylosis)", "Does not shorten life span but can significantly affect quality of life", "Is always fatal within 10 years"],
+    ans: 2,
+    exp: "Generally, gout does not shorten life span but can significantly affect quality of life through painful attacks and complications."
+  },
+  {
+    q: "Calcium Pyrophosphate Crystal Deposition Disease (CPPD) is also known as:",
+    opts: ["True gout", "Pseudogout", "Septic arthritis", "Reactive arthritis"],
+    ans: 1,
+    exp: "CPPD is also known as pseudogout because it mimics gout clinically but involves calcium pyrophosphate crystals instead of urate crystals."
+  },
+  {
+    q: "CPPD usually occurs in individuals older than:",
+    opts: ["20 years", "35 years", "50 years", "70 years"],
+    ans: 2,
+    exp: "CPPD usually occurs in individuals older than 50 years and becomes more common with increasing age."
+  },
+  {
+    q: "An autosomal dominant variant of CPPD is caused by:",
+    opts: ["Mutations in the collagen gene", "Germline mutations in the pyrophosphate transport channel", "Defects in xanthine oxidase", "HLA-B27 association"],
+    ans: 1,
+    exp: "An autosomal dominant variant of CPPD is caused by germline mutations in the pyrophosphate transport channel, resulting in crystal deposition and arthritis relatively early in life."
+  },
+  {
+    q: "Which condition predisposes to secondary CPPD?",
+    opts: ["Hyperthyroidism", "Hypoparathyroidism", "Hyperparathyroidism and hemochromatosis", "Hypercalcemia from malignancy only"],
+    ans: 2,
+    exp: "Disorders that predispose to secondary CPPD include previous joint damage, hyperparathyroidism, hemochromatosis, hypothyroidism, and diabetes."
+  },
+  {
+    q: "In CPPD, crystals first develop in:",
+    opts: ["The synovial membrane", "The articular cartilage, menisci, and intervertebral discs", "Periarticular soft tissue", "Renal tubules"],
+    ans: 1,
+    exp: "In CPPD, crystals first develop in the articular cartilage, menisci, and intervertebral discs. As deposits enlarge, they may rupture and seed the joint."
+  },
+  {
+    q: "Approximately what percentage of individuals with CPPD experience significant joint damage?",
+    opts: ["10%", "25%", "50%", "90%"],
+    ans: 2,
+    exp: "Ultimately, approximately 50% of affected individuals with CPPD experience significant joint damage."
+  },
+  {
+    q: "Currently, treatment of CPPD is:",
+    opts: ["Xanthine oxidase inhibitors", "Long-term colchicine to dissolve crystals", "Supportive only; no known treatment prevents or slows crystal formation", "Surgical removal of crystals"],
+    ans: 2,
+    exp: "Therapy for CPPD is supportive: there is no known treatment that prevents or slows crystal formation."
+  },
+  {
+    q: "Joints can become infected by all of the following routes EXCEPT:",
+    opts: ["Hematogenous dissemination", "Direct inoculation through the skin", "Contiguous spread from osteomyelitis", "Inhalation of airborne pathogens"],
+    ans: 3,
+    exp: "Joints become infected via hematogenous dissemination, direct inoculation through skin, or contiguous spread from soft tissue abscess or osteomyelitis — NOT by inhalation."
+  },
+  {
+    q: "Why is infectious arthritis considered potentially serious?",
+    opts: ["It always leads to systemic sepsis", "It can cause rapid, permanent joint destruction", "It spreads to other joints within 24 hours", "It is universally fatal without treatment"],
+    ans: 1,
+    exp: "Infectious arthritis is potentially serious because it can cause rapid, permanent joint destruction if not promptly treated."
+  },
+  {
+    q: "The most common pathogen causing acute suppurative arthritis in adults and children is:",
+    opts: ["Streptococcus pneumoniae", "Escherichia coli", "Staphylococcus aureus", "Pseudomonas aeruginosa"],
+    ans: 2,
+    exp: "Staphylococcus aureus is the most common pathogen causing acute suppurative arthritis in adults and children. In neonates, group B Streptococcus may be responsible."
+  },
+  {
+    q: "In neonates, the most common organism responsible for suppurative arthritis is:",
+    opts: ["Staphylococcus aureus", "Group B Streptococcus", "Neisseria gonorrhoeae", "Haemophilus influenzae"],
+    ans: 1,
+    exp: "In neonates, group B Streptococcus may be responsible for suppurative arthritis, while Staphylococcus aureus is more common in adults and older children."
+  },
+  {
+    q: "Gram-negative bacilli and Pseudomonas cause septic arthritis most commonly in:",
+    opts: ["Elderly women with OA", "Healthy young adults", "Immunocompromised patients and intravenous drug users", "Children with viral infections"],
+    ans: 2,
+    exp: "Infection with gram-negative bacilli and Pseudomonas is generally seen in patients who are immunocompromised and in people who use intravenous drugs."
+  },
+  {
+    q: "The classic presentation of suppurative arthritis includes all of the following EXCEPT:",
+    opts: ["Sudden development of acute painful and swollen joint", "Fever and leukocytosis", "Gradual onset over several months", "Restricted range of motion"],
+    ans: 2,
+    exp: "The classic presentation is SUDDEN development of an acutely painful, warm, and swollen joint with restricted range of motion, fever, and leukocytosis — NOT gradual onset."
+  },
+  {
+    q: "Which joint is most commonly affected in suppurative arthritis?",
+    opts: ["Small joints of the hand", "Knee, hip, shoulder, and elbow", "Ankle and foot", "Sacroiliac joint"],
+    ans: 1,
+    exp: "Suppurative arthritis usually involves only a single joint, most commonly the knee, hip, shoulder, and elbow."
+  },
+  {
+    q: "In patients who inject intravenous drugs, suppurative arthritis more commonly involves:",
+    opts: ["Knee and hip", "Axial joints (spine, sacroiliac)", "Interphalangeal joints", "Temporomandibular joint"],
+    ans: 1,
+    exp: "The axial joints are more often involved in individuals who inject drugs, distinguishing them from the typical pattern seen in the general population."
+  },
+  {
+    q: "Diagnosis of suppurative arthritis is confirmed by:",
+    opts: ["MRI showing joint effusion", "Plain X-ray showing joint space narrowing", "Joint aspiration yielding purulent fluid with identifiable causative agent", "Elevated ESR alone"],
+    ans: 2,
+    exp: "Joint aspiration is diagnostic if it yields purulent fluid in which the causative agent can be identified. Prompt recognition and antimicrobial therapy can prevent joint destruction."
+  }
+];
+
+let current = 0;
+let score = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let answered = false;
+
+function startQuiz() {
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[current];
+  const labels = ['A', 'B', 'C', 'D'];
+
+  document.getElementById('qCounter').textContent = `السؤال ${current + 1} / 45`;
+  document.getElementById('progressFill').style.width = `${((current) / 45) * 100}%`;
+  document.getElementById('qNum').textContent = `QUESTION ${String(current + 1).padStart(2, '0')}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('nextBtn').textContent = current === 44 ? '🏁 إنهاء الاختبار' : 'التالي ←';
+
+  const fb = document.getElementById('feedbackBox');
+  fb.style.display = 'none';
+  fb.className = 'feedback-box';
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-label">${labels[i]}</span><span class="option-text">${opt}</span>`;
+    btn.addEventListener('click', () => selectAnswer(i));
+    grid.appendChild(btn);
+  });
+
+  // Animate card
+  const card = document.getElementById('questionCard');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'slideIn 0.4s ease';
+}
+
+function selectAnswer(selected) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[current];
+  const btns = document.querySelectorAll('.option-btn');
+  const fb = document.getElementById('feedbackBox');
+
+  btns.forEach(b => b.disabled = true);
+
+  if (selected === q.ans) {
+    btns[selected].classList.add('correct');
+    score += 2;
+    correctCount++;
+    document.getElementById('scoreDisplay').textContent = score;
+
+    fb.className = 'feedback-box correct-fb';
+    fb.style.display = 'block';
+    document.getElementById('fbTitle').innerHTML = '✅ إجابة صحيحة!';
+    document.getElementById('fbBody').textContent = q.exp;
+  } else {
+    btns[selected].classList.add('wrong');
+    btns[q.ans].classList.add('reveal');
+    wrongCount++;
+
+    fb.className = 'feedback-box wrong-fb';
+    fb.style.display = 'block';
+    document.getElementById('fbTitle').innerHTML = `❌ إجابة خاطئة`;
+    document.getElementById('fbBody').textContent = `الإجابة الصحيحة هي الخيار ${['A','B','C','D'][q.ans]}: ${q.opts[q.ans]}. ${q.exp}`;
+  }
+
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  if (current < 44) {
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('quizArea').style.display = 'none';
+  const rs = document.getElementById('resultScreen');
+  rs.style.display = 'block';
+
+  const pct = Math.round((correctCount / 45) * 100);
+  document.getElementById('resultPct').textContent = pct + '%';
+  document.getElementById('resCorrect').textContent = correctCount;
+  document.getElementById('resWrong').textContent = wrongCount;
+  document.getElementById('resScore').textContent = score;
+
+  const circle = document.getElementById('resultCircle');
+  circle.style.setProperty('--pct', `${pct * 3.6}deg`);
+
+  let title, msg;
+  if (pct >= 90) { title = '🏆 ممتاز!'; msg = 'أداء رائع! أنت متمكن من مادة أمراض المفاصل.'; }
+  else if (pct >= 75) { title = '🌟 جيد جداً!'; msg = 'أداء قوي! راجع الأجزاء التي أخطأت فيها.'; }
+  else if (pct >= 60) { title = '👍 جيد'; msg = 'أداء مقبول. أعد مراجعة المحاضرة وكرر الاختبار.'; }
+  else { title = '📚 تحتاج للمزيد'; msg = 'راجع المحاضرة بعناية وأعد الاختبار مجدداً. لا تستسلم!'; }
+
+  document.getElementById('resultTitle').textContent = title;
+  if (window.parent && window.parent.saveScore) { window.parent.saveScore(pct); }
+  document.getElementById('resultMsg').textContent = msg;
+}
+
+function restartQuiz() {
+  current = 0; score = 0; correctCount = 0; wrongCount = 0; answered = false;
+  document.getElementById('scoreDisplay').textContent = '0';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  renderQuestion();
+}
+</script>
+</body>
+</html>
