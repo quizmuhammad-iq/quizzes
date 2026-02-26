@@ -837,6 +837,9 @@ function showResult() {
   document.getElementById('progressWrap').style.display = 'none';
 
   const pct = Math.round((correct / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('finalPct').textContent = pct + '%';
   document.getElementById('rCorrect').textContent = correct;
   document.getElementById('rWrong').textContent = wrong;
