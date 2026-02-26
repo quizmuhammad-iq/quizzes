@@ -916,6 +916,9 @@ function showResult() {
   rs.classList.add('show');
 
   const pct = Math.round(score/questions.length*100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   const wrong = questions.length - score;
 
   document.getElementById('r-correct').textContent = score;
