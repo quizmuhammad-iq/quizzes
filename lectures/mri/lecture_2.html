@@ -1077,6 +1077,9 @@ function showResults() {
   document.getElementById('progressContainer').style.display = 'none';
 
   const pct = Math.round((score / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   let emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
 
   document.getElementById('resultsEmoji').textContent = emoji;
