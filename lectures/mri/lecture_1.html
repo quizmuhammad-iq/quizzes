@@ -825,6 +825,9 @@ function showResult() {
   const rs = document.getElementById('result-screen');
   rs.style.display = 'block';
   const pct = Math.round((correct/questions.length)*100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   let grade = pct >= 90 ? '🏆 ممتاز' : pct >= 75 ? '🥇 جيد جداً' : pct >= 60 ? '🥈 جيد' : pct >= 50 ? '🥉 مقبول' : '📚 يحتاج مراجعة';
   const m = String(Math.floor(timerSec/60)).padStart(2,'0');
   const s = String(timerSec%60).padStart(2,'0');
