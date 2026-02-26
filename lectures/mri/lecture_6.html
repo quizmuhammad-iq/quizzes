@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الفيزياء الشعاعية / الرنين المغناطيسي - المحاضرة السادسة</title>
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #131929;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #2d3f5e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 10%, #1e3a5f22 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 90%, #1e3a5f22 0%, transparent 50%);
+  }
+  .en { font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; direction: ltr; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1b2e 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+    position: relative;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .header-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent2);
+    margin-bottom: 4px;
+  }
+  .header-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .telegram-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #0088cc22, #0088cc44);
+    border: 1px solid #0088cc55;
+    color: #29aee6;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+  .telegram-link:hover {
+    background: linear-gradient(135deg, #0088cc44, #0088cc66);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px #0088cc33;
+  }
+  .telegram-link svg { width: 16px; height: 16px; fill: #29aee6; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 14px 24px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .stat-label { color: var(--muted); font-size: 0.78rem; }
+  .stat-value { font-weight: 700; color: var(--text); font-size: 1rem; }
+  .stat-value.timer { color: var(--warning); font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; }
+  .stat-value.score { color: var(--success); }
+  .stat-value.current { color: var(--accent2); }
+
+  /* PROGRESS */
+  .progress-container {
+    padding: 12px 24px;
+    background: var(--card2);
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .progress-bar-outer {
+    background: #1e2d45;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    position: relative;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .q-number {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .q-text {
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.7;
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    direction: ltr;
+    margin-bottom: 20px;
+  }
+
+  /* OPTIONS */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: #0d1520;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: right;
+    transition: all 0.25s;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    direction: ltr;
+    font-size: 0.94rem;
+    color: var(--text);
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #1a2d4a;
+    transform: translateX(-2px);
+  }
+  .option-letter {
+    min-width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--muted);
+    transition: all 0.25s;
+    flex-shrink: 0;
+  }
+  .option-btn.correct { border-color: var(--success); background: #064e3b33; }
+  .option-btn.correct .option-letter { background: var(--success); color: white; }
+  .option-btn.wrong { border-color: var(--danger); background: #7f1d1d33; }
+  .option-btn.wrong .option-letter { background: var(--danger); color: white; }
+  .option-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: #0d2035;
+    border: 1px solid #1e4a6e;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    color: #93c5fd;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    direction: ltr;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: #60a5fa; }
+
+  /* NAV BUTTONS */
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: white;
+    flex: 1;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px #3b82f640; }
+  .btn-secondary {
+    background: var(--card2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { color: var(--text); border-color: var(--accent); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(.175,.885,.32,1.275);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { background: linear-gradient(135deg, #059669, #10b981); color: white; box-shadow: 0 8px 25px #10b98155; }
+  .toast.error { background: linear-gradient(135deg, #b91c1c, #ef4444); color: white; box-shadow: 0 8px 25px #ef444455; }
+
+  /* RESULTS */
+  .results-screen {
+    text-align: center;
+    padding: 40px 20px;
+    display: none;
+  }
+  .results-screen.show { display: block; animation: fadeIn 0.5s ease; }
+  .score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) var(--pct), var(--border) 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .score-inner {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-pct { font-size: 1.8rem; font-weight: 800; color: var(--accent2); }
+  .score-label { font-size: 0.75rem; color: var(--muted); }
+  .results-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 12px; }
+  .results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .r-stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 14px 24px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .r-stat-val { font-size: 1.4rem; font-weight: 800; }
+  .r-stat-lbl { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+  .correct-color { color: var(--success); }
+  .wrong-color { color: var(--danger); }
+  .btn-restart {
+    margin-top: 24px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: white;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .btn-restart:hover { transform: translateY(-3px); box-shadow: 0 8px 25px #3b82f655; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-top: 40px;
+  }
+
+  /* START SCREEN */
+  .start-screen {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .start-screen h1 { font-size: 1.8rem; font-weight: 800; color: var(--accent2); margin-bottom: 10px; }
+  .start-screen p { color: var(--muted); font-size: 0.95rem; margin-bottom: 6px; }
+  .start-screen .badge {
+    display: inline-block;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin: 8px 4px;
+    color: var(--muted);
+  }
+  .start-screen .badge span { color: var(--accent2); font-weight: 700; }
+  .btn-start {
+    margin-top: 30px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: white;
+    padding: 16px 50px;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px #3b82f640;
+  }
+  .btn-start:hover { transform: translateY(-3px); box-shadow: 0 8px 30px #3b82f666; }
+  .made-by { font-size: 0.8rem; color: var(--muted); margin-top: 16px; }
+
+  @media (max-width: 600px) {
+    .stats-bar { gap: 8px; }
+    .stat-item { padding: 6px 10px; }
+    .question-card { padding: 18px; }
+    header { padding: 14px 12px; }
+    .header-title { font-size: 0.95rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<header>
+  <div class="header-title">الفيزياء الشعاعية / الرنين المغناطيسي — المحاضرة السادسة</div>
+  <div class="header-sub">RF Pulse | In-Phase & Diphase | Excitation | Relaxation</div>
+  <a href="https://t.me/mulimcq" target="_blank" class="telegram-link">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+    <strong>محمد صبار</strong> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</header>
+
+<!-- START SCREEN -->
+<div id="startScreen">
+  <main>
+    <div class="start-screen">
+      <h1>اختبار المحاضرة السادسة</h1>
+      <p style="color:var(--accent2); font-size:1rem; margin-bottom:16px;">من إنشاء الطالب محمد صبار</p>
+      <p>RF Pulse — In-Phase & Diphase — Excitation — Relaxation</p>
+      <br>
+      <div class="badge">عدد الأسئلة: <span>45</span></div>
+      <div class="badge">الاختيار من متعدد: <span>4 خيارات</span></div>
+      <div class="badge">شرح فوري عند الخطأ: <span>✓</span></div>
+      <div class="badge">عداد الوقت: <span>✓</span></div>
+      <br><br>
+      <button class="btn-start" onclick="startQuiz()">🚀 ابدأ الاختبار</button>
+      <div class="made-by">تم إنشاء هذا الاختبار من محتوى المحاضرة السادسة للفيزياء الشعاعية</div>
+    </div>
+  </main>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quizScreen" style="display:none;">
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div>
+        <div class="stat-label">السؤال</div>
+        <div class="stat-value current" id="statCurrent">1 / 45</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div>
+        <div class="stat-label">النقاط</div>
+        <div class="stat-value score" id="statScore">0</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div>
+        <div class="stat-label">الوقت</div>
+        <div class="stat-value timer" id="statTimer">00:00</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div>
+        <div class="stat-label">الإجابات الصحيحة</div>
+        <div class="stat-value" style="color:var(--success)" id="statCorrect">0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-info">
+      <span id="progressText">التقدم: 0%</span>
+      <span id="progressFraction">0 / 45</span>
+    </div>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <main>
+    <div class="question-card" id="questionCard">
+      <div class="q-number" id="qNumber">السؤال 1 من 45</div>
+      <div class="q-text en" id="qText"></div>
+      <div class="options" id="optionsContainer"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" id="btnPrev" onclick="prevQuestion()" disabled>◄ السابق</button>
+      <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()" disabled>التالي ►</button>
+    </div>
+  </main>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="resultsScreen" class="results-screen">
+  <main>
+    <div class="score-circle" id="scoreCircle">
+      <div class="score-inner">
+        <div class="score-pct" id="scorePct">0%</div>
+        <div class="score-label">النتيجة</div>
+      </div>
+    </div>
+    <div class="results-title" id="resultsTitle">اكتمل الاختبار!</div>
+    <div class="results-stats">
+      <div class="r-stat">
+        <div class="r-stat-val correct-color" id="rCorrect">0</div>
+        <div class="r-stat-lbl">إجابات صحيحة</div>
+      </div>
+      <div class="r-stat">
+        <div class="r-stat-val wrong-color" id="rWrong">0</div>
+        <div class="r-stat-lbl">إجابات خاطئة</div>
+      </div>
+      <div class="r-stat">
+        <div class="r-stat-val" style="color:var(--accent2)" id="rTime">00:00</div>
+        <div class="r-stat-lbl">الوقت المستغرق</div>
+      </div>
+      <div class="r-stat">
+        <div class="r-stat-val" style="color:var(--warning)" id="rScore">0</div>
+        <div class="r-stat-lbl">النقاط الكلية</div>
+      </div>
+    </div>
+    <a href="https://t.me/mulimcq" target="_blank" class="telegram-link" style="display:inline-flex; margin-bottom:16px;">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="#29aee6"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      <strong>محمد صبار</strong> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </a>
+    <br>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+  </main>
+</div>
+
+<footer>
+  <div style="margin-bottom:8px;">
+    جامعة الهادي | كلية التقنيات الصحية والطبية | قسم تقنيات الأشعة  | من إنشاء الطالب <strong style="color:var(--accent2)">محمد صبار</strong>
+  </div>
+  <a href="https://t.me/mulimcq" target="_blank" class="telegram-link" style="display:inline-flex;">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="#29aee6"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+    <strong>محمد صبار</strong> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "What does 'in-phase' mean when describing two rotating objects?",
+    options: ["They rotate at different speeds", "They rotate in the same direction and at the same angle", "They rotate in opposite directions", "They have different frequencies"],
+    correct: 1,
+    explanation: "In-phase means the two objects rotate at the same speed and in the same angle, so their arrows always point in the same direction at any time."
+  },
+  {
+    q: "Two wheels rotating 'de-phase' (out of phase) means:",
+    options: ["They rotate at the same angle", "They rotate at different speeds only", "They rotate at different angles from each other", "They are stationary"],
+    correct: 2,
+    explanation: "De-phase (out of phase) means the two wheels have different angles, so their arrows point in different directions."
+  },
+  {
+    q: "In MRI, when a patient is placed in the scanner, what is the first event that occurs?",
+    options: ["An RF pulse is applied", "Relaxation begins", "Spins precess around the direction of the external magnetic field (z-axis)", "T1 relaxation occurs"],
+    correct: 2,
+    explanation: "The first thing that happens when a person is placed in an MRI scanner is the precession of spins around the direction of the external magnetic field (the z-axis)."
+  },
+  {
+    q: "What happens when a second static magnetic field is applied in a different direction to already precessing spins?",
+    options: ["A simple rotation results", "A complicated motion results due to precession from two static fields", "The spins stop completely", "T2 relaxation occurs immediately"],
+    correct: 1,
+    explanation: "If the second applied magnetic field is static, the resultant movement of the net magnetization will be a complicated motion due to precession from the two static fields."
+  },
+  {
+    q: "What is the result when a second magnetic field oscillating at the precession frequency is applied to precessing spins?",
+    options: ["Complicated motion", "Complete stop of precession", "A simple rotation of the net magnetization vector", "Immediate relaxation"],
+    correct: 2,
+    explanation: "If the second magnetic field oscillates with the frequency of precession of the precessing spins, a simple rotation of the net magnetization vector results."
+  },
+  {
+    q: "What is a '90° pulse' in MRI?",
+    options: ["Rotation of magnetization into the z-plane", "Rotation of magnetization into the x-y-plane", "Rotation by 180 degrees", "Stopping all precession"],
+    correct: 1,
+    explanation: "Rotation of magnetization into the x-y-plane is called a '90° pulse'."
+  },
+  {
+    q: "What is an RF pulse?",
+    options: ["A static magnetic field applied permanently", "A magnetic field whose direction oscillates at the Larmor frequency, applied briefly", "A gradient field for slice selection", "An electric field applied to the patient"],
+    correct: 1,
+    explanation: "An RF pulse is a magnetic field, the direction of which is oscillating at the Larmor frequency, switched on for a very small amount of time."
+  },
+  {
+    q: "What is 'pre-scan' in MRI?",
+    options: ["The final image acquisition", "A quick measurement to determine the Larmor frequency of protons", "A safety check before the magnet is turned on", "Calibration of the gradient coils"],
+    correct: 1,
+    explanation: "Before data acquisition, the system performs a pre-scan to determine the frequency of protons (Larmor frequency), which is critical for the next step."
+  },
+  {
+    q: "Why is determining the Larmor frequency important before acquisition?",
+    options: ["It is not important", "The system uses this frequency for the RF pulse in the next step", "It determines the patient's weight", "It sets the gradient strength"],
+    correct: 1,
+    explanation: "Selecting the Larmor frequency is important because the system uses it for the next step — sending the RF pulse at exactly this frequency."
+  },
+  {
+    q: "For a 1.5 Tesla MRI system, what is the center operating frequency?",
+    options: ["42.577 MHz", "63.855 MHz", "127.7 MHz", "59.347 MHz"],
+    correct: 1,
+    explanation: "For a 1.5 Tesla system, the center frequency is 63.855 MHz, calculated using the Larmor equation: ω₀ = γB₀."
+  },
+  {
+    q: "Which equation is used to calculate the operating frequency of an MRI system?",
+    options: ["E = mc²", "ω₀ = γB₀ (Larmor equation)", "F = ma", "V = IR"],
+    correct: 1,
+    explanation: "The Larmor equation (ω₀ = γB₀) is used to calculate the center or operating frequency of the MRI system."
+  },
+  {
+    q: "What happens if an RF pulse with a frequency different from the Larmor frequency is sent?",
+    options: ["All protons respond equally", "The protons are damaged", "Nothing happens — only protons spinning at the Larmor frequency respond", "T1 relaxation is accelerated"],
+    correct: 2,
+    explanation: "Only protons that spin with the same frequency as the RF pulse will respond. If a different frequency (e.g., 59.347 MHz instead of 63.855 MHz) is sent, nothing happens."
+  },
+  {
+    q: "The term 'Resonance' in Magnetic Resonance Imaging refers to:",
+    options: ["The echo of sound waves in the scanner", "Matching the RF pulse frequency to the Larmor frequency of protons", "The magnetic field gradient resonance", "The rotation of the patient table"],
+    correct: 1,
+    explanation: "Resonance means the RF pulse frequency must match the Larmor frequency for the protons to respond — similar to an opera singer shattering a crystal glass with a matching frequency."
+  },
+  {
+    q: "What is the Flip Angle (FA) in MRI?",
+    options: ["The angle of the patient in the scanner", "The number of degrees the net magnetization is rotated by the RF pulse", "The angle of the gradient coils", "The phase difference between two RF pulses"],
+    correct: 1,
+    explanation: "The Flip Angle (FA) is a parameter in the pulse sequence that indicates the number of degrees the net magnetization is rotated."
+  },
+  {
+    q: "What is the range of flip angles that can be achieved in MRI?",
+    options: ["1° to 90° only", "90° to 360°", "1° to 180°", "45° to 270°"],
+    correct: 2,
+    explanation: "It is possible to flip the net magnetization any degree in the range from 1° to 180°."
+  },
+  {
+    q: "The process of applying an RF pulse at the Larmor frequency to rotate net magnetization is called:",
+    options: ["Relaxation", "Excitation", "Gradient switching", "Pre-scan"],
+    correct: 1,
+    explanation: "This process is called RF excitation of the spin system (or simply excitation)."
+  },
+  {
+    q: "How long is an RF pulse typically applied for?",
+    options: ["Several minutes", "A few seconds", "A few milliseconds", "Hours"],
+    correct: 2,
+    explanation: "The oscillating magnetic field is switched on for a very small amount of time — a few milliseconds — to achieve the desired rotation."
+  },
+  {
+    q: "What is the Larmor frequency range used in MRI?",
+    options: ["Gamma ray range", "X-ray range", "Radio frequency range (tens of MHz)", "Infrared range"],
+    correct: 2,
+    explanation: "The Larmor frequency for MRI is in the radio frequency range (tens of MHz), which is why the pulse is called an 'RF pulse'."
+  },
+  {
+    q: "How can different amounts of magnetization rotation be achieved in MRI?",
+    options: ["By changing the main magnetic field strength B₀", "By applying the oscillating field for different durations", "By changing the patient's position", "By modifying the gradient coils"],
+    correct: 1,
+    explanation: "Different amounts of rotation can be achieved by applying the oscillating magnetic field for different durations."
+  },
+  {
+    q: "After a 90° RF pulse, what starts to occur in the x-y plane?",
+    options: ["Magnetization grows in the x-y plane", "Dephasing of the components of magnetization in the x-y plane begins", "Protons stop spinning", "T1 relaxation is complete"],
+    correct: 1,
+    explanation: "After a 90° pulse, dephasing of the components of magnetization in the x-y-plane starts to occur straight away, as does the re-growth of magnetization in the z-direction."
+  },
+  {
+    q: "What happens to the z-direction magnetization after a 90° RF pulse?",
+    options: ["It becomes zero and stays zero forever", "It immediately doubles", "Re-growth of magnetization in the z-direction begins", "It becomes negative"],
+    correct: 2,
+    explanation: "After a 90° pulse, re-growth of magnetization in the z-direction begins, as part of the relaxation process."
+  },
+  {
+    q: "When protons are rotated 90° into the x-y plane, what has happened energetically?",
+    options: ["Protons released energy and went to a lower state", "Protons absorbed energy from the RF pulse and raised to a higher energy state", "No energy change occurred", "Protons were destroyed"],
+    correct: 1,
+    explanation: "Rotating magnetization 90° into the x-y plane means protons absorbed energy from the RF pulse and were raised to a higher energy state."
+  },
+  {
+    q: "The tendency of protons to return from a high energy (excited) state to a low energy (equilibrium) state is called:",
+    options: ["Excitation", "Perturbation", "Relaxation", "Precession"],
+    correct: 2,
+    explanation: "Relaxation means the return of a perturbed system into the original equilibrium situation, characterized by a relaxation time."
+  },
+  {
+    q: "The general principle from thermodynamics that applies to proton relaxation is:",
+    options: ["Every system seeks its highest energy level", "Every system seeks its lowest energy level", "Energy is always conserved in excited states", "Systems remain in their excited state indefinitely"],
+    correct: 1,
+    explanation: "A general principle of thermodynamics is that every system seeks its lowest energy level — this is why protons prefer to realign with the main magnetic field."
+  },
+  {
+    q: "In the lecture's analogy, the 'excited' state of protons is compared to:",
+    options: ["Swimming in the ocean", "Running at full speed", "Walking on your hands (abnormal and temporary)", "Sleeping in a bed"],
+    correct: 2,
+    explanation: "The excited state is compared to walking on your hands — it's possible but abnormal, and you inevitably prefer the natural state (walking on your feet = equilibrium)."
+  },
+  {
+    q: "The relaxation process in MRI can be divided into how many parts?",
+    options: ["One part", "Two parts: T1 and T2", "Three parts: T1, T2, and T2*", "Four parts"],
+    correct: 1,
+    explanation: "The relaxation process can be divided into two parts: T1 and T2 relaxation."
+  },
+  {
+    q: "What is 'perturbation' in the context of MRI relaxation?",
+    options: ["Applying the gradient field", "The disruption of the equilibrium state caused by the RF pulse", "The process of data collection", "The Larmor frequency calculation"],
+    correct: 1,
+    explanation: "Perturbation refers to the disruption of the equilibrium state — protons do not 'like' the high energy excitation state and tend to return to equilibrium."
+  },
+  {
+    q: "Each relaxation process is characterized by:",
+    options: ["A relaxation angle", "A relaxation frequency", "A relaxation time", "A relaxation field strength"],
+    correct: 2,
+    explanation: "Each relaxation process can be characterized by a relaxation time."
+  },
+  {
+    q: "Protons 'prefer to lineup with the main magnetic field' because:",
+    options: ["This is the highest energy state", "This is the lowest energy state (equilibrium)", "The gradient fields force them to", "The RF pulse keeps them aligned"],
+    correct: 1,
+    explanation: "Protons prefer to align with the main magnetic field because this represents the lowest energy state (equilibrium)."
+  },
+  {
+    q: "The analogy of an opera singer shattering a crystal glass in the lecture explains:",
+    options: ["T1 relaxation", "The resonance principle — matching frequencies causes maximum effect", "The gradient field function", "The dephasing process"],
+    correct: 1,
+    explanation: "The opera singer analogy explains resonance: when the frequency of the singer's voice matches the natural frequency of the glass, maximum effect (shattering) occurs — just like the RF pulse matching the Larmor frequency."
+  },
+  {
+    q: "In sine waves, 'in-phase' means:",
+    options: ["Waves have different frequencies", "Peaks occur simultaneously (at the same time)", "Waves are 90° out of phase", "Waves travel in opposite directions"],
+    correct: 1,
+    explanation: "In-phase sine waves have peaks that occur simultaneously — they are perfectly synchronized."
+  },
+  {
+    q: "A phase angle of θ = 90° between two sine waves means:",
+    options: ["They are in-phase", "They are completely opposite", "They are a quarter cycle out of phase (diphase)", "They have different amplitudes"],
+    correct: 2,
+    explanation: "A phase angle of 90° means the waves are a quarter cycle out of phase, which is called diphase."
+  },
+  {
+    q: "The direction of the second magnetic field applied during an RF pulse is:",
+    options: ["Along the z-axis (same as B₀)", "Along the x- or y-axis (perpendicular to B₀)", "At 45° to B₀", "Randomly oriented"],
+    correct: 1,
+    explanation: "The second magnetic field (RF pulse) is applied in a different direction from the main field — along the x- or y-axis, perpendicular to the z-axis."
+  },
+  {
+    q: "What does 'spin isochromatic' experience when two static fields are applied simultaneously?",
+    options: ["Simple rotation", "Complete stop", "Complicated motion due to precession from two static fields", "T2 relaxation only"],
+    correct: 2,
+    explanation: "The net magnetization of a spin isochromatic experiences complicated motion due to precession from two static fields when both are applied simultaneously."
+  },
+  {
+    q: "Using vectors in MRI physics is important because:",
+    options: ["Vectors are not important in MRI", "Vectors make calculation harder", "Vectors help visualize and imagine what is happening — without them it would be nearly impossible to illustrate these events", "Vectors replace the need for mathematics"],
+    correct: 2,
+    explanation: "The lecture notes that vectors facilitate imagining what is happening — without the use of vectors, it would be quite impossible to draw/illustrate these events."
+  },
+  {
+    q: "At 1.5 Tesla, which RF pulse frequency would have NO effect on protons?",
+    options: ["63.855 MHz", "63.0 MHz", "59.347 MHz (wrong frequency)", "64.0 MHz"],
+    correct: 2,
+    explanation: "At 1.5 T, the Larmor frequency is 63.855 MHz. An RF pulse at 59.347 MHz would not match this frequency and nothing would happen."
+  },
+  {
+    q: "After the RF pulse rotates magnetization into the x-y plane (90° pulse), the net magnetization is now:",
+    options: ["Parallel to z-axis", "Anti-parallel to z-axis", "In the x-y plane, perpendicular to the z-axis", "Unchanged"],
+    correct: 2,
+    explanation: "A 90° pulse rotates the net magnetization into the x-y plane, which is perpendicular to the z-axis."
+  },
+  {
+    q: "The 'equilibrium' state of protons in MRI refers to:",
+    options: ["The excited high-energy state after RF pulse", "The normal low-energy state aligned with B₀", "The dephased state in x-y plane", "The state during data acquisition"],
+    correct: 1,
+    explanation: "Equilibrium is the normal low-energy state where protons are aligned with the main magnetic field B₀."
+  },
+  {
+    q: "What is the primary purpose of matching the RF pulse frequency to the Larmor frequency?",
+    options: ["To cool down the scanner", "To cause resonance and allow the RF pulse to rotate the net magnetization", "To increase the magnetic field strength", "To create the gradient fields"],
+    correct: 1,
+    explanation: "Matching the RF pulse frequency to the Larmor frequency causes resonance, allowing the RF pulse to interact with and rotate the net magnetization."
+  },
+  {
+    q: "The main magnetic field in MRI is directed along:",
+    options: ["The x-axis", "The y-axis", "The z-axis", "All directions equally"],
+    correct: 2,
+    explanation: "The external magnetic field (B₀) is directed along the z-axis, and spins precess around this direction."
+  },
+  {
+    q: "After applying a 90° RF pulse, the magnetization rotated from the z-axis to the x-y plane. What is this process called?",
+    options: ["Relaxation", "Dephasing", "Excitation", "Precession"],
+    correct: 2,
+    explanation: "The process of applying an RF pulse to rotate the net magnetization (e.g., 90° into the x-y plane) is called excitation."
+  },
+  {
+    q: "Which of the following BEST describes 'dephasing' after a 90° RF pulse?",
+    options: ["All spins remain perfectly aligned in the x-y plane", "Individual spin components begin to lose their phase coherence in the x-y plane", "Spins return immediately to the z-axis", "The RF pulse continues to be applied"],
+    correct: 1,
+    explanation: "After a 90° pulse, dephasing starts — individual spin components begin to lose their phase coherence in the x-y plane."
+  },
+  {
+    q: "T1 and T2 are both examples of:",
+    options: ["Excitation times", "RF pulse durations", "Relaxation times", "Larmor frequencies"],
+    correct: 2,
+    explanation: "T1 and T2 are the two relaxation times that characterize the two parts of the relaxation process in MRI."
+  },
+  {
+    q: "What property of the RF pulse can be varied to achieve different flip angles?",
+    options: ["The frequency only", "The direction of B₀", "The duration (how long the oscillating field is applied)", "The patient's temperature"],
+    correct: 2,
+    explanation: "Different flip angles can be achieved by applying the oscillating magnetic field for different durations."
+  },
+  {
+    q: "In the Figure 16 described in the lecture, an RF pulse at 63.855 MHz at 1.5T achieves:",
+    options: ["A 180° flip", "A 45° flip", "A 90° flip — rotating net magnetization into the x-y plane", "No change in magnetization"],
+    correct: 2,
+    explanation: "Figure 16 shows that by sending an RF pulse at the Larmor frequency (63.855 MHz at 1.5T) with appropriate strength and duration, the net magnetization is rotated 90° into the x-y plane."
+  },
+  {
+    q: "The lecture describes relaxation as being similar to which situation?",
+    options: ["A ball rolling down a hill", "A system returning from an abnormal state (e.g., walking on hands) to its natural state (walking on feet)", "Water flowing uphill", "A spinning top accelerating"],
+    correct: 1,
+    explanation: "Relaxation is compared to returning from an abnormal state (walking on hands) back to the natural, preferred equilibrium state (walking on feet)."
+  },
+  {
+    q: "Which statement about protons absorbing energy from an RF pulse is correct?",
+    options: ["Protons can absorb any frequency of electromagnetic radiation", "Protons only absorb RF energy at their specific Larmor frequency (resonance condition)", "Protons absorb energy continuously regardless of frequency", "Protons absorb energy only from gradient fields"],
+    correct: 1,
+    explanation: "Protons only absorb RF energy when the RF pulse frequency matches their Larmor frequency — this is the resonance condition fundamental to MRI."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let correctCount = 0;
+let answered = new Array(questions.length).fill(false);
+let timerInterval;
+let seconds = 0;
+
+function startQuiz() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  startTimer();
+  loadQuestion(0);
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    document.getElementById('statTimer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function formatTime(sec) {
+  const m = String(Math.floor(sec/60)).padStart(2,'0');
+  const s = String(sec%60).padStart(2,'0');
+  return `${m}:${s}`;
+}
+
+function loadQuestion(index) {
+  currentQ = index;
+  const q = questions[index];
+  document.getElementById('qNumber').textContent = `السؤال ${index+1} من ${questions.length}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('statCurrent').textContent = `${index+1} / ${questions.length}`;
+  
+  const pct = Math.round((index / questions.length) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `التقدم: ${pct}%`;
+  document.getElementById('progressFraction').textContent = `${index} / ${questions.length}`;
+
+  const opts = document.getElementById('optionsContainer');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span><span class="en">${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, btn);
+    opts.appendChild(btn);
+  });
+
+  const exp = document.getElementById('explanation');
+  exp.classList.remove('show');
+  exp.innerHTML = '';
+
+  // restore state if answered
+  if (answered[index] !== false) {
+    const btns = opts.querySelectorAll('.option-btn');
+    const sel = answered[index];
+    btns.forEach((b, i) => {
+      b.disabled = true;
+      if (i === q.correct) b.classList.add('correct');
+      else if (i === sel && sel !== q.correct) b.classList.add('wrong');
+    });
+    if (sel !== q.correct) {
+      exp.innerHTML = `<strong>✗ الإجابة الصحيحة: ${letters[q.correct]}</strong><br>${q.explanation}`;
+      exp.classList.add('show');
+    }
+  }
+
+  document.getElementById('btnNext').disabled = answered[index] === false;
+  document.getElementById('btnPrev').disabled = index === 0;
+}
+
+function selectAnswer(chosen, btn) {
+  if (answered[currentQ] !== false) return;
+  answered[currentQ] = chosen;
+  const q = questions[currentQ];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.correct) b.classList.add('correct');
+    else if (i === chosen && chosen !== q.correct) b.classList.add('wrong');
+  });
+
+  if (chosen === q.correct) {
+    score += 2;
+    correctCount++;
+    document.getElementById('statScore').textContent = score;
+    document.getElementById('statCorrect').textContent = correctCount;
+    showToast('✓ إجابة صحيحة! +2 نقطة', 'success');
+  } else {
+    const letters = ['A','B','C','D'];
+    const exp = document.getElementById('explanation');
+    exp.innerHTML = `<strong>✗ الإجابة الصحيحة: ${letters[q.correct]}</strong><br>${q.explanation}`;
+    exp.classList.add('show');
+    showToast('✗ إجابة خاطئة!', 'error');
+  }
+
+  document.getElementById('btnNext').disabled = false;
+}
+
+function nextQuestion() {
+  if (currentQ < questions.length - 1) {
+    loadQuestion(currentQ + 1);
+  } else {
+    showResults();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) loadQuestion(currentQ - 1);
+}
+
+function showResults() {
+  clearInterval(timerInterval);
+  document.getElementById('quizScreen').style.display = 'none';
+  const rs = document.getElementById('resultsScreen');
+  rs.style.display = 'block';
+
+  const total = questions.length;
+  const pct = Math.round((correctCount / total) * 100);
+  if (window.parent && window.parent.saveScore) { window.parent.saveScore(pct); }
+  document.getElementById('scorePct').textContent = pct + '%';
+  document.getElementById('scoreCircle').style.setProperty('--pct', `${pct}% `);
+  document.getElementById('rCorrect').textContent = correctCount;
+  document.getElementById('rWrong').textContent = total - correctCount;
+  document.getElementById('rTime').textContent = formatTime(seconds);
+  document.getElementById('rScore').textContent = score;
+
+  let title = '';
+  if (pct >= 90) title = '🏆 ممتاز! أداء رائع!';
+  else if (pct >= 75) title = '🎉 جيد جداً! استمر!';
+  else if (pct >= 60) title = '👍 جيد! يمكن التحسين!';
+  else title = '📚 تحتاج مراجعة المحاضرة مجدداً';
+  document.getElementById('resultsTitle').textContent = title;
+
+  // update progress bar to 100%
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('progressText').textContent = 'التقدم: 100%';
+  document.getElementById('progressFraction').textContent = `${total} / ${total}`;
+}
+
+function restartQuiz() {
+  answered = new Array(questions.length).fill(false);
+  score = 0; correctCount = 0; seconds = 0;
+  document.getElementById('statScore').textContent = '0';
+  document.getElementById('statCorrect').textContent = '0';
+  document.getElementById('statTimer').textContent = '00:00';
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  startTimer();
+  loadQuestion(0);
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

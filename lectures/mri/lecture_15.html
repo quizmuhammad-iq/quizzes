@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة 15 - K-Space | محمد صبار</title>
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #111827;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3a52;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.08) 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 80%, rgba(16,185,129,0.05) 0%, transparent 50%);
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f1729 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  header h1 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--accent2);
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  header p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  header a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s;
+  }
+  header a:hover { color: #fff; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .stat-value {
+    font-weight: 700;
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+  }
+
+  .stat-icon { font-size: 1.1rem; }
+
+  /* PROGRESS */
+  .progress-container {
+    padding: 12px 24px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .progress-bar-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 28px 16px 60px;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    animation: fadeSlide 0.4s ease;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+  }
+
+  .question-text {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 22px;
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    background: #111827;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 18px;
+    cursor: pointer;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.92rem;
+    color: var(--text);
+    text-align: left;
+    direction: ltr;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.1);
+    transform: translateX(-2px);
+  }
+
+  .option-btn.selected {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.15);
+  }
+
+  .option-btn.correct {
+    border-color: var(--success);
+    background: rgba(16,185,129,0.15);
+    color: #6ee7b7;
+  }
+
+  .option-btn.wrong {
+    border-color: var(--danger);
+    background: rgba(239,68,68,0.12);
+    color: #fca5a5;
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  .option-letter {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+  }
+
+  .option-btn.correct .option-letter { background: var(--success); color: #fff; }
+  .option-btn.wrong .option-letter { background: var(--danger); color: #fff; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 10px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.88rem;
+    color: #fcd34d;
+    direction: ltr;
+    text-align: left;
+    line-height: 1.6;
+    animation: fadeSlide 0.3s ease;
+    display: none;
+  }
+
+  .explanation.show { display: block; }
+
+  .explanation-title {
+    font-weight: 700;
+    color: var(--warning);
+    margin-bottom: 4px;
+    font-size: 0.82rem;
+  }
+
+  /* NEXT BTN */
+  .nav-btns {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 12px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.35);
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59,130,246,0.45); }
+
+  .btn-secondary {
+    background: var(--card);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 999;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  #toast.correct { background: var(--success); color: #fff; }
+  #toast.wrong { background: var(--danger); color: #fff; }
+
+  /* RESULT SCREEN */
+  #result-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeSlide 0.5s ease;
+  }
+
+  .result-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    position: relative;
+  }
+
+  .result-circle::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) var(--pct), var(--border) 0);
+    z-index: -1;
+  }
+
+  .result-circle-inner {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: var(--card2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .result-score { font-size: 2rem; font-weight: 700; color: var(--accent2); }
+  .result-total { font-size: 0.85rem; color: var(--text-muted); }
+  .result-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+  .result-subtitle { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 28px; }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 420px;
+    margin: 0 auto 28px;
+  }
+
+  .result-stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 10px;
+  }
+
+  .result-stat-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+  .result-stat-num { font-size: 1.4rem; font-weight: 700; font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; }
+  .green { color: var(--success); }
+  .red { color: var(--danger); }
+  .blue { color: var(--accent2); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  footer a { color: var(--accent2); text-decoration: none; font-weight: 700; }
+
+  /* WELCOME SCREEN */
+  #welcome-screen {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .welcome-icon { font-size: 4rem; margin-bottom: 16px; }
+  .welcome-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; color: var(--accent2); }
+  .welcome-subtitle { font-size: 1rem; color: var(--text-muted); margin-bottom: 6px; }
+  .welcome-info { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 28px; }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 420px;
+    margin: 0 auto 28px;
+  }
+
+  .info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 10px;
+    font-size: 0.85rem;
+  }
+
+  .info-box-num { font-size: 1.5rem; font-weight: 800; color: var(--accent2); font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; }
+  .info-box-label { color: var(--text-muted); font-size: 0.78rem; }
+
+  #quiz-screen { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧲 اختبار المحاضرة الخامسة عشر — K-Space</h1>
+  <p>من إنشاء <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a> &nbsp;|&nbsp; اضغط هنا للحصول على اختبارات باقي المحاضرات</p>
+</header>
+
+<div class="stats-bar" id="stats-bar" style="display:none">
+  <div class="stat-item">
+    <span class="stat-icon">📋</span>
+    <span>السؤال: <span class="stat-value" id="q-counter">1/45</span></span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">⏱️</span>
+    <span>الوقت: <span class="stat-value" id="timer">00:00</span></span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">⭐</span>
+    <span>النقاط: <span class="stat-value" id="score-display">0</span></span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">✅</span>
+    <span>صحيح: <span class="stat-value green" id="correct-count">0</span></span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">❌</span>
+    <span>خطأ: <span class="stat-value red" id="wrong-count">0</span></span>
+  </div>
+</div>
+
+<div class="progress-container" id="progress-container" style="display:none">
+  <div class="progress-label">
+    <span>التقدم</span>
+    <span id="progress-pct">0%</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<main>
+
+  <!-- WELCOME SCREEN -->
+  <div id="welcome-screen">
+    <div class="welcome-icon">🧲</div>
+    <div class="welcome-title">اختبار K-Space</div>
+    <div class="welcome-subtitle">الفيزياء الشعاعية 2 — المرحلة الثالثة</div>
+    <div class="welcome-info">جامعة الهادي | كلية التقنيات الصحية والطبية | قسم تقنيات الأشعة | المرحلة الثالثة</div>
+    <div class="info-grid">
+      <div class="info-box"><div class="info-box-num">45</div><div class="info-box-label">سؤال</div></div>
+      <div class="info-box"><div class="info-box-num">45</div><div class="info-box-label">نقطة</div></div>
+      <div class="info-box"><div class="info-box-num">∞</div><div class="info-box-label">وقت</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()">🚀 ابدأ الاختبار</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen">
+    <div class="question-card" id="question-card">
+      <div class="question-num" id="q-num">السؤال 1 من 45</div>
+      <div class="question-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="explanation" id="explanation">
+        <div class="explanation-title">💡 التوضيح:</div>
+        <div id="explanation-text"></div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" style="display:none">التالي ←</button>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen">
+    <div class="result-circle" id="result-circle">
+      <div class="result-circle-inner">
+        <div class="result-score" id="result-score">0</div>
+        <div class="result-total">من 45</div>
+      </div>
+    </div>
+    <div class="result-title" id="result-title">النتيجة</div>
+    <div class="result-subtitle" id="result-subtitle"></div>
+    <div class="result-stats">
+      <div class="result-stat-box">
+        <div class="result-stat-label">إجابات صحيحة</div>
+        <div class="result-stat-num green" id="r-correct">0</div>
+      </div>
+      <div class="result-stat-box">
+        <div class="result-stat-label">إجابات خاطئة</div>
+        <div class="result-stat-num red" id="r-wrong">0</div>
+      </div>
+      <div class="result-stat-box">
+        <div class="result-stat-label">الوقت الكلي</div>
+        <div class="result-stat-num blue" id="r-time">00:00</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+  </div>
+
+</main>
+
+<footer>
+  <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "K-space in MRI was introduced by Likes in which year?",
+    options: ["A. 1975", "B. 1979", "C. 1983", "D. 1990"],
+    correct: 1,
+    explanation: "K-space was introduced by Likes in 1979, and later by Ljunggren and Twieg in 1983."
+  },
+  {
+    q: "Which mathematical tool is used to convert K-space raw data into an MRI image?",
+    options: ["A. Laplace transformation", "B. Wavelet transformation", "C. Fourier transformation", "D. Z-transformation"],
+    correct: 2,
+    explanation: "Fourier transformation (FT) is used to convert the raw data matrix in K-space into an MR image."
+  },
+  {
+    q: "K-space is described as the _____ of the MR image measured.",
+    options: ["A. 1D transform", "B. 2D or 3D Fourier transform", "C. Inverse Laplace transform", "D. Real-space representation"],
+    correct: 1,
+    explanation: "In MRI physics, k-space is the 2D or 3D Fourier transform of the MR image measured."
+  },
+  {
+    q: "What does kx define in the context of K-space?",
+    options: ["A. Amplitude of RF pulse", "B. Number of phase cycles per meter from the origin", "C. Slice thickness of MRI", "D. Relaxation time T1"],
+    correct: 1,
+    explanation: "The value kx defines the number of phase cycles per meter distance from the origin (x=0) a magnetization vector passes through due to the magnetic field gradient (Gx)."
+  },
+  {
+    q: "By analogy to frequency (cycles per time), k is called the:",
+    options: ["A. Temporal frequency", "B. Angular frequency", "C. Spatial frequency", "D. Resonant frequency"],
+    correct: 2,
+    explanation: "By analogy to frequency given as cycles per time, k is called the 'spatial frequency'."
+  },
+  {
+    q: "What is the primary importance of K-space in MRI?",
+    options: ["A. It stores patient demographic data", "B. It helps understand how an MRI image is acquired and how pulse sequences work", "C. It controls the RF amplifier", "D. It manages contrast agent delivery"],
+    correct: 1,
+    explanation: "K-space helps us understand how an MRI image is acquired and how various pulse-sequences work."
+  },
+  {
+    q: "K-space holds data in what state before reconstruction?",
+    options: ["A. Fully processed image data", "B. Compressed JPEG format", "C. Raw unprocessed data", "D. Grayscale bitmap data"],
+    correct: 2,
+    explanation: "K-space holds raw data before reconstruction. The raw or unprocessed data prior to becoming an image makes up k-space."
+  },
+  {
+    q: "Which of the following are synonyms for K-space?",
+    options: ["A. Image domain and pixel space", "B. Matrix and time domain", "C. Frequency domain and phase space", "D. Slice space and volume data"],
+    correct: 1,
+    explanation: "Synonyms for k-space are 'matrix' and 'time domain'."
+  },
+  {
+    q: "When is k-space considered 'full'?",
+    options: ["A. After each RF pulse", "B. At the beginning of the scan", "C. At the end of the scan", "D. When T2 relaxation is complete"],
+    correct: 2,
+    explanation: "When k-space is full (at the end of the scan), the data are mathematically processed to produce a final image."
+  },
+  {
+    q: "MR signals are stored in k-space as:",
+    options: ["A. A 1D array", "B. A 2D array", "C. A 3D volume always", "D. A polar coordinate map"],
+    correct: 1,
+    explanation: "The read-out MR signal is stored in a 2D array called k-space, containing samples of the continuous Fourier transform of the object's magnetization."
+  },
+  {
+    q: "K-space contains samples of the continuous Fourier transform of:",
+    options: ["A. The RF coil configuration", "B. The static magnetic field B0", "C. The object's magnetization", "D. The gradient waveform"],
+    correct: 2,
+    explanation: "The 2D array k-space contains samples of the continuous Fourier transform of the object's magnetization."
+  },
+  {
+    q: "Who are the three researchers credited with introducing the k-space formalism?",
+    options: ["A. Lauterbur, Mansfield, and Damadian", "B. Likes, Ljunggren, and Twieg", "C. Bloch, Purcell, and Ernst", "D. Hahn, Carr, and Purcell"],
+    correct: 1,
+    explanation: "K-space formalism was introduced by Likes in 1979 and by Ljunggren and Twieg in 1983."
+  },
+  {
+    q: "What controls the scheme in which k-space complex values are sampled during MR measurement?",
+    options: ["A. The patient's body habitus", "B. A pulse sequence", "C. The RF coil geometry", "D. The bore temperature"],
+    correct: 1,
+    explanation: "Complex values are sampled in a premeditated scheme controlled by a pulse sequence — an accurately timed sequence of radiofrequency and gradient pulses."
+  },
+  {
+    q: "A pulse sequence is defined as:",
+    options: ["A. A random set of gradient activations", "B. An accurately timed sequence of radiofrequency and gradient pulses", "C. A series of slice selections only", "D. A protocol for patient positioning"],
+    correct: 1,
+    explanation: "A pulse sequence is an accurately timed sequence of radiofrequency and gradient pulses used to control k-space sampling."
+  },
+  {
+    q: "In MRI, k-space often refers to a temporary image space that is usually a:",
+    options: ["A. Vector", "B. Scalar value", "C. Matrix", "D. Histogram"],
+    correct: 2,
+    explanation: "In practice, k-space often refers to the temporary image space, usually a matrix, in which data from digitized MR signals are stored during data acquisition."
+  },
+  {
+    q: "The k-space matrix dimensions in a 2D MRI acquisition are typically described as:",
+    options: ["A. P×Q arbitrary values", "B. NxN matrix", "C. 1×N single row", "D. Circular matrix"],
+    correct: 1,
+    explanation: "K-space is represented as an NxN matrix, as shown in the raw data matrix in MRI."
+  },
+  {
+    q: "The ky axis in k-space corresponds to:",
+    options: ["A. Frequency encoding", "B. Slice selection", "C. Phase encoding", "D. RF excitation"],
+    correct: 2,
+    explanation: "In k-space, the ky axis corresponds to phase encoding, while kx corresponds to frequency encoding."
+  },
+  {
+    q: "The kx axis in k-space corresponds to:",
+    options: ["A. Phase encoding", "B. Frequency encoding", "C. Slice selection gradient", "D. B0 field direction"],
+    correct: 1,
+    explanation: "The kx axis (horizontal) in k-space corresponds to frequency encoding."
+  },
+  {
+    q: "What happens to the k-space data mathematically at the end of a scan?",
+    options: ["A. It is compressed and archived", "B. It is processed (via Fourier transform) to produce a final image", "C. It is deleted after viewing", "D. It is converted to DICOM directly without processing"],
+    correct: 1,
+    explanation: "When k-space is full at the end of the scan, the data are mathematically processed (using Fourier transformation) to produce a final image."
+  },
+  {
+    q: "Which application field primarily uses the k-space formalism described in the lecture?",
+    options: ["A. CT scanning", "B. Ultrasound imaging", "C. Magnetic Resonance Imaging (MRI)", "D. Nuclear medicine PET"],
+    correct: 2,
+    explanation: "K-space is a formalism widely used in magnetic resonance imaging (MRI)."
+  },
+  {
+    q: "The MR signal that is read out during acquisition is stored in k-space as:",
+    options: ["A. A real-valued signal only", "B. One complex signal per excitation combined from different excitations", "C. Separate magnitude and phase files", "D. A voltage waveform"],
+    correct: 1,
+    explanation: "At each RF excitation, combinations of different excitations are collected as one complex signal."
+  },
+  {
+    q: "The task of an MRI scanner regarding k-space is to:",
+    options: ["A. Randomly store signals", "B. Recognize, collect, and store MR signals in a specific recognizable order", "C. Only collect frequency data", "D. Discard phase information"],
+    correct: 1,
+    explanation: "The task of an MRI scanner is to recognize and collect MR signals and store them in a specific order which is recognizable for further analysis."
+  },
+  {
+    q: "Ljunggren and Twieg introduced the k-space concept in which year?",
+    options: ["A. 1975", "B. 1979", "C. 1983", "D. 1988"],
+    correct: 2,
+    explanation: "Ljunggren and Twieg introduced the k-space formalism in 1983 (Likes introduced it in 1979)."
+  },
+  {
+    q: "What type of gradient (Gx) influences the kx value?",
+    options: ["A. Slice selection gradient", "B. Phase encoding gradient", "C. Frequency encoding magnetic field gradient", "D. Spoiler gradient"],
+    correct: 2,
+    explanation: "kx is defined by the application of the magnetic field gradient Gx — the frequency encoding gradient."
+  },
+  {
+    q: "K-space data acquisition is described as a 'premeditated scheme' meaning it is:",
+    options: ["A. Random and unpredictable", "B. Planned and controlled in advance by the pulse sequence", "C. Determined solely by patient anatomy", "D. Chosen automatically by the magnet"],
+    correct: 1,
+    explanation: "Complex values are sampled in a 'premeditated scheme controlled by a pulse sequence' — meaning planned and controlled in advance."
+  },
+  {
+    q: "What is the relationship between k-space and the final MR image?",
+    options: ["A. They are identical representations", "B. K-space is the Fourier domain; the MR image is obtained after inverse Fourier transform", "C. K-space is the image and must be inverted for display", "D. There is no mathematical relationship"],
+    correct: 1,
+    explanation: "K-space is the 2D/3D Fourier transform of the MR image. Applying inverse Fourier transform to k-space yields the MR image."
+  },
+  {
+    q: "The center of k-space (low spatial frequencies) contains information about:",
+    options: ["A. Fine detail and edges", "B. Overall image contrast and brightness", "C. Noise only", "D. Slice thickness"],
+    correct: 1,
+    explanation: "The center of k-space (low spatial frequencies) contains information about overall image contrast and signal intensity, while the periphery contains detail/edge information."
+  },
+  {
+    q: "The periphery of k-space (high spatial frequencies) contains information about:",
+    options: ["A. Global contrast", "B. Patient motion only", "C. Fine detail and edges of the image", "D. Coil sensitivity maps"],
+    correct: 2,
+    explanation: "High spatial frequencies at the periphery of k-space encode fine detail and edge information in the MR image."
+  },
+  {
+    q: "Which of the following best describes 'spatial frequency' in MRI?",
+    options: ["A. The temporal repetition rate of RF pulses", "B. The number of phase cycles per unit distance", "C. The frequency of the main magnetic field B0", "D. The sampling rate of the ADC"],
+    correct: 1,
+    explanation: "Spatial frequency (k) refers to the number of phase cycles per meter distance — analogous to temporal frequency (cycles per second)."
+  },
+  {
+    q: "K-space values are described as 'complex values'. This means they have:",
+    options: ["A. Very large magnitudes only", "B. Both real and imaginary components", "C. Only imaginary parts", "D. Integer values only"],
+    correct: 1,
+    explanation: "K-space complex values have both real and imaginary components, sampled during MR measurement."
+  },
+  {
+    q: "Before Fourier transformation is applied, k-space data can be described as:",
+    options: ["A. A recognizable anatomical image", "B. Raw or unprocessed data", "C. A compressed image format", "D. A completed diagnostic image"],
+    correct: 1,
+    explanation: "\"The MRI data prior to becoming an image (raw or unprocessed data) is what makes up k-space.\""
+  },
+  {
+    q: "In a 2D MRI acquisition, the Fourier transform applied to k-space is:",
+    options: ["A. 1D-FT", "B. 2D-FT", "C. 3D-FT", "D. No transform is needed"],
+    correct: 1,
+    explanation: "A 2D Fourier transform (2D-FT) is applied to the NxN k-space matrix to produce the MR image in a 2D acquisition."
+  },
+  {
+    q: "Which statement about k-space is FALSE?",
+    options: [
+      "A. K-space is filled during data acquisition",
+      "B. K-space data are processed after collection to form an image",
+      "C. Each point in k-space corresponds directly to a pixel in the image",
+      "D. K-space is the Fourier domain of the MR image"
+    ],
+    correct: 2,
+    explanation: "Each point in k-space does NOT correspond to a single pixel in the image. Each k-space point contributes to the entire image because of the global nature of Fourier transformation."
+  },
+  {
+    q: "The phase encoding gradient affects which axis of k-space?",
+    options: ["A. kx", "B. kz", "C. ky", "D. Both kx and ky equally"],
+    correct: 2,
+    explanation: "The phase encoding gradient steps through the ky axis of k-space, one line per TR (repetition time)."
+  },
+  {
+    q: "What does 'NxN matrix' represent in the context of k-space?",
+    options: ["A. The number of patients scanned", "B. The dimensions of the raw data matrix where k-space data is stored", "C. The number of RF coils used", "D. The field of view in centimeters"],
+    correct: 1,
+    explanation: "The NxN matrix represents the dimensions of the raw data matrix (k-space) where sampled MR data is stored before reconstruction."
+  },
+  {
+    q: "Which of the following changes in k-space sampling would directly affect image spatial resolution?",
+    options: ["A. Changing the TR value only", "B. Changing the extent (coverage) of k-space", "C. Adjusting the coil temperature", "D. Modifying patient positioning"],
+    correct: 1,
+    explanation: "Spatial resolution is determined by how far into the periphery of k-space data is collected — greater k-space coverage yields higher spatial resolution."
+  },
+  {
+    q: "The concept of k-space is described as a 'formalism'. This means it is:",
+    options: ["A. A physical compartment inside the MRI machine", "B. A mathematical framework or theoretical construct", "C. A type of coil array", "D. A patient preparation protocol"],
+    correct: 1,
+    explanation: "K-space is described as a 'formalism' — a mathematical framework or theoretical construct widely used in MRI, not a physical component."
+  },
+  {
+    q: "In 3D MRI acquisition, k-space is:",
+    options: ["A. One-dimensional", "B. Two-dimensional", "C. Three-dimensional", "D. Four-dimensional"],
+    correct: 2,
+    explanation: "In MRI physics, k-space is the 2D or 3D Fourier transform of the MR image — in 3D acquisitions, k-space is 3D."
+  },
+  {
+    q: "What must be done with k-space data to obtain a diagnostic MRI image?",
+    options: ["A. Print it directly", "B. Apply mathematical processing (inverse Fourier transform)", "C. Transfer it to CT scanner for processing", "D. View it as-is since it looks like an image"],
+    correct: 1,
+    explanation: "K-space data must be mathematically processed — specifically using inverse Fourier transformation — to produce the final diagnostic MR image."
+  },
+  {
+    q: "The MRI signal collected during the readout gradient is used to fill:",
+    options: ["A. One column of k-space at a time", "B. One line (row) of k-space per TR", "C. The entire k-space at once", "D. Only the center point of k-space"],
+    correct: 1,
+    explanation: "During each TR, one line (row along kx) of k-space is filled during the readout, while ky position is set by the phase encoding gradient."
+  },
+  {
+    q: "Which of the following best defines the term 'raw data' in MRI?",
+    options: ["A. The reconstructed diagnostic image", "B. The data stored in k-space before Fourier transformation", "C. Patient demographic information", "D. The coil calibration data"],
+    correct: 1,
+    explanation: "Raw data in MRI refers to the data stored in k-space before Fourier transformation — the unprocessed MR signal data."
+  },
+  {
+    q: "Understanding k-space is important for MRI technologists because it explains:",
+    options: ["A. How to service the magnet cooling system", "B. How image acquisition and pulse sequences function", "C. How to install MRI software updates", "D. How to position patients for imaging"],
+    correct: 1,
+    explanation: "K-space is important because it helps understand how an MRI image is acquired and how various pulse-sequences work."
+  },
+  {
+    q: "The subject of Lecture 15 (المحاضرة 15) in Radiological Physics 2 is:",
+    options: ["A. CT reconstruction algorithms", "B. K-space", "C. Ultrasound Doppler physics", "D. X-ray tube design"],
+    correct: 1,
+    explanation: "The subject of Lecture 15 in Radiological Physics 2 for the third-year Radiological Technology students is K-space."
+  },
+  {
+    q: "In which department is this lecture taught according to the document?",
+    options: ["A. Department of Laboratory Medicine", "B. Department of Radiology Technology (تقنيات الأشعة)", "C. Department of Physiotherapy", "D. Department of Nursing"],
+    correct: 1,
+    explanation: "The lecture is for the Department of Radiology Technology (قسم تقنيات الأشعة), College of Health and Medical Technologies, Baghdad."
+  },
+  {
+    q: "According to the reference listed in the lecture, the textbook used is authored by:",
+    options: ["A. Bushberg et al.", "B. Thayalan and Ramamoorthy Ravichandran", "C. Westbrook and Kaut", "D. Hashemi and Bradley"],
+    correct: 1,
+    explanation: "The reference is: Thayalan, K., and Ramamoorthy Ravichandran. 'The physics of radiology and imaging.' JP Medical Ltd, 2014."
+  },
+  {
+    q: "What is the name of the reference book listed in Lecture 15?",
+    options: [
+      "A. MRI in Practice",
+      "B. The Physics of Radiology and Imaging",
+      "C. Handbook of MRI Pulse Sequences",
+      "D. Radiologic Science for Technologists"
+    ],
+    correct: 1,
+    explanation: "The reference book is 'The physics of radiology and imaging' by Thayalan K. and Ramamoorthy Ravichandran, published by JP Medical Ltd, 2014."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let answered = false;
+let timerInterval;
+let seconds = 0;
+
+function startQuiz() {
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('progress-container').style.display = 'block';
+  startTimer();
+  loadQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    document.getElementById('timer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function loadQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  document.getElementById('q-num').textContent = `السؤال ${currentQ+1} من ${questions.length}`;
+  document.getElementById('q-counter').textContent = `${currentQ+1}/${questions.length}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('explanation').classList.remove('show');
+
+  const pct = Math.round((currentQ / questions.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt.substring(3)}`;
+    btn.onclick = () => selectAnswer(i, btn);
+    optionsDiv.appendChild(btn);
+  });
+
+  // Animate
+  document.getElementById('question-card').style.animation = 'none';
+  setTimeout(() => { document.getElementById('question-card').style.animation = 'fadeSlide 0.4s ease'; }, 10);
+}
+
+function selectAnswer(index, btn) {
+  if (answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const allBtns = document.querySelectorAll('.option-btn');
+
+  allBtns[q.correct].classList.add('correct');
+
+  if (index === q.correct) {
+    score++;
+    correctCount++;
+    document.getElementById('score-display').textContent = score;
+    document.getElementById('correct-count').textContent = correctCount;
+    showToast('✅ إجابة صحيحة!', 'correct');
+  } else {
+    btn.classList.add('wrong');
+    wrongCount++;
+    document.getElementById('wrong-count').textContent = wrongCount;
+    showToast('❌ إجابة خاطئة!', 'wrong');
+    document.getElementById('explanation-text').textContent = q.explanation;
+    document.getElementById('explanation').classList.add('show');
+  }
+
+  allBtns.forEach(b => b.disabled = true);
+  document.getElementById('next-btn').style.display = 'inline-block';
+  if (currentQ === questions.length - 1) {
+    document.getElementById('next-btn').textContent = '📊 عرض النتيجة';
+  }
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  setTimeout(() => { t.className = ''; }, 2000);
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= questions.length) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('stats-bar').style.display = 'none';
+  document.getElementById('progress-container').style.display = 'none';
+
+  const pct = Math.round((score / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) { window.parent.saveScore(pct); }
+  document.getElementById('result-score').textContent = score;
+  document.getElementById('r-correct').textContent = correctCount;
+  document.getElementById('r-wrong').textContent = wrongCount;
+  document.getElementById('r-time').textContent = document.getElementById('timer').textContent;
+  document.getElementById('result-circle').style.setProperty('--pct', pct + '%');
+
+  let title, subtitle;
+  if (pct >= 90) { title = '🏆 ممتاز!'; subtitle = 'أداء رائع جداً، استمر!'; }
+  else if (pct >= 75) { title = '🥈 جيد جداً!'; subtitle = 'نتيجة جيدة، يمكنك التحسين أكثر.'; }
+  else if (pct >= 60) { title = '🥉 جيد'; subtitle = 'راجع المحاضرة مرة أخرى.'; }
+  else { title = '📖 تحتاج مراجعة'; subtitle = 'ادرس المحاضرة جيداً وأعد المحاولة.'; }
+
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-subtitle').textContent = subtitle;
+  document.getElementById('result-screen').style.display = 'block';
+}
+
+function restartQuiz() {
+  currentQ = 0; score = 0; correctCount = 0; wrongCount = 0; seconds = 0;
+  answered = false;
+  clearInterval(timerInterval);
+  document.getElementById('score-display').textContent = '0';
+  document.getElementById('correct-count').textContent = '0';
+  document.getElementById('wrong-count').textContent = '0';
+  document.getElementById('timer').textContent = '00:00';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('progress-container').style.display = 'block';
+  document.getElementById('quiz-screen').style.display = 'block';
+  startTimer();
+  loadQuestion();
+}
+</script>
+</body>
+</html>

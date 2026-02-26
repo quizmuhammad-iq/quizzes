@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الفيزياء الشعاعية / الرنين المغناطيسي - المحاضرة الثالثة | من إنشاء الطالب محمد صبار</title>
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #111827;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #10b981;
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3748;
+    --glow: rgba(59,130,246,0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(16,185,129,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .header-title h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    line-height: 1.4;
+  }
+
+  .header-title p {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .telegram-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #0088cc, #0066aa);
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .telegram-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,136,204,0.4);
+  }
+
+  .telegram-link svg { flex-shrink: 0; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  .stat-item span.val {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .timer-display {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: 'Roboto', monospace;
+    font-size: 0.88rem;
+    color: var(--accent2);
+    letter-spacing: 1px;
+  }
+
+  .score-display {
+    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.05));
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+
+  /* PROGRESS */
+  .progress-wrapper {
+    width: 100%;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: var(--card2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #60a5fa);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px rgba(59,130,246,0.5);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    animation: slideIn 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent), transparent);
+    border-radius: 4px 0 0 4px;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--accent), #1d4ed8);
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 14px;
+    box-shadow: 0 0 12px rgba(59,130,246,0.4);
+  }
+
+  .q-text {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.7;
+    direction: ltr;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+
+  /* OPTIONS */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: right;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.92rem;
+    color: var(--text);
+    direction: ltr;
+    text-align: left;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+    transform: translateX(-3px);
+  }
+
+  .option-btn:disabled { cursor: not-allowed; }
+
+  .option-letter {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: all 0.25s;
+  }
+
+  .option-btn.correct {
+    border-color: var(--success);
+    background: rgba(16,185,129,0.12);
+    animation: pulse-green 0.5s ease;
+  }
+
+  .option-btn.correct .option-letter {
+    background: var(--success);
+    color: #fff;
+  }
+
+  .option-btn.wrong {
+    border-color: var(--error);
+    background: rgba(239,68,68,0.12);
+    animation: shake 0.4s ease;
+  }
+
+  .option-btn.wrong .option-letter {
+    background: var(--error);
+    color: #fff;
+  }
+
+  .option-btn.reveal-correct {
+    border-color: var(--success);
+    background: rgba(16,185,129,0.08);
+  }
+
+  .option-btn.reveal-correct .option-letter {
+    background: var(--success);
+    color: #fff;
+  }
+
+  @keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+    100% { box-shadow: none; }
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  /* EXPLANATION */
+  .explanation-box {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 10px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.88rem;
+    color: var(--accent2);
+    direction: ltr;
+    text-align: left;
+    line-height: 1.6;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .explanation-box strong { color: #fff; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* NEXT BUTTON */
+  .btn-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #1d4ed8);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+    display: none;
+  }
+
+  .btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59,130,246,0.5);
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .toast.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    box-shadow: 0 8px 25px rgba(16,185,129,0.4);
+  }
+
+  .toast.error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    box-shadow: 0 8px 25px rgba(239,68,68,0.4);
+  }
+
+  /* RESULTS SCREEN */
+  .results-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .results-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: bounce 0.8s ease;
+  }
+
+  @keyframes bounce {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  .results-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+
+  .results-score-circle {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) var(--pct), var(--card2) 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 24px auto;
+    position: relative;
+    box-shadow: 0 0 30px rgba(59,130,246,0.3);
+  }
+
+  .results-score-inner {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .results-score-num {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--text);
+  }
+
+  .results-score-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 20px 0 30px;
+  }
+
+  .rs-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    min-width: 120px;
+  }
+
+  .rs-val {
+    font-size: 1.8rem;
+    font-weight: 900;
+  }
+
+  .rs-lab {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .rs-val.green { color: var(--success); }
+  .rs-val.red { color: var(--error); }
+  .rs-val.blue { color: var(--accent2); }
+
+  .btn-restart {
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--accent), #1d4ed8);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.35);
+  }
+
+  .btn-restart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(59,130,246,0.5);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--card2);
+    border-top: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  /* START SCREEN */
+  .start-screen {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .start-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+  }
+
+  .start-title {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .start-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .start-meta {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 20px 0 30px;
+  }
+
+  .meta-badge {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .meta-badge span { color: var(--accent2); font-weight: 700; }
+
+  .btn-start {
+    padding: 16px 60px;
+    background: linear-gradient(135deg, var(--accent), #1d4ed8);
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 25px rgba(59,130,246,0.4);
+    letter-spacing: 1px;
+  }
+
+  .btn-start:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(59,130,246,0.6);
+  }
+
+  @media (max-width: 600px) {
+    .question-card { padding: 18px; }
+    .header-title h1 { font-size: 0.9rem; }
+    .q-text { font-size: 0.9rem; }
+    .option-btn { font-size: 0.85rem; padding: 12px 14px; }
+    .results-title { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="header-title">
+        <h1>🎓 الفيزياء الشعاعية / الرنين المغناطيسي — المحاضرة الثالثة</h1>
+        <p>من إنشاء الطالب: <strong style="color:var(--accent2)">محمد صبار</strong> | قسم تقنيات الاشعة — المرحلة الثالثة</p>
+      </div>
+      <a href="https://t.me/mulimcq" target="_blank" class="telegram-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.25l-2.01 9.474c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.873.747z"/></svg>
+        <strong>محمد صبار</strong> | اضغط هنا للحصول على اختبارات باقي المحاضرات
+      </a>
+    </div>
+    <div class="stats-bar" id="statsBar" style="display:none">
+      <div class="stat-item">
+        ⏱️ الوقت: <span class="timer-display" id="timerDisplay">00:00</span>
+      </div>
+      <div class="stat-item">
+        📊 التقدم: <span class="val" id="progressText">0/45</span>
+      </div>
+      <div class="score-display" id="scoreDisplay">⭐ النقاط: 0</div>
+    </div>
+    <div class="progress-wrapper" id="progressWrapper" style="display:none">
+      <div class="progress-info">
+        <span id="progressLabel">السؤال 0 من 45</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- START SCREEN -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-icon">🧲</div>
+    <div class="start-title">اختبار المحاضرة الثالثة</div>
+    <p class="start-sub" style="font-family:'Roboto',sans-serif;direction:ltr;">Shimming & Radio Frequency Coils in MRI</p>
+    <p class="start-sub">اختبر معلوماتك في موضوع التشميم وملفات التردد الراديوي في الرنين المغناطيسي</p>
+    <div class="start-meta">
+      <div class="meta-badge">📝 عدد الأسئلة: <span>45</span></div>
+      <div class="meta-badge">⭐ نقطة لكل إجابة صحيحة: <span>1</span></div>
+      <div class="meta-badge">⏱️ بدون حد زمني</div>
+      <div class="meta-badge">📖 مادة: <span>الفيزياء الشعاعية</span></div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">🚀 ابدأ الاختبار</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quizScreen" style="display:none">
+    <div class="question-card" id="questionCard">
+      <div class="q-number" id="qNumber">1</div>
+      <div class="q-text" id="qText"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="explanation-box" id="explanationBox" style="display:none"></div>
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">
+        السؤال التالي ←
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div class="results-screen" id="resultsScreen">
+    <div class="results-icon" id="resultsIcon">🏆</div>
+    <div class="results-title" id="resultsTitle">أحسنت!</div>
+    <p style="color:var(--text-muted);margin-bottom:10px;" id="resultsMsg"></p>
+    <div class="results-score-circle" id="scoreCircle">
+      <div class="results-score-inner">
+        <div class="results-score-num" id="scoreNum">0</div>
+        <div class="results-score-label">من 45</div>
+      </div>
+    </div>
+    <div class="results-stats">
+      <div class="rs-item">
+        <div class="rs-val green" id="rCorrect">0</div>
+        <div class="rs-lab">✅ إجابات صحيحة</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val red" id="rWrong">0</div>
+        <div class="rs-lab">❌ إجابات خاطئة</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val blue" id="rTime">00:00</div>
+        <div class="rs-lab">⏱️ الوقت المستغرق</div>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+    <br><br>
+    <a href="https://t.me/mulimcq" target="_blank" class="telegram-link" style="display:inline-flex">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.25l-2.01 9.474c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.873.747z"/></svg>
+      <strong>محمد صبار</strong> | اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </a>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>📚 جامعة الهادي | كلية التقنيات الصحية والطبية | قسم تقنيات الأشعة </p>
+  <p>المرحلة الثالثة</p>
+  <a href="https://t.me/mulimcq" target="_blank" class="telegram-link" style="display:inline-flex;margin-top:10px">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.25l-2.01 9.474c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.873.747z"/></svg>
+    <strong>محمد صبار</strong> | اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</footer>
+
+<script>
+const questions = [
+  // SHIMMING (1-15)
+  {
+    q: "What is the primary purpose of shimming in MRI?",
+    opts: ["To increase the magnetic field strength", "To improve the homogeneity of the static magnetic field (Bo)", "To reduce RF noise from the environment", "To cool the superconducting magnet"],
+    ans: 1,
+    exp: "Shimming is performed to improve or adjust the homogeneity of the static magnetic field (Bo), which is essential for high-resolution MRI images."
+  },
+  {
+    q: "To what order must magnetic field inhomogeneity be maintained in a high-performance MRI scanner?",
+    opts: ["Several Tesla", "Several mT", "Several ppm (parts per million)", "Several kHz"],
+    ans: 2,
+    exp: "The magnetic field inhomogeneity must be maintained to the order of several ppm (parts per million) to produce high-resolution MRI images."
+  },
+  {
+    q: "What is a 'shim' in the context of MRI?",
+    opts: ["A cooling device for the magnet", "A device used to adjust the homogeneity of a magnetic field", "A type of RF coil", "A gradient coil amplifier"],
+    ans: 1,
+    exp: "A shim is defined as a device used to adjust the homogeneity of a magnetic field in MRI systems."
+  },
+  {
+    q: "How many main methods are used to accomplish shimming in MRI?",
+    opts: ["One", "Two", "Three", "Four"],
+    ans: 1,
+    exp: "Shimming is accomplished by two methods: (1) Passive shimming and (2) Active shimming."
+  },
+  {
+    q: "Which type of shimming involves adding small pieces of iron or magnetized materials?",
+    opts: ["Active shimming", "Passive shimming", "Dynamic shimming", "Gradient shimming"],
+    ans: 1,
+    exp: "Passive shimming involves mechanical adjustments by adding small pieces of iron or magnetized materials (typically steel) near the magnet."
+  },
+  {
+    q: "What material is typically used in passive shimming?",
+    opts: ["Copper wire coils", "Steel pieces with good magnetic qualities", "Liquid helium", "Silicon chips"],
+    ans: 1,
+    exp: "Passive shimming involves pieces of steel with good magnetic qualities placed near the permanent or superconducting magnet."
+  },
+  {
+    q: "How do the steel pieces in passive shimming contribute to field homogeneity?",
+    opts: ["They absorb excess magnetic field", "They become magnetized and produce their own magnetic field", "They reduce the temperature of the magnet", "They block external RF interference"],
+    ans: 1,
+    exp: "The steel pieces placed near the magnet become magnetized and produce their own magnetic field, which adds to the overall field to increase homogeneity."
+  },
+  {
+    q: "Which type of shimming uses extra exciting currents through coils?",
+    opts: ["Passive shimming", "Mechanical shimming", "Active shimming", "Thermal shimming"],
+    ans: 2,
+    exp: "Active shimming uses electrical adjustments — extra exciting currents passed through coils with adjustable current."
+  },
+  {
+    q: "What is the key feature of coils used in active shimming?",
+    opts: ["They are made of iron", "They have adjustable current", "They are placed outside the scanner room", "They operate at liquid nitrogen temperatures"],
+    ans: 1,
+    exp: "Active shimming is performed with coils with adjustable current, which allows correction of specific field inhomogeneities."
+  },
+  {
+    q: "What specific property do shim coils in active shimming have?",
+    opts: ["They generate gradient fields for slice selection", "They are designed to correct inhomogeneities of specific geometries", "They transmit RF pulses to the patient", "They monitor the patient's heartbeat"],
+    ans: 1,
+    exp: "Active shimming coils have unique geometric configurations and are designed to correct inhomogeneities of specific geometries."
+  },
+  {
+    q: "What happens to the additional magnetic fields produced during shimming (both active and passive)?",
+    opts: ["They cancel the main magnetic field", "They add to the overall field to increase homogeneity of the total field", "They create gradient fields for imaging", "They are absorbed by the patient's body"],
+    ans: 1,
+    exp: "In both active and passive shimming, the additional magnetic fields (from coils or steel) add to the overall magnetic field to increase the homogeneity of the total field."
+  },
+  {
+    q: "Why must the magnet be adjusted after manufacturing?",
+    opts: ["Because the magnet is too strong", "Because the magnet itself is not adequately homogeneous", "Because the RF coils interfere with the field", "Because the gradient coils distort the field"],
+    ans: 1,
+    exp: "After manufacturing, the magnet must be adjusted because the magnet itself is not adequately homogeneous. Shimming improves this homogeneity."
+  },
+  {
+    q: "What type of magnet does passive shimming typically work with?",
+    opts: ["Resistive magnets only", "Permanent or superconducting magnets", "Electromagnets only", "Gradient magnets"],
+    ans: 1,
+    exp: "Steel pieces in passive shimming are placed near the permanent or superconducting magnet to improve field homogeneity."
+  },
+  {
+    q: "Active shimming requires passage of electric current through coils with what kind of configurations?",
+    opts: ["Standard circular loops", "Unique geometric configurations", "Random helical windings", "Flat planar arrays only"],
+    ans: 1,
+    exp: "Active shimming requires passage of electric current through coils with unique geometric configurations, each designed to correct specific types of field inhomogeneities."
+  },
+  {
+    q: "The magnetic field inhomogeneity in MRI is measured in which unit?",
+    opts: ["Tesla (T)", "Hertz (Hz)", "Parts per million (ppm)", "Gauss (G)"],
+    ans: 2,
+    exp: "Magnetic field inhomogeneity in MRI must be maintained to the order of several ppm (parts per million) for high-resolution imaging."
+  },
+  // RF COILS (16-35)
+  {
+    q: "What are RF coils needed for in MRI scanners?",
+    opts: ["To cool the superconducting magnet", "To receive and/or transmit RF signals", "To generate the static magnetic field", "To create gradient fields for spatial encoding"],
+    ans: 1,
+    exp: "RF coils are needed to receive and/or transmit the RF signals used in MRI scanners."
+  },
+  {
+    q: "Into how many main categories can RF coils for MRI be classified?",
+    opts: ["Two: volume coils and surface coils", "Three: transmit, receive, and transceiver coils", "Four: head, body, extremity, and spine coils", "One: all coils are the same type"],
+    ans: 0,
+    exp: "RF coils for MRI can be categorized into two different categories: volume coils and surface coils."
+  },
+  {
+    q: "What is the primary design goal of a volume RF coil?",
+    opts: ["To provide high SNR in a small region", "To provide a homogeneous RF field inside the coil", "To minimize RF power consumption", "To image only superficial tissues"],
+    ans: 1,
+    exp: "The design of a volume coil is to provide a homogeneous RF field inside the coil, which is highly desirable for transmit applications."
+  },
+  {
+    q: "What is a disadvantage of volume coils compared to surface coils?",
+    opts: ["They cannot transmit RF pulses", "They receive noise from the whole body, not just the region of interest", "They have very low signal-to-noise ratio", "They can only image the head"],
+    ans: 1,
+    exp: "Volume coils have a large field of view, meaning they receive noise from the whole body, not just the region of interest, which reduces SNR compared to surface coils."
+  },
+  {
+    q: "Where must the area of examination be located relative to a volume coil?",
+    opts: ["Outside the coil", "Adjacent to the coil", "Inside the coil", "Below the coil"],
+    ans: 2,
+    exp: "Volume coils need to have the area of examination inside the coil to function properly."
+  },
+  {
+    q: "Volume coils can be used for which operations?",
+    opts: ["Transmit only", "Receive only", "Transmit and receive, or receive only", "Neither transmit nor receive"],
+    ans: 2,
+    exp: "Volume coils can be used for transmit and receive, although sometimes they are used for receive only."
+  },
+  {
+    q: "Why are large volume coils often driven in quadrature?",
+    opts: ["To increase the field of view", "To reduce RF power requirements by a factor of two", "To improve spatial resolution", "To eliminate the need for gradient coils"],
+    ans: 1,
+    exp: "Large volume coils require a great deal of RF power due to their size, so they are often driven in quadrature to reduce by two the RF power requirements."
+  },
+  {
+    q: "Where are surface coils placed during MRI imaging?",
+    opts: ["Inside the bore of the magnet away from the patient", "Over or around the surface of the anatomy of interest", "Inside the patient's body", "Around the entire scanner housing"],
+    ans: 1,
+    exp: "Surface coils are placed over or around the surface of the anatomy of interest directly on the patient, such as the temporo-mandibular joint, orbits, or shoulder."
+  },
+  {
+    q: "What does SNR stand for in MRI coil terminology?",
+    opts: ["Static Noise Ratio", "Signal to Noise Ratio", "Spatial Normalization Range", "Sequence Null Response"],
+    ans: 1,
+    exp: "SNR stands for Signal to Noise Ratio, which is a key performance metric for RF coils. Surface coils have high SNR due to their small field of view."
+  },
+  {
+    q: "What material are surface coil loops typically made of?",
+    opts: ["Iron wire", "Copper wire", "Aluminum foil", "Carbon fiber"],
+    ans: 1,
+    exp: "Surface coils consist of single or multi-turn loops of copper wire."
+  },
+  {
+    q: "What is the main advantage of surface coils regarding image quality?",
+    opts: ["They provide very uniform signal across the entire body", "They have high SNR and allow for very high-resolution imaging", "They can image any depth without signal loss", "They require less RF power than volume coils"],
+    ans: 1,
+    exp: "Surface coils have a high SNR and allow for very high-resolution imaging because their small field of view means they only detect noise from the region of interest."
+  },
+  {
+    q: "What is the main disadvantage of surface coils?",
+    opts: ["They are too expensive", "They lose signal uniformity very quickly when moving away from the coil", "They cannot be used for receive operations", "They interfere with the static magnetic field"],
+    ans: 1,
+    exp: "The disadvantage of surface coils is that they lose signal uniformity very quickly when you move away from the coil."
+  },
+  {
+    q: "For a circular surface coil, what is the approximate depth penetration?",
+    opts: ["Equal to its full diameter", "About half its diameter", "About twice its diameter", "Unlimited depth penetration"],
+    ans: 1,
+    exp: "In the case of a circular surface coil, the depth penetration is about half its diameter."
+  },
+  {
+    q: "Why do surface coils make poor transmit coils?",
+    opts: ["Because they are too small to generate sufficient power", "Because they have poor RF homogeneity even over their region of interest", "Because they cannot be connected to the RF transmitter", "Because they overheat during transmission"],
+    ans: 1,
+    exp: "Surface coils make poor transmit coils because they have poor RF homogeneity, even over their region of interest."
+  },
+  {
+    q: "At what angle are the two coils in a quadrature coil oriented relative to each other?",
+    opts: ["45 degrees", "180 degrees", "90 degrees", "60 degrees"],
+    ans: 2,
+    exp: "The quadrature coil consists of two coils placed at right angles to one another, meaning oriented 90 degrees relative to each other."
+  },
+  {
+    q: "What is the phase relationship between signals received by each coil in a quadrature design?",
+    opts: ["In phase (0 degrees)", "90 degrees out of phase", "180 degrees out of phase", "270 degrees out of phase"],
+    ans: 1,
+    exp: "Because the two coils are oriented 90 degrees to each other, the MRI signals received by each coil are 90 degrees out of phase with each other."
+  },
+  {
+    q: "How much more signal does a quadrature coil produce compared to a single loop coil?",
+    opts: ["2 times more signal", "√2 more signal", "3 times more signal", "The same signal"],
+    ans: 1,
+    exp: "The advantage of the quadrature design is that the coils produce √2 more signal than single loop coils."
+  },
+  {
+    q: "In what mode does a quadrature coil operate?",
+    opts: ["Linear polarization mode", "Circular polarization mode", "Elliptical polarization mode", "Random polarization mode"],
+    ans: 1,
+    exp: "The quadrature coil operates in the circular polarization (circularization) mode."
+  },
+  {
+    q: "How many types of images can a quadrature coil generate?",
+    opts: ["One: magnitude image only", "Two: real and imaginary", "Three: real, imaginary, and magnitude", "Four: axial, sagittal, coronal, and oblique"],
+    ans: 2,
+    exp: "The quadrature coil can generate three types of images: Real image, Imaginary image, and Magnitude image."
+  },
+  {
+    q: "What do phased array coils consist of?",
+    opts: ["A single large surface coil", "Multiple surface coils with small diameter combined together", "Two quadrature coils oriented 90 degrees apart", "Volume coils arranged in a circle"],
+    ans: 1,
+    exp: "Phased array coils consist of multiple surface coils with small diameter which are combined (coil elements in phased array) to record the signal simultaneously and independently."
+  },
+  {
+    q: "How many surface coils can be combined to create a phased array coil with a large sensitive area?",
+    opts: ["2 or 3", "4 or 6", "8 or 10", "12 or more"],
+    ans: 1,
+    exp: "By combining 4 or 6 surface coils it is possible to create a phased array coil with a large sensitive area."
+  },
+  {
+    q: "How much more signal do phased array coils produce compared to quadrature coils?",
+    opts: ["2 times more", "√2 more on average", "The same amount", "Half the signal"],
+    ans: 1,
+    exp: "Phased array coils produce on average √2 more signal than quadrature coils."
+  },
+  {
+    q: "The QD Body Array coil mentioned in the lecture is classified as which type?",
+    opts: ["Surface coil", "Volume coil", "Quadrature-only coil", "Passive shimming coil"],
+    ans: 1,
+    exp: "The QD Body Array coil is a volume coil, while the Spine Array coil is a surface coil."
+  },
+  {
+    q: "The Spine Array coil is classified as which type of coil?",
+    opts: ["Volume coil", "Surface coil", "Quadrature body coil", "Transmit-only coil"],
+    ans: 1,
+    exp: "The Spine Array coil is a surface coil, while the QD Body Array coil is a volume coil."
+  },
+  // OTHER HARDWARE (36-45)
+  {
+    q: "What is the RF chain in an MRI system responsible for?",
+    opts: ["Cooling the superconducting magnet", "Producing and receiving the RF signal transmitted to and from the patient", "Generating gradient magnetic fields", "Performing image reconstruction"],
+    ans: 1,
+    exp: "The RF chain produces the RF signal transmitted into the patient and receives the RF signal from the patient. The receive coil is a part of the RF chain."
+  },
+  {
+    q: "Why is a Faraday cage used with MRI scanners?",
+    opts: ["To keep the magnet cold", "To prevent radio waves from entering the scanner room and causing artifacts", "To block gradient field interference", "To store helium gas safely"],
+    ans: 1,
+    exp: "MRI scanners are placed in a Faraday cage to prevent radio waves from entering the scanner room, which may cause artifacts on the MRI image."
+  },
+  {
+    q: "The frequency range used in MRI overlaps with which other technology?",
+    opts: ["Microwave communications", "Radio transmissions", "X-ray imaging", "Infrared remote controls"],
+    ans: 1,
+    exp: "The frequency range used in MRI is the same as used for radio transmissions, which is why shielding against RF interference is necessary."
+  },
+  {
+    q: "What would happen to the weak RF signals from the patient if an MRI scanner had no Faraday shielding?",
+    opts: ["They would be amplified beyond measurement", "They would be overwhelmed by external RF signals", "They would cause the magnet to quench", "They would damage the gradient coils"],
+    ans: 1,
+    exp: "Without Faraday shielding, the very weak RF signals that emanate from the patient when scanned would be overwhelmed by external radio frequency interference."
+  },
+  {
+    q: "What analogy was used in the lecture to describe MRI without proper RF shielding?",
+    opts: ["Like using a telescope in daylight", "Like watching television with a radio", "Like reading in complete darkness", "Like driving without headlights"],
+    ans: 1,
+    exp: "Someone once described it as: 'MRI is like watching television with a radio' — highlighting the interference problem that Faraday shielding solves."
+  },
+  {
+    q: "Besides protecting the scanner from external RF, what else does the Faraday cage do?",
+    opts: ["It maintains the temperature of the magnet", "It stops RF produced by the scanner from interfering with equipment outside the cage", "It amplifies the gradient coil signals", "It provides structural support for the magnet bore"],
+    ans: 1,
+    exp: "The Faraday cage also stops the radio frequencies produced by the scanner itself from interfering with equipment outside the cage."
+  },
+  {
+    q: "What is the primary advantage of phased array coils over single surface coils?",
+    opts: ["They are cheaper to manufacture", "They combine multiple small coils to achieve both high SNR and large sensitive area", "They do not require preamplifiers", "They can generate their own static magnetic field"],
+    ans: 1,
+    exp: "Phased array coils combine multiple surface coils with small diameter to record signal simultaneously and independently, achieving high SNR while covering a greater area than a single surface coil."
+  },
+  {
+    q: "Which coil type is described as having high SNR but a limited sensitive area due to small field of view?",
+    opts: ["Volume coils", "Body coils", "Surface coils", "Faraday coils"],
+    ans: 2,
+    exp: "Surface coils have the highest SNR but have a limited sensitive area due to their small field of view — they only detect noise from their region of interest."
+  },
+  {
+    q: "What coils are mentioned as examples of surface coils in the lecture?",
+    opts: ["Head coil and knee coil", "Shoulder coil, neck coil, and spine coil", "Body coil and cardiac coil", "Wrist coil and ankle coil"],
+    ans: 1,
+    exp: "The lecture shows examples of surface coils including: Surface coils (general), Shoulder coil, Neck coil, and Spine coil."
+  },
+  {
+    q: "According to the lecture, most modern MRI systems come equipped with which types of coils?",
+    opts: ["Only phased array coils", "Only quadrature coils", "Quadrature and phased array coils", "Only surface coils"],
+    ans: 2,
+    exp: "Today most MRI systems come with both Quadrature coils and Phased Array coils as standard equipment."
+  }
+];
+
+let current = 0;
+let score = 0;
+let correct = 0;
+let wrong = 0;
+let answered = false;
+let timerInterval = null;
+let seconds = 0;
+
+function startQuiz() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('statsBar').style.display = 'flex';
+  document.getElementById('progressWrapper').style.display = 'block';
+  startTimer();
+  loadQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    seconds++;
+    document.getElementById('timerDisplay').textContent = formatTime(seconds);
+  }, 1000);
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60).toString().padStart(2, '0');
+  const sec = (s % 60).toString().padStart(2, '0');
+  return `${m}:${sec}`;
+}
+
+function loadQuestion() {
+  answered = false;
+  const q = questions[current];
+  document.getElementById('qNumber').textContent = current + 1;
+  document.getElementById('qText').textContent = q.q;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span> ${opt}`;
+    btn.onclick = () => selectAnswer(i, btn);
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('explanationBox').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'none';
+
+  updateProgress();
+}
+
+function selectAnswer(idx, btn) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[current];
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  if (idx === q.ans) {
+    btn.classList.add('correct');
+    score++;
+    correct++;
+    showToast('✅ إجابة صحيحة!', 'success');
+  } else {
+    btn.classList.add('wrong');
+    wrong++;
+    allBtns[q.ans].classList.add('reveal-correct');
+    const expBox = document.getElementById('explanationBox');
+    expBox.innerHTML = `<strong>💡 الشرح:</strong> ${q.exp}`;
+    expBox.style.display = 'block';
+    showToast('❌ إجابة خاطئة!', 'error');
+  }
+
+  document.getElementById('scoreDisplay').textContent = `⭐ النقاط: ${score}`;
+  document.getElementById('btnNext').style.display = 'flex';
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResults();
+  } else {
+    loadQuestion();
+    document.getElementById('questionCard').style.animation = 'none';
+    requestAnimationFrame(() => {
+      document.getElementById('questionCard').style.animation = 'slideIn 0.4s ease';
+    });
+  }
+}
+
+function updateProgress() {
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${current}/${questions.length}`;
+  document.getElementById('progressLabel').textContent = `السؤال ${current + 1} من ${questions.length}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function showResults() {
+  clearInterval(timerInterval);
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('statsBar').style.display = 'none';
+  document.getElementById('progressWrapper').style.display = 'none';
+  const resultsScreen = document.getElementById('resultsScreen');
+  resultsScreen.style.display = 'block';
+
+  const pct = Math.round((score / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) { window.parent.saveScore(pct); }
+  document.getElementById('scoreCircle').style.setProperty('--pct', pct + '%');
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('rCorrect').textContent = correct;
+  document.getElementById('rWrong').textContent = wrong;
+  document.getElementById('rTime').textContent = formatTime(seconds);
+
+  let icon = '🏆', title = 'ممتاز!', msg = 'أداء رائع! أنت على دراية تامة بمحتوى المحاضرة الثالثة.';
+  if (pct < 50) { icon = '📚'; title = 'تحتاج مراجعة'; msg = 'راجع المحاضرة مجدداً وأعد الاختبار للحصول على نتيجة أفضل.'; }
+  else if (pct < 70) { icon = '👍'; title = 'جيد!'; msg = 'نتيجة جيدة، لكن يمكنك تحسينها بمزيد من المراجعة.'; }
+  else if (pct < 90) { icon = '🌟'; title = 'جيد جداً!'; msg = 'أداء ممتاز! معرفتك بمحتوى المحاضرة ممتازة.'; }
+
+  document.getElementById('resultsIcon').textContent = icon;
+  document.getElementById('resultsTitle').textContent = title;
+  document.getElementById('resultsMsg').textContent = `${msg} — النتيجة: ${pct}%`;
+
+  // Update the progress circle
+  const circle = document.getElementById('scoreCircle');
+  circle.style.background = `conic-gradient(var(--accent) ${pct * 3.6}deg, var(--card2) 0)`;
+}
+
+function restartQuiz() {
+  current = 0; score = 0; correct = 0; wrong = 0; seconds = 0; answered = false;
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('statsBar').style.display = 'flex';
+  document.getElementById('progressWrapper').style.display = 'block';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('scoreDisplay').textContent = '⭐ النقاط: 0';
+  document.getElementById('timerDisplay').textContent = '00:00';
+  startTimer();
+  loadQuestion();
+}
+
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = `toast ${type}`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المحاضرة الرابعة - الفيزياء الشعاعية / الرنين المغناطيسي</title>
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #1e2a42;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warn: #f59e0b;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --border: #2d3f5e;
+    --glow: rgba(59,130,246,0.3);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.06) 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 80%, rgba(16,185,129,0.04) 0%, transparent 50%);
+  }
+  .en { font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace; direction: ltr; display: inline-block; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1526 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+    position: relative;
+  }
+  header::before {
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;height:3px;
+    background: linear-gradient(90deg, var(--accent), #8b5cf6, var(--success));
+  }
+  .header-title {
+    font-size: 1.05rem;
+    color: var(--text2);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+  .header-main {
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent2), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+  .header-sub {
+    font-size: 0.85rem;
+    color: var(--text2);
+  }
+  .header-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--accent2);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(59,130,246,0.3);
+    padding: 4px 14px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+  .header-link:hover { background: rgba(59,130,246,0.15); }
+  .header-link span { color: var(--text2); font-weight: 400; margin-right: 6px; font-size: 0.82rem; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .stat-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.88rem;
+  }
+  .stat-icon { font-size: 1.1rem; }
+  .stat-label { color: var(--text2); }
+  .stat-val { font-weight: 700; color: var(--text); font-size: 1rem; }
+  #timer-val { color: var(--warn); font-family: 'Roboto', monospace; }
+  #score-val { color: var(--success); }
+  #correct-val { color: var(--success); }
+  #wrong-val { color: var(--danger); }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 12px 20px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--text2);
+    margin-bottom: 6px;
+  }
+  .progress-bar-outer {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--accent), #8b5cf6);
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* MAIN */
+  main { max-width: 820px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  /* START SCREEN */
+  .start-screen {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .start-icon { font-size: 4rem; margin-bottom: 20px; }
+  .start-screen h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
+  .start-screen p { color: var(--text2); margin-bottom: 30px; line-height: 1.7; }
+  .start-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 30px;
+    max-width: 480px;
+    margin-inline: auto;
+    margin-bottom: 30px;
+  }
+  .start-stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .start-stat .n { font-size: 1.8rem; font-weight: 800; color: var(--accent2); }
+  .start-stat .l { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .q-card::before {
+    content:'';
+    position:absolute;
+    top:0;left:0;width:4px;height:100%;
+    background: linear-gradient(180deg, var(--accent), #8b5cf6);
+    border-radius: 4px 0 0 4px;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(16px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  .q-num {
+    font-size: 0.8rem;
+    color: var(--accent2);
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .q-text {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    font-weight: 500;
+    margin-bottom: 22px;
+    direction: ltr;
+    text-align: left;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    color: #f1f5f9;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    direction: ltr;
+    text-align: left;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.95rem;
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+  }
+  .option:hover:not(.disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+    transform: translateX(-3px);
+  }
+  .option .opt-letter {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option.correct {
+    border-color: var(--success);
+    background: rgba(16,185,129,0.12);
+  }
+  .option.correct .opt-letter {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+  }
+  .option.wrong {
+    border-color: var(--danger);
+    background: rgba(239,68,68,0.1);
+  }
+  .option.wrong .opt-letter {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: #fff;
+  }
+  .option.disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 16px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    direction: ltr;
+    text-align: left;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    color: #fca5a5;
+    display: none;
+  }
+  .explanation.show { display: block; animation: fadeUp 0.3s ease; }
+  .explanation strong { color: var(--warn); }
+
+  /* NEXT BTN */
+  .btn-next {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #6366f1);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+  .btn-next:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 8px 25px var(--glow); }
+  .btn-next.show { display: block; }
+
+  /* RESULT SCREEN */
+  .result-screen {
+    text-align: center;
+    padding: 40px 20px;
+    display: none;
+  }
+  .result-circle {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(var(--success) 0%, var(--accent) 60%, var(--border) 60%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .result-circle-inner {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .result-pct { font-size: 1.9rem; font-weight: 800; color: var(--text); }
+  .result-label { font-size: 0.7rem; color: var(--text2); }
+  .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+  .result-sub { color: var(--text2); margin-bottom: 28px; }
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 12px;
+    max-width: 400px;
+    margin: 0 auto 28px;
+  }
+  .result-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .result-box .rv { font-size: 1.6rem; font-weight: 800; }
+  .result-box .rl { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+  .btn-retry {
+    padding: 13px 40px;
+    background: linear-gradient(135deg, var(--accent), #6366f1);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-retry:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 8px 25px var(--glow); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 10px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--success); color: var(--success); }
+  .toast.error { border-color: var(--danger); color: var(--danger); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 0.85rem;
+    background: var(--card);
+  }
+  footer a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  footer a:hover { text-decoration: underline; }
+
+  /* START BTN */
+  .btn-start {
+    padding: 14px 50px;
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 8px 30px var(--glow);
+  }
+  .btn-start:hover { transform: translateY(-2px); opacity: 0.92; }
+
+  @media(max-width:500px) {
+    .start-grid { grid-template-columns: repeat(3,1fr); }
+    .stats-bar { gap: 8px; }
+    .stat-box { padding: 6px 10px; font-size: 0.8rem; }
+    .q-text { font-size: 0.95rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<header>
+  <div class="header-title">جامعة الهادي | كلية التقنيات الصحية والطبية | قسم تقنيات الإشعة| المرحلة الثالثة</div>
+  <div class="header-main">الفيزياء الشعاعية / الرنين المغناطيسي — المحاضرة الرابعة</div>
+  <div class="header-sub">Atomic Structure &amp; Magnetization | من إنشاء الطالب: محمد صبار</div>
+  <a href="https://t.me/mulimcq" target="_blank" class="header-link">
+    <span>اضغط هنا للحصول على اختبارات باقي المحاضرات</span>
+    <strong>محمد صبار</strong>
+  </a>
+</header>
+
+<div class="stats-bar" id="statsBar" style="display:none">
+  <div class="stat-box">
+    <span class="stat-icon">⏱️</span>
+    <span class="stat-label">الوقت:</span>
+    <span class="stat-val" id="timer-val">00:00</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-icon">❓</span>
+    <span class="stat-label">السؤال:</span>
+    <span class="stat-val" id="q-counter">1/45</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-icon">⭐</span>
+    <span class="stat-label">النقاط:</span>
+    <span class="stat-val" id="score-val">0</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-icon">✅</span>
+    <span class="stat-label">صحيح:</span>
+    <span class="stat-val" id="correct-val">0</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-icon">❌</span>
+    <span class="stat-label">خطأ:</span>
+    <span class="stat-val" id="wrong-val">0</span>
+  </div>
+</div>
+
+<div class="progress-wrap" id="progressWrap" style="display:none">
+  <div class="progress-info">
+    <span id="prog-text">التقدم: 0%</span>
+    <span id="prog-q">0 من 45</span>
+  </div>
+  <div class="progress-bar-outer">
+    <div class="progress-bar-inner" id="progBar"></div>
+  </div>
+</div>
+
+<main>
+  <!-- START SCREEN -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-icon">🔬</div>
+    <h2>اختبار المحاضرة الرابعة</h2>
+    <p>Atomic Structure &amp; Magnetization<br>اختبر معلوماتك في التركيب الذري والمغنطة</p>
+    <div class="start-grid">
+      <div class="start-stat"><div class="n">45</div><div class="l">سؤال</div></div>
+      <div class="start-stat"><div class="n">2</div><div class="l">نقاط/سؤال</div></div>
+      <div class="start-stat"><div class="n">90</div><div class="l">نقطة كاملة</div></div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">ابدأ الاختبار 🚀</button>
+  </div>
+
+  <!-- QUIZ AREA -->
+  <div id="quizArea" style="display:none">
+    <div class="q-card" id="qCard">
+      <div class="q-num" id="qNum"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="optionsBox"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <button class="btn-next" id="btnNext" onclick="nextQuestion()">السؤال التالي ←</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-circle" id="resultCircle">
+      <div class="result-circle-inner">
+        <div class="result-pct" id="resPct">0%</div>
+        <div class="result-label">النتيجة</div>
+      </div>
+    </div>
+    <div class="result-title" id="resTitle"></div>
+    <div class="result-sub" id="resSub"></div>
+    <div class="result-grid">
+      <div class="result-box"><div class="rv" style="color:var(--success)" id="r-correct">0</div><div class="rl">إجابات صحيحة</div></div>
+      <div class="result-box"><div class="rv" style="color:var(--danger)" id="r-wrong">0</div><div class="rl">إجابات خاطئة</div></div>
+      <div class="result-box"><div class="rv" style="color:var(--accent2)" id="r-score">0</div><div class="rl">النقاط المكتسبة</div></div>
+      <div class="result-box"><div class="rv" style="color:var(--warn)" id="r-time">-</div><div class="rl">الوقت المستغرق</div></div>
+    </div>
+    <button class="btn-retry" onclick="retryQuiz()">🔄 إعادة الاختبار</button>
+    <br><br>
+    <a href="https://t.me/mulimcq" target="_blank" class="header-link">
+      <span>اضغط هنا للحصول على اختبارات باقي المحاضرات</span>
+      <strong>محمد صبار</strong>
+    </a>
+  </div>
+</main>
+
+<footer>
+  من إنشاء: <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+  &nbsp;|&nbsp; اضغط هنا للحصول على اختبارات باقي المحاضرات
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "What is the most abundant atom in the human body?",
+    opts: ["Oxygen", "Carbon", "Hydrogen", "Nitrogen"],
+    ans: 2,
+    exp: "Hydrogen is the most abundant atom in the human body, found mainly in water (H₂O) and fat molecules."
+  },
+  {
+    q: "How many hydrogen atoms are in a water molecule (H₂O)?",
+    opts: ["One", "Two", "Three", "Four"],
+    ans: 1,
+    exp: "Water (H₂O) consists of two hydrogen atoms bonded with one oxygen atom."
+  },
+  {
+    q: "What does the atomic number represent?",
+    opts: ["The sum of protons and neutrons", "The sum of protons only", "The sum of neutrons only", "The total mass of the atom"],
+    ans: 1,
+    exp: "The atomic number is the sum of protons in the nucleus. It gives an atom its chemical identity."
+  },
+  {
+    q: "What does the mass number represent?",
+    opts: ["Number of protons only", "Number of neutrons only", "Sum of protons and neutrons", "Number of electrons"],
+    ans: 2,
+    exp: "The mass number is the sum of protons and neutrons in the nucleus."
+  },
+  {
+    q: "Atoms with the same number of protons but different number of neutrons are called:",
+    opts: ["Ions", "Isotopes", "Isobars", "Isomers"],
+    ans: 1,
+    exp: "Isotopes are atoms of the same element with the same number of protons but different numbers of neutrons."
+  },
+  {
+    q: "Which type of nucleus is particularly important in MRI?",
+    opts: ["Nuclei with an even mass number", "Nuclei with an odd mass number", "Nuclei with equal protons and electrons", "Nuclei with no neutrons"],
+    ans: 1,
+    exp: "Nuclei with an odd mass number (different number of protons to neutrons) are important in MRI."
+  },
+  {
+    q: "What is the electrical charge of a proton?",
+    opts: ["Negative", "Neutral (no charge)", "Positive", "Variable"],
+    ans: 2,
+    exp: "Protons carry a positive electrical charge."
+  },
+  {
+    q: "What is the electrical charge of a neutron?",
+    opts: ["Positive", "Negative", "No net charge", "Double positive"],
+    ans: 2,
+    exp: "Neutrons have no net electrical charge — they are electrically neutral."
+  },
+  {
+    q: "What is the electrical charge of an electron?",
+    opts: ["Positive", "Neutral", "Negative", "Variable"],
+    ans: 2,
+    exp: "Electrons are negatively charged particles that orbit the nucleus."
+  },
+  {
+    q: "An atom is electrically stable when:",
+    opts: ["It has more protons than electrons", "The number of electrons equals the number of protons", "It has more neutrons than protons", "It has no neutrons"],
+    ans: 1,
+    exp: "Atoms are electrically stable when the number of negatively charged electrons equals the number of positively charged protons."
+  },
+  {
+    q: "What are atoms called when they lose or gain electrons due to external energy?",
+    opts: ["Isotopes", "Isomers", "Ions", "Isobars"],
+    ans: 2,
+    exp: "When external energy knocks out electrons, creating an electron deficit, atoms become ions."
+  },
+  {
+    q: "Where is the mass of an atom mainly concentrated?",
+    opts: ["In the electron cloud", "In the outermost shell", "In the nucleus", "Evenly distributed"],
+    ans: 2,
+    exp: "The nucleus is very small (one millionth of a billionth of the total atom volume) but contains the entire atom's mass."
+  },
+  {
+    q: "What are the particles in the nucleus called collectively?",
+    opts: ["Electrons", "Nucleons", "Photons", "Leptons"],
+    ans: 1,
+    exp: "The mass of the nucleus comes mainly from particles called nucleons, which are subdivided into protons and neutrons."
+  },
+  {
+    q: "Heisenberg's Uncertainty Principle refers to:",
+    opts: ["The exact position of the nucleus", "The unpredictable position of an electron at any moment", "The charge of a proton", "The number of neutrons in the nucleus"],
+    ans: 1,
+    exp: "Heisenberg's Uncertainty Principle states that the position of an electron is not predictable as it depends on its energy at any moment."
+  },
+  {
+    q: "What percentage of the human body is water?",
+    opts: ["60%", "70%", "80%", "90%"],
+    ans: 2,
+    exp: "The human body consists of about 80% water."
+  },
+  {
+    q: "The hydrogen atom nucleus contains:",
+    opts: ["One proton and one neutron", "One proton only", "Two protons", "One neutron only"],
+    ans: 1,
+    exp: "Hydrogen, the simplest atom, has a nucleus containing only one proton with no neutrons."
+  },
+  {
+    q: "A rotating electrical charge creates:",
+    opts: ["A gravitational field", "A magnetic field", "An electric field only", "No field"],
+    ans: 1,
+    exp: "A rotating electrical charge creates a magnetic field — this is the fundamental principle behind MRI."
+  },
+  {
+    q: "The hydrogen proton behaves like:",
+    opts: ["A large magnet", "A tiny bar magnet with a north and south pole", "A neutral particle", "A negative charge"],
+    ans: 1,
+    exp: "The hydrogen proton, being positively charged and spinning, behaves as a tiny bar magnet with a north and south pole."
+  },
+  {
+    q: "The term used for the magnetism of a nucleus is:",
+    opts: ["Magnetic field", "Magnetic moment", "Magnetic dipole moment", "Both B and C are correct"],
+    ans: 3,
+    exp: "The nucleus is said to be a magnetic dipole, and the name for its magnetism is the magnetic moment."
+  },
+  {
+    q: "What is the unit used for magnetic field strength?",
+    opts: ["Volt", "Ampere", "Tesla", "Joule"],
+    ans: 2,
+    exp: "Tesla (T) is the unit used for magnetic field strength."
+  },
+  {
+    q: "What is the approximate magnetic field strength of the Earth at the poles?",
+    opts: ["30 T", "70 T", "100 T", "1 T"],
+    ans: 0,
+    exp: "The magnetic field strength of the Earth is approximately 30 T at the poles and 70 T at the equator."
+  },
+  {
+    q: "What is the magnetic field strength of the Earth at the equator?",
+    opts: ["30 T", "50 T", "70 T", "100 T"],
+    ans: 2,
+    exp: "The magnetic field strength of Earth is 30 T at the poles and 70 T at the equator."
+  },
+  {
+    q: "The Gyromagnetic Ratio for hydrogen is:",
+    opts: ["42.57 MHz/Tesla", "63.87 MHz/Tesla", "21.28 MHz/Tesla", "100 MHz/Tesla"],
+    ans: 0,
+    exp: "The Gyromagnetic Ratio for hydrogen is the largest of all elements at 42.57 MHz/Tesla."
+  },
+  {
+    q: "Why is hydrogen chosen as the source for MRI signal? (Choose the best answer)",
+    opts: ["It is the heaviest atom", "It is the most abundant and has the highest Gyromagnetic Ratio", "It has the most neutrons", "It is the only magnetic atom"],
+    ans: 1,
+    exp: "Hydrogen is chosen because: (1) it is the most abundant element in the body, and (2) it has the largest Gyromagnetic Ratio (42.57 MHz/Tesla)."
+  },
+  {
+    q: "The Gyromagnetic Ratio differs for each:",
+    opts: ["Atom size", "Element/proton", "Molecule", "Orbital shell"],
+    ans: 1,
+    exp: "In quantum physics, the Gyromagnetic Ratio is different for each element/proton type."
+  },
+  {
+    q: "How many electrons does a neutral atom normally have compared to protons?",
+    opts: ["Fewer than protons", "More than protons", "The same number as protons", "Exactly double"],
+    ans: 2,
+    exp: "The number of electrons is usually the same as the number of protons in the nucleus for a neutral atom."
+  },
+  {
+    q: "Half a million atoms lined up together are narrower than:",
+    opts: ["A pencil tip", "A human hair", "A grain of sand", "A cell membrane"],
+    ans: 1,
+    exp: "Atoms are very small — half a million lined up together are narrower than a human hair."
+  },
+  {
+    q: "The nucleus occupies approximately what fraction of an atom's total volume?",
+    opts: ["One millionth of a billionth", "One thousandth", "One tenth", "One hundredth"],
+    ans: 0,
+    exp: "The nucleus is very small — one millionth of a billionth of the total volume of an atom."
+  },
+  {
+    q: "Electrons exist around the nucleus in:",
+    opts: ["Fixed orbits like planets", "A cloud formation", "A straight line", "The nucleus itself"],
+    ans: 1,
+    exp: "In reality, electrons exist around the nucleus in a cloud; the outermost dimension of the cloud is the edge of the atom."
+  },
+  {
+    q: "A molecule is defined as:",
+    opts: ["A single atom", "Two or more atoms arranged together", "A charged atom", "The nucleus of an atom"],
+    ans: 1,
+    exp: "Molecules are two or more atoms arranged together."
+  },
+  {
+    q: "What is the first element in the periodic table?",
+    opts: ["Oxygen", "Carbon", "Hydrogen", "Helium"],
+    ans: 2,
+    exp: "Hydrogen is the first element in the periodic table and the simplest atom with one proton and one electron."
+  },
+  {
+    q: "The Earth can be compared to a:",
+    opts: ["Spinning electric motor", "Giant spinning bar magnet", "Neutral sphere", "Charged conductor"],
+    ans: 1,
+    exp: "The Earth, being a charged spinning ball, creates a magnetic field, making it essentially a giant spinning bar magnet with north and south poles."
+  },
+  {
+    q: "Approximately how many elements are known in chemistry?",
+    opts: ["92", "100", "110", "120"],
+    ans: 2,
+    exp: "There are 110 elements known in chemistry."
+  },
+  {
+    q: "MRI images are primarily generated using which element?",
+    opts: ["Oxygen", "Carbon", "Nitrogen", "Hydrogen"],
+    ans: 3,
+    exp: "MRI uses hydrogen atoms (from water and fat in the body) to generate MR images."
+  },
+  {
+    q: "The proton source needed for MR signal comes from hydrogen associated with:",
+    opts: ["Bone and muscle only", "Fat molecules and water", "Proteins only", "DNA molecules"],
+    ans: 1,
+    exp: "It is essential that there be a source of protons (in nuclei of hydrogen atoms associated with fat molecules and water) to form the MR signal."
+  },
+  {
+    q: "The traditional model of electrons orbiting the nucleus is analogous to:",
+    opts: ["Electrons in a cloud", "Planets orbiting the sun", "Magnets attracting each other", "Waves in the ocean"],
+    ans: 1,
+    exp: "Traditionally, electrons orbiting the nucleus is thought of as analogous to planets orbiting the sun."
+  },
+  {
+    q: "The spin of the hydrogen proton around its axis creates:",
+    opts: ["An electric field only", "A magnetic moment", "No field", "A gravitational pull"],
+    ans: 1,
+    exp: "The spinning positively charged hydrogen proton creates a magnetic moment, making it act like a tiny bar magnet."
+  },
+  {
+    q: "What makes the mass number an even number in most atoms?",
+    opts: ["Equal number of electrons and protons", "Equal number of protons and neutrons", "Equal number of neutrons and electrons", "More neutrons than protons"],
+    ans: 1,
+    exp: "The number of neutrons and protons in a nucleus are usually balanced so that the mass number is an even number."
+  },
+  {
+    q: "Ions are atoms that have:",
+    opts: ["Gained or lost neutrons", "Gained or lost electrons", "Changed their proton number", "No mass"],
+    ans: 1,
+    exp: "Ions are atoms in which electrons have been knocked out by external energy, causing a deficit in electrons and electrical instability."
+  },
+  {
+    q: "In the context of MRI, why is the Gyromagnetic Ratio of hydrogen significant?",
+    opts: ["It is the smallest ratio", "It is the largest ratio among elements", "It is equal to oxygen's ratio", "It determines neutron count"],
+    ans: 1,
+    exp: "The Gyromagnetic Ratio for hydrogen is the largest of all elements (42.57 MHz/Tesla), making it the best candidate for MRI signal generation."
+  },
+  {
+    q: "A nucleus acting as a magnetic dipole means it has:",
+    opts: ["Only a north pole", "Only a south pole", "Both a north and south pole", "No magnetic properties"],
+    ans: 2,
+    exp: "A magnetic dipole has both a north and south pole, just like a bar magnet — this is the magnetic behavior of the hydrogen nucleus."
+  },
+  {
+    q: "What does 'spinning' of the hydrogen proton refer to?",
+    opts: ["Orbital revolution around the nucleus", "Rotation of the proton about its own axis", "Movement between energy levels", "Vibration of the nucleus"],
+    ans: 1,
+    exp: "The hydrogen proton rotates (spins) around its own axis, and because it is positively charged, this creates a magnetic field."
+  },
+  {
+    q: "The outermost boundary of an atom is defined by:",
+    opts: ["The nucleus edge", "The outermost dimension of the electron cloud", "The last proton layer", "The neutron shell"],
+    ans: 1,
+    exp: "The outermost dimension of the electron cloud defines the edge of the atom."
+  },
+  {
+    q: "Water molecule (H₂O) consists of:",
+    opts: ["One hydrogen and two oxygen atoms", "Two hydrogen and one oxygen atom", "Two hydrogen and two oxygen atoms", "One hydrogen and one oxygen atom"],
+    ans: 1,
+    exp: "Water (H₂O) consists of two hydrogen atoms arranged with one oxygen atom."
+  },
+  {
+    q: "Which physical principle states that the position of an electron cannot be precisely predicted?",
+    opts: ["Newton's Third Law", "Coulomb's Law", "Heisenberg's Uncertainty Principle", "Faraday's Law"],
+    ans: 2,
+    exp: "Heisenberg's Uncertainty Principle states that the position of an electron is not predictable as it depends on its energy at any given moment."
+  },
+  {
+    q: "The moving charges in a spinning proton give rise to:",
+    opts: ["Electric field only", "Gravitational field", "Magnetic field", "No field"],
+    ans: 2,
+    exp: "Moving charges give rise to magnetic fields. The spinning, positively charged hydrogen proton thus generates a magnetic field."
+  }
+];
+
+let current = 0, score = 0, correct = 0, wrong = 0;
+let timerInterval, seconds = 0;
+let answered = false;
+
+function startQuiz() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('statsBar').style.display = 'flex';
+  document.getElementById('progressWrap').style.display = 'block';
+  current = 0; score = 0; correct = 0; wrong = 0; seconds = 0;
+  updateStats();
+  loadQuestion();
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    document.getElementById('timer-val').textContent = m+':'+s;
+  }, 1000);
+}
+
+function loadQuestion() {
+  answered = false;
+  const q = questions[current];
+  document.getElementById('qNum').textContent = `السؤال ${current+1} من ${questions.length}`;
+  document.getElementById('qText').textContent = q.q;
+  const exp = document.getElementById('explanation');
+  exp.className = 'explanation';
+  exp.textContent = '';
+  const btnNext = document.getElementById('btnNext');
+  btnNext.className = 'btn-next';
+  btnNext.textContent = current === questions.length-1 ? 'إنهاء الاختبار ✓' : 'السؤال التالي ←';
+
+  const box = document.getElementById('optionsBox');
+  box.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    div.onclick = () => selectAnswer(i, div);
+    box.appendChild(div);
+  });
+
+  updateProgress();
+}
+
+function selectAnswer(idx, el) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.classList.add('disabled'));
+
+  if (idx === q.ans) {
+    el.classList.add('correct');
+    score += 2;
+    correct++;
+    showToast('✅ إجابة صحيحة! +2 نقطة', 'success');
+  } else {
+    el.classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    wrong++;
+    showToast('❌ إجابة خاطئة!', 'error');
+    const exp = document.getElementById('explanation');
+    exp.innerHTML = `<strong>📖 الشرح:</strong> ${q.exp}`;
+    exp.classList.add('show');
+  }
+
+  document.getElementById('btnNext').classList.add('show');
+  updateStats();
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}
+
+function updateStats() {
+  document.getElementById('q-counter').textContent = `${current+1}/${questions.length}`;
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('correct-val').textContent = correct;
+  document.getElementById('wrong-val').textContent = wrong;
+}
+
+function updateProgress() {
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progBar').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = `التقدم: ${pct}%`;
+  document.getElementById('prog-q').textContent = `${current} من ${questions.length}`;
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('statsBar').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+
+  const res = document.getElementById('resultScreen');
+  res.style.display = 'block';
+  const pct = Math.round((correct / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) { window.parent.saveScore(pct); }
+  document.getElementById('resPct').textContent = pct + '%';
+  document.getElementById('r-correct').textContent = correct;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-score').textContent = score + ' / 90';
+
+  const m = String(Math.floor(seconds/60)).padStart(2,'0');
+  const s = String(seconds%60).padStart(2,'0');
+  document.getElementById('r-time').textContent = m + ':' + s;
+
+  const deg = pct * 3.6;
+  document.getElementById('resultCircle').style.background =
+    `conic-gradient(var(--success) ${deg}deg, var(--border) ${deg}deg)`;
+
+  let title, sub;
+  if (pct >= 90) { title = '🏆 ممتاز!'; sub = 'أداء رائع جداً، أنت متمكن من المادة!'; }
+  else if (pct >= 75) { title = '🥇 جيد جداً!'; sub = 'أداء جيد، استمر في التحسن!'; }
+  else if (pct >= 60) { title = '🥈 جيد'; sub = 'مستوى جيد، لكن يحتاج مراجعة!'; }
+  else { title = '📚 تحتاج مراجعة'; sub = 'ارجع لمراجعة المحاضرة مرة أخرى.'; }
+  document.getElementById('resTitle').textContent = title;
+  document.getElementById('resSub').textContent = sub;
+}
+
+function retryQuiz() {
+  document.getElementById('resultScreen').style.display = 'none';
+  startQuiz();
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => { t.className = 'toast'; }, 2200);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة الخامسة - اللحظات المغناطيسية</title>
+
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #141929;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3a55;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 20%, #1a2a4a22 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 80%, #0f1f3a22 0%, transparent 60%);
+  }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0f1b35 0%, #1a2a4a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, #3b82f615 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .header h2 {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+  .header-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .header-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    background: #3b82f620;
+    border: 1px solid #3b82f640;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 0.83rem;
+    color: var(--accent2);
+    transition: background 0.2s;
+  }
+  .header-link:hover { background: #3b82f630; text-decoration: none; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 12px 24px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88rem;
+  }
+  .stat-label { color: var(--text-muted); }
+  .stat-value { font-weight: 700; color: var(--text); }
+  #timer-val { color: var(--warning); }
+  #score-val { color: var(--success); }
+  #prog-val { color: var(--accent2); }
+
+  /* Progress bar */
+  .progress-wrap {
+    padding: 10px 24px 0;
+    background: var(--card2);
+  }
+  .progress-bg {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* Main */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.35s ease;
+    box-shadow: 0 4px 24px #00000040;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .q-num {
+    font-size: 0.78rem;
+    color: var(--accent2);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .q-num-badge {
+    background: #3b82f620;
+    border: 1px solid #3b82f640;
+    border-radius: 8px;
+    padding: 2px 10px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+  }
+  .q-text {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 22px;
+    line-height: 1.7;
+    direction: ltr;
+    text-align: left;
+  }
+  .options-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    width: 100%;
+    background: #0f1726;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: left;
+    direction: ltr;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #1e2d4a;
+    transform: translateX(-2px);
+  }
+  .option-btn .opt-letter {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .option-btn.correct {
+    border-color: var(--success);
+    background: #14532d30;
+  }
+  .option-btn.correct .opt-letter { background: var(--success); color: #fff; }
+  .option-btn.wrong {
+    border-color: var(--danger);
+    background: #7f1d1d30;
+  }
+  .option-btn.wrong .opt-letter { background: var(--danger); color: #fff; }
+  .option-btn:disabled { cursor: default; }
+
+  /* Explanation */
+  .explanation {
+    margin-top: 16px;
+    background: #0f1f0f;
+    border: 1px solid #22c55e40;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #86efac;
+    direction: ltr;
+    text-align: left;
+    animation: fadeIn 0.3s ease;
+  }
+  .explanation.wrong-exp {
+    background: #1a0a0a;
+    border-color: #ef444440;
+    color: #fca5a5;
+  }
+  .explanation strong { color: #fff; }
+
+  /* Nav buttons */
+  .nav-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    gap: 12px;
+  }
+  .nav-btn {
+    padding: 11px 28px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-prev {
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    color: var(--text-muted);
+  }
+  .btn-prev:hover { border-color: var(--accent); color: var(--accent2); }
+  .btn-next {
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: #fff;
+    box-shadow: 0 4px 15px #3b82f640;
+  }
+  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 20px #3b82f660; }
+  .btn-next:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  /* Results screen */
+  .results-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .results-screen.show { display: block; }
+  .result-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) 0%, var(--accent2) var(--pct), var(--border) var(--pct));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .result-inner {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .result-pct { font-size: 1.8rem; font-weight: 800; color: var(--accent2); }
+  .result-lbl { font-size: 0.75rem; color: var(--text-muted); }
+  .result-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+  .result-sub { color: var(--text-muted); margin-bottom: 28px; font-size: 0.95rem; }
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .rs-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    min-width: 100px;
+  }
+  .rs-val { font-size: 1.5rem; font-weight: 800; }
+  .rs-lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+  .btn-restart {
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 36px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px #3b82f650;
+    transition: all 0.2s;
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    z-index: 9999;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+    box-shadow: 0 8px 30px #00000060;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.correct { background: var(--success); color: #fff; }
+  .toast.wrong { background: var(--danger); color: #fff; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    background: var(--card2);
+  }
+</style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Header -->
+<div class="header">
+  <h1>الفيزياء الشعاعية / الرنين المغناطيسي</h1>
+  <h2>المحاضرة الخامسة: Magnetic Moments — اختبار من إنشاء الطالب محمد صبار</h2>
+  <div class="header-sub">قسم تقنيات الاشعة — المرحلة الثالثة | 45 سؤال</div>
+  <a class="header-link" href="https://t.me/mulimcq" target="_blank">
+    <span>📢</span>
+    <span><strong>محمد صبار</strong> — اضغط هنا للحصول على اختبارات باقي المحاضرات</span>
+  </a>
+</div>
+
+<!-- Stats bar -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-label">⏱️ الوقت:</span>
+    <span class="stat-value" id="timer-val">00:00</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">🏆 النقاط:</span>
+    <span class="stat-value" id="score-val">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">📊 التقدم:</span>
+    <span class="stat-value" id="prog-val">0 / 45</span>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-wrap">
+  <div class="progress-bg"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div id="quiz-area">
+    <div class="question-card" id="q-card">
+      <div class="q-num">
+        <span class="q-num-badge" id="q-num-badge">Question 1 of 45</span>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <ul class="options-list" id="options-list"></ul>
+      <div id="explanation-area"></div>
+    </div>
+    <div class="nav-area">
+      <button class="nav-btn btn-prev" id="btn-prev" onclick="navigate(-1)">◀ السابق</button>
+      <button class="nav-btn btn-next" id="btn-next" onclick="navigate(1)" disabled>التالي ▶</button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results-screen" id="results-screen">
+    <div class="result-circle" id="result-circle">
+      <div class="result-inner">
+        <div class="result-pct" id="result-pct">0%</div>
+        <div class="result-lbl">النتيجة</div>
+      </div>
+    </div>
+    <div class="result-title" id="result-title">🎉 أحسنت!</div>
+    <div class="result-sub" id="result-sub"></div>
+    <div class="result-stats">
+      <div class="rs-item">
+        <div class="rs-val" id="rs-correct" style="color:var(--success)">0</div>
+        <div class="rs-lbl">✅ إجابات صحيحة</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val" id="rs-wrong" style="color:var(--danger)">0</div>
+        <div class="rs-lbl">❌ إجابات خاطئة</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val" id="rs-time" style="color:var(--warning)">0:00</div>
+        <div class="rs-lbl">⏱️ الوقت الكلي</div>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">🔄 إعادة الاختبار</button>
+    <div style="margin-top:24px">
+      <a class="header-link" href="https://t.me/mulimcq" target="_blank" style="display:inline-flex;">
+        <span>📢</span>
+        <span><strong>محمد صبار</strong> — اضغط هنا للحصول على اختبارات باقي المحاضرات</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <a href="https://t.me/mulimcq" target="_blank"><strong>محمد صبار</strong></a> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+</div>
+
+<script>
+const questions = [
+  {
+    q: "In most materials such as soft tissue, the magnetic moments of nuclei are:",
+    opts: ["All aligned with an external field", "Randomly oriented in all directions", "Always parallel to each other", "Pointing in the same direction"],
+    ans: 1,
+    exp: "In most materials like soft tissue, magnetic moments are randomly oriented — some point up, some down, and others in various directions. This causes them to cancel out, resulting in zero net magnetization."
+  },
+  {
+    q: "What is the net magnetization (M) in a material where all magnetic moments are randomly oriented?",
+    opts: ["Maximum", "Minimum but not zero", "Zero", "Equal to Bo"],
+    ans: 2,
+    exp: "When magnetic moments are randomly oriented, all the spins and magnetic moments cancel each other out, giving a net magnetization M = 0."
+  },
+  {
+    q: "The symbol used to represent net magnetization is:",
+    opts: ["B", "γ", "ω", "M"],
+    ans: 3,
+    exp: "Net magnetization is symbolized by M. It represents the sum of all individual magnetic moments in the tissue."
+  },
+  {
+    q: "When a patient is placed in a strong external magnetic field, the magnetic moments:",
+    opts: ["Remain randomly oriented", "Align themselves with or against the field", "Cancel each other completely", "Disappear entirely"],
+    ans: 1,
+    exp: "When placed in a strong magnetic field, magnetic moments align themselves similar to how a compass needle aligns with Earth's magnetic field — either parallel (with) or anti-parallel (against) the field."
+  },
+  {
+    q: "According to quantum mechanics, magnetic moments in an external magnetic field must align:",
+    opts: ["At 45° angle to the field", "Either with the field or against it", "Perpendicular to the field", "Randomly regardless of field"],
+    ans: 1,
+    exp: "Quantum mechanics dictates that nuclear magnetic moments can only align either with (parallel) or against (anti-parallel) the external magnetic field — no intermediate angles are allowed."
+  },
+  {
+    q: "The slight excess of protons aligned with the external magnetic field results in:",
+    opts: ["Zero net magnetization", "Random magnetization", "A net magnetization M in the patient", "Destruction of the magnetic field"],
+    ans: 2,
+    exp: "Although nearly equal numbers align parallel and anti-parallel, the small excess aligned with the field gives the patient a net magnetization M — effectively making the patient a weak magnet."
+  },
+  {
+    q: "Why are nuclei continually being knocked out of alignment in a magnetic field?",
+    opts: ["Due to RF pulses", "Due to constant thermal motion of atoms", "Due to gravity", "Due to electrical resistance"],
+    ans: 1,
+    exp: "Atoms are in constant thermal motion, which continually disturbs (bangs out) the nuclei from their aligned positions. Despite this, there is always a slight net excess aligned with the field."
+  },
+  {
+    q: "Which element is most commonly used in MRI and why?",
+    opts: ["Oxygen, because it is abundant", "Hydrogen, because it has odd number of particles", "Carbon, because it is in all tissues", "Nitrogen, because of its stability"],
+    ans: 1,
+    exp: "Hydrogen is primarily used in MRI. Any element with an odd number of particles in the nucleus can be used, and hydrogen (with 1 proton) is the most abundant in the human body, found in water and fat."
+  },
+  {
+    q: "In MRI, which elements can potentially be used for imaging?",
+    opts: ["Only hydrogen", "Only elements with an even number of protons", "Any element with an odd number of nuclear particles", "Only elements with atomic mass > 12"],
+    ans: 2,
+    exp: "Any element with an odd number of particles (protons and neutrons) in its nucleus possesses a net nuclear spin and magnetic moment, making it usable for MRI. Hydrogen is most common due to its abundance."
+  },
+  {
+    q: "The protons in hydrogen atoms behave like:",
+    opts: ["Electric dipoles", "Tiny bar magnets spinning on their own axes", "Static charges", "Neutron emitters"],
+    ans: 1,
+    exp: "Hydrogen protons behave like tiny bar magnets that spin on their own axes. This spinning charged particle creates a magnetic dipole moment."
+  },
+  {
+    q: "In the human body under normal conditions (without external MRI field), the magnetic forces of protons are:",
+    opts: ["All pointing north", "In balance — magnetic forces equalize", "Dominantly anti-parallel", "Unbalanced and causing magnetism"],
+    ans: 1,
+    exp: "In the human body, the tiny magnetic moments are arranged so that magnetic forces equalize. The human body is magnetically in balance under normal conditions."
+  },
+  {
+    q: "The magnetic field strength of a 1 Tesla MRI magnet compared to Earth's magnetic field is approximately:",
+    opts: ["Equal to Earth's field", "10 times stronger", "200 times stronger", "±20,000 times stronger"],
+    ans: 3,
+    exp: "A 1 Tesla magnet is approximately ±20,000 times stronger than Earth's magnetic field. This immense field strength highlights why MRI equipment must be handled with great caution."
+  },
+  {
+    q: "When a person is placed in an MRI scanner, hydrogen protons align with the magnetic field in:",
+    opts: ["One way only — parallel", "Three ways — parallel, perpendicular, anti-parallel", "Two ways — parallel or anti-parallel", "Random directions as before"],
+    ans: 2,
+    exp: "When placed in the MRI scanner, hydrogen protons can align in two ways: parallel (with the field, low energy) or anti-parallel (against the field, high energy). These are the only two quantum states allowed."
+  },
+  {
+    q: "After aligning in a magnetic field, protons also:",
+    opts: ["Stop all movement", "Precess or 'wobble' around the direction of the external magnetic field", "Rotate perpendicular to the field", "Emit visible light"],
+    ans: 1,
+    exp: "Protons not only align with the field, they also precess (wobble) around the direction of the external magnetic field (the z-axis) due to their magnetic momentum. This is similar to a spinning top precessing due to gravity."
+  },
+  {
+    q: "The frequency at which protons precess in an external magnetic field is called:",
+    opts: ["Radio frequency", "Gyromagnetic ratio", "Larmor frequency", "Tesla frequency"],
+    ans: 2,
+    exp: "The precession frequency is called the Larmor frequency (ωo). This is a critical parameter in MRI as it determines the frequency of RF pulses needed for resonance."
+  },
+  {
+    q: "The equation for Larmor frequency is:",
+    opts: ["ωo = γ / Bo", "ωo = γ × Bo", "ωo = Bo / γ", "ωo = γ + Bo"],
+    ans: 1,
+    exp: "The Larmor frequency equation is ωo = γBo, where ωo is the precessional/Larmor frequency (MHz), γ is the Gyromagnetic Ratio (MHz/T), and Bo is the magnetic field strength (Tesla)."
+  },
+  {
+    q: "In the Larmor equation ωo = γBo, what does γ represent?",
+    opts: ["Net magnetization", "Larmor frequency", "Gyromagnetic Ratio (MHz/T)", "External magnetic field strength"],
+    ans: 2,
+    exp: "γ (gamma) is the Gyromagnetic Ratio, measured in MHz/T. It is a constant specific to each type of nucleus. For hydrogen (proton), γ ≈ 42.57 MHz/T."
+  },
+  {
+    q: "The Gyromagnetic Ratio for hydrogen (proton) is approximately:",
+    opts: ["21.3 MHz/T", "63.8 MHz/T", "42.57 MHz/T", "100 MHz/T"],
+    ans: 2,
+    exp: "The Gyromagnetic Ratio (γ) for hydrogen protons is approximately 42.57 MHz/T. This value is used to calculate the Larmor frequency for any given field strength."
+  },
+  {
+    q: "What is the Larmor frequency for a 1.5 Tesla MRI system?",
+    opts: ["42.57 MHz", "21.285 MHz", "63.855 MHz", "127.71 MHz"],
+    ans: 2,
+    exp: "Using ωo = γBo: 42.57 × 1.5 = 63.855 MHz. This is the operating frequency for a standard 1.5T MRI scanner."
+  },
+  {
+    q: "What is the precessional frequency for a 1.0 Tesla MRI system?",
+    opts: ["63.855 MHz", "42.57 MHz", "21.285 MHz", "14.8995 MHz"],
+    ans: 1,
+    exp: "For a 1.0T system: ωo = 42.57 × 1.0 = 42.57 MHz."
+  },
+  {
+    q: "What is the precessional frequency for a 0.5 Tesla MRI system?",
+    opts: ["42.57 MHz", "21.285 MHz", "63.855 MHz", "8.514 MHz"],
+    ans: 1,
+    exp: "For a 0.5T system: ωo = 42.57 × 0.5 = 21.285 MHz."
+  },
+  {
+    q: "What is the precessional frequency for a 0.35 Tesla MRI system?",
+    opts: ["21.285 MHz", "8.514 MHz", "14.8995 MHz", "42.57 MHz"],
+    ans: 2,
+    exp: "For a 0.35T system: ωo = 42.57 × 0.35 = 14.8995 MHz."
+  },
+  {
+    q: "What is the precessional frequency for a 0.2 Tesla MRI system?",
+    opts: ["14.8995 MHz", "21.285 MHz", "8.514 MHz", "4.257 MHz"],
+    ans: 2,
+    exp: "For a 0.2T system: ωo = 42.57 × 0.2 = 8.514 MHz."
+  },
+  {
+    q: "Protons aligned parallel to the external magnetic field are in a:",
+    opts: ["High energy state", "Neutral state", "Low energy state", "Excited state"],
+    ans: 2,
+    exp: "Protons aligned parallel (with the field) are in a low-energy state. Anti-parallel protons are in a high-energy state. Most protons prefer the low-energy (parallel) state — similar to how most people prefer to be lazy and take the easy path."
+  },
+  {
+    q: "Protons aligned anti-parallel to the external magnetic field are in a:",
+    opts: ["Low energy state", "Zero energy state", "High energy state", "Ground state"],
+    ans: 2,
+    exp: "Anti-parallel protons (against the field direction) are in a high-energy state. They require more energy to maintain this orientation against the strong magnetic field."
+  },
+  {
+    q: "At 0.5 Tesla, the excess number of protons aligned parallel (low energy) per million is:",
+    opts: ["6 ppm", "9 ppm", "3 ppm", "12 ppm"],
+    ans: 2,
+    exp: "At 0.5T, only 3 protons per million (3 ppm) are in excess in the parallel/low-energy state. This small excess is what creates the net magnetization detectable in MRI."
+  },
+  {
+    q: "At 1.0 Tesla, the excess number of parallel protons per million is:",
+    opts: ["3 ppm", "6 ppm", "9 ppm", "12 ppm"],
+    ans: 1,
+    exp: "At 1.0T, there are 6 protons per million in excess aligned parallel to the field. This is double the amount at 0.5T, demonstrating the proportional relationship with Bo."
+  },
+  {
+    q: "At 1.5 Tesla, the excess number of parallel protons per million is:",
+    opts: ["3 ppm", "6 ppm", "9 ppm", "15 ppm"],
+    ans: 2,
+    exp: "At 1.5T, there are 9 protons per million in excess aligned parallel. This is why 1.5T systems produce better image quality than lower field strength systems."
+  },
+  {
+    q: "The excess number of protons aligned parallel is proportional to:",
+    opts: ["The Larmor frequency only", "Bo (the magnetic field strength)", "The temperature of the patient", "The gyromagnetic ratio squared"],
+    ans: 1,
+    exp: "The excess number of protons is directly proportional to Bo (magnetic field strength). Higher field strength → more excess protons → stronger net magnetization → better image quality."
+  },
+  {
+    q: "Why do 1.5T MRI systems produce better images than lower field strength systems?",
+    opts: ["They use stronger RF pulses", "They have more excess aligned protons, giving stronger net magnetization", "They cool the patient better", "They use different Gyromagnetic Ratios"],
+    ans: 1,
+    exp: "1.5T systems have 9 ppm excess parallel protons vs 3 ppm at 0.5T. More excess protons = stronger net magnetization M = stronger MRI signal = better image quality."
+  },
+  {
+    q: "A single voxel in MRI is assumed to have dimensions of:",
+    opts: ["1 × 1 × 1 mm = 0.001 ml", "2 × 2 × 5 mm = 0.02 ml", "5 × 5 × 5 mm = 0.125 ml", "1 × 1 × 5 mm = 0.005 ml"],
+    ans: 1,
+    exp: "The example in the lecture assumes a voxel of 2 × 2 × 5 mm = 0.02 ml. A voxel (volume element) is the 3D equivalent of a pixel in MRI imaging."
+  },
+  {
+    q: "Avogadro's Number states there are how many molecules per mole?",
+    opts: ["3.01 × 10²³", "6.02 × 10²³", "9.03 × 10²³", "1.20 × 10²⁴"],
+    ans: 1,
+    exp: "Avogadro's Number is 6.02 × 10²³ molecules per mole. This fundamental constant is used to calculate the number of protons in a given volume of water."
+  },
+  {
+    q: "One mole of water weighs 18 grams and contains how many moles of Hydrogen?",
+    opts: ["1 mole of Hydrogen", "2 moles of Hydrogen", "3 moles of Hydrogen", "0.5 mole of Hydrogen"],
+    ans: 1,
+    exp: "Water is H₂O (O16 + 2H1), so 1 mole of water contains 2 moles of Hydrogen. One mole of water weighs 18 grams and occupies 18 ml."
+  },
+  {
+    q: "The total number of protons in one voxel of water (2×2×5mm) is approximately:",
+    opts: ["6.02 × 10²⁰", "1.338 × 10²¹", "2.67 × 10²²", "9.03 × 10¹⁹"],
+    ans: 1,
+    exp: "Calculation: 2 × 6.02 × 10²³ × 0.02 / 18 = 1.338 × 10²¹ total protons. This is an enormous number despite the tiny voxel size."
+  },
+  {
+    q: "The total number of excess protons in a single voxel at 1.5T is approximately:",
+    opts: ["6.02 × 10¹²", "6.02 × 10¹⁵ (6 million billion)", "6.02 × 10¹⁸", "6.02 × 10⁹"],
+    ans: 1,
+    exp: "Excess protons = (1.338×10²¹ × 9) / (2×10⁶) = 6.02×10¹⁵, which equals 6 million billion protons. Even though 9 ppm seems tiny, it adds up to an enormous number in practice."
+  },
+  {
+    q: "Net magnetization is described as pointing in the same direction as:",
+    opts: ["The X-axis", "The Y-axis", "The Z-axis (direction of main magnetic field)", "The transverse plane"],
+    ans: 2,
+    exp: "The net magnetization vector M points along the Z-axis, which is defined as the direction of the main external magnetic field Bo in the MRI coordinate system."
+  },
+  {
+    q: "In MRI coordinate system, the Z-axis is defined as:",
+    opts: ["Perpendicular to the main magnetic field", "Along the width of the patient", "The direction of the main magnetic field Bo", "The direction of RF pulse transmission"],
+    ans: 2,
+    exp: "In MRI, the Z-axis is always defined as pointing in the direction of the main magnetic field Bo. The X and Y axes are perpendicular to Z, forming the transverse plane."
+  },
+  {
+    q: "Net magnetization along the Z-axis is also called:",
+    opts: ["Transverse magnetization", "Longitudinal magnetization", "Rotational magnetization", "Anti-parallel magnetization"],
+    ans: 1,
+    exp: "When net magnetization M is along the Z-axis (parallel to Bo), it is called longitudinal magnetization (Mz). This is the equilibrium state before any RF pulse is applied."
+  },
+  {
+    q: "A vector in MRI (represented by the red arrow) has:",
+    opts: ["Only a direction", "Only a magnitude/force", "Both a direction and a force (magnitude)", "Neither direction nor magnitude"],
+    ans: 2,
+    exp: "A vector has both a direction and a magnitude (force). In MRI, the net magnetization vector M has a specific direction (along Z-axis at equilibrium) and a magnitude proportional to the number of excess aligned protons."
+  },
+  {
+    q: "To obtain an MRI image from a patient, placing them in the magnet alone is:",
+    opts: ["Sufficient for simple images", "Not sufficient — additional steps are required", "Sufficient only for brain scans", "Sufficient only at 3T or higher"],
+    ans: 1,
+    exp: "Simply placing a patient in the magnet is not enough to obtain an MRI image. Additional steps including Excitation, Relaxation, Acquisition, Computing, and Display are all required."
+  },
+  {
+    q: "The steps required to obtain an MRI image after placing the patient in the magnet include:",
+    opts: ["Only excitation and acquisition", "Excitation, Relaxation, Acquisition, Computing, and Display", "Magnetization and display only", "Only relaxation and display"],
+    ans: 1,
+    exp: "The complete MRI imaging process requires: Excitation (RF pulse), Relaxation (T1 and T2), Acquisition (signal collection), Computing (Fourier transform), and Display (image reconstruction)."
+  },
+  {
+    q: "In which direction do protons precess in the MRI scanner?",
+    opts: ["Along the X-axis only", "Around the direction of the external magnetic field (Z-axis)", "In the transverse plane only", "Against the direction of Bo"],
+    ans: 1,
+    exp: "Protons precess around the direction of the external magnetic field, which is the Z-axis. This precession is like the wobble of a spinning top due to gravity."
+  },
+  {
+    q: "Which of the following best describes the relationship between field strength and Larmor frequency?",
+    opts: ["Inversely proportional", "Not related", "Directly proportional", "Exponentially related"],
+    ans: 2,
+    exp: "From ωo = γBo, the Larmor frequency is directly proportional to the field strength Bo. Double the field strength → double the Larmor frequency. This is why different field strength systems operate at different frequencies."
+  },
+  {
+    q: "The term 'ppm' in the context of MRI proton excess means:",
+    opts: ["Pulses per minute", "Parts per million", "Protons per molecule", "Power per magnet"],
+    ans: 1,
+    exp: "ppm stands for 'parts per million.' In MRI, it describes the tiny excess of parallel protons. For example, 3 ppm at 0.5T means only 3 extra parallel protons for every 1 million protons."
+  },
+  {
+    q: "Before understanding MRI image acquisition, it is important to understand the concepts of:",
+    opts: ["T1 and T2 relaxation only", "In-Phase and Diphase", "Excitation and RF only", "Parallel and series circuits"],
+    ans: 1,
+    exp: "Before the excitation and acquisition steps, one must understand the concepts of 'In-Phase' and 'Diphase' (or out-of-phase) behavior of proton spins, as these form the basis of MRI signal formation and contrast."
+  },
+  {
+    q: "The importance of the Larmor frequency in MRI is that it:",
+    opts: ["Determines image color", "Determines the patient's dose", "Is used to calculate the operating frequency of the MRI system", "Determines the slice thickness only"],
+    ans: 2,
+    exp: "The Larmor frequency is crucial because it determines the exact RF frequency that must be applied to achieve resonance with the hydrogen protons. The MRI system must transmit and receive at this specific frequency."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = new Array(45).fill(null);
+let timerSec = 0;
+let timerInt = null;
+let started = false;
+
+function startTimer() {
+  if (!started) {
+    started = true;
+    timerInt = setInterval(() => {
+      timerSec++;
+      const m = String(Math.floor(timerSec/60)).padStart(2,'0');
+      const s = String(timerSec%60).padStart(2,'0');
+      document.getElementById('timer-val').textContent = m+':'+s;
+    }, 1000);
+  }
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('q-num-badge').textContent = `Question ${current+1} of 45`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('prog-val').textContent = `${answered.filter(a=>a!==null).length} / 45`;
+  document.getElementById('progress-fill').style.width = (answered.filter(a=>a!==null).length/45*100)+'%';
+
+  const ul = document.getElementById('options-list');
+  ul.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+    if (answered[current] !== null) {
+      btn.disabled = true;
+      if (i === q.ans) btn.classList.add('correct');
+      else if (i === answered[current]) btn.classList.add('wrong');
+    } else {
+      btn.onclick = () => { startTimer(); selectAnswer(i); };
+    }
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
+
+  const expArea = document.getElementById('explanation-area');
+  expArea.innerHTML = '';
+  if (answered[current] !== null) {
+    const isCorrect = answered[current] === q.ans;
+    const div = document.createElement('div');
+    div.className = 'explanation' + (isCorrect ? '' : ' wrong-exp');
+    div.innerHTML = `<strong>${isCorrect ? '✅ Correct!' : '❌ Incorrect!'}</strong> ${q.exp}`;
+    expArea.appendChild(div);
+    document.getElementById('btn-next').disabled = false;
+  } else {
+    document.getElementById('btn-next').disabled = true;
+  }
+
+  document.getElementById('btn-prev').style.visibility = current === 0 ? 'hidden' : 'visible';
+  if (current === 44) {
+    document.getElementById('btn-next').textContent = 'إنهاء الاختبار ✓';
+  } else {
+    document.getElementById('btn-next').textContent = 'التالي ▶';
+  }
+}
+
+function selectAnswer(i) {
+  if (answered[current] !== null) return;
+  answered[current] = i;
+  const q = questions[current];
+  const isCorrect = i === q.ans;
+  if (isCorrect) score++;
+  document.getElementById('score-val').textContent = score;
+  showToast(isCorrect ? '✅ إجابة صحيحة!' : '❌ إجابة خاطئة!', isCorrect ? 'correct' : 'wrong');
+  renderQuestion();
+}
+
+function navigate(dir) {
+  if (current === 44 && dir === 1) {
+    showResults();
+    return;
+  }
+  current = Math.max(0, Math.min(44, current + dir));
+  renderQuestion();
+}
+
+function showResults() {
+  clearInterval(timerInt);
+  document.getElementById('quiz-area').style.display = 'none';
+  const rs = document.getElementById('results-screen');
+  rs.classList.add('show');
+  const pct = Math.round(score/45*100);
+  if (window.parent && window.parent.saveScore) { window.parent.saveScore(pct); }
+  document.getElementById('result-pct').textContent = pct+'%';
+  document.getElementById('result-circle').style.setProperty('--pct', pct+'%');
+  document.getElementById('rs-correct').textContent = score;
+  document.getElementById('rs-wrong').textContent = 45 - score;
+  const m = String(Math.floor(timerSec/60)).padStart(2,'0');
+  const s = String(timerSec%60).padStart(2,'0');
+  document.getElementById('rs-time').textContent = m+':'+s;
+
+  let title, sub;
+  if (pct >= 90) { title = '🏆 ممتاز! أداء رائع'; sub = 'أنت متميز في هذا الموضوع!'; }
+  else if (pct >= 75) { title = '🎉 جيد جداً!'; sub = 'أداء جيد، استمر في المراجعة!'; }
+  else if (pct >= 60) { title = '👍 جيد'; sub = 'يمكنك التحسن أكثر بمزيد من المراجعة.'; }
+  else { title = '📚 راجع المحاضرة'; sub = 'عد لمراجعة مادة المحاضرة مرة أخرى.'; }
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+}
+
+function restart() {
+  current = 0;
+  score = 0;
+  answered = new Array(45).fill(null);
+  timerSec = 0;
+  started = false;
+  document.getElementById('timer-val').textContent = '00:00';
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('results-screen').classList.remove('show');
+  renderQuestion();
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
