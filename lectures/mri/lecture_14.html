@@ -737,6 +737,9 @@ function showResult() {
   document.getElementById('rTime').textContent = formatTime(seconds);
 
   const pct = Math.round((correctCount / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   let title = '', subtitle = '';
   if (pct >= 90) { title = '🏆 ممتاز!'; subtitle = 'أداء رائع، أنت متميز في مادة الفيزياء الشعاعية!'; }
   else if (pct >= 75) { title = '👍 جيد جداً!'; subtitle = 'أداء جيد، استمر في المراجعة!'; }
