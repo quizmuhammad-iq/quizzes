@@ -1146,6 +1146,9 @@ function showResult() {
   rs.style.animation = 'slideUp 0.5s ease';
 
   const pct = Math.round((score / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('resultScore').textContent = score;
   document.getElementById('correctCount').textContent = correctAns;
   document.getElementById('wrongCount').textContent = wrongAns;
