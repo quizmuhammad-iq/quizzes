@@ -957,6 +957,9 @@ function showResults() {
   const correct = answers.filter(a => a === true).length;
   const wrong = answers.filter(a => a === false).length;
   const pct = Math.round((correct / total) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
 
   document.getElementById('progressFill').style.width = '100%';
   document.getElementById('progressPct').textContent = '100%';
