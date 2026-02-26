@@ -1118,6 +1118,9 @@ function showResult() {
   result.style.display = 'flex';
   
   const pct = Math.round((score / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('res-pct').textContent = pct + '%';
   document.getElementById('res-correct').textContent = score;
   document.getElementById('res-wrong').textContent = wrongCount;
