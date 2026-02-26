@@ -914,6 +914,9 @@ function showResult() {
   const res = document.getElementById('resultScreen');
   res.style.display = 'block';
   const pct = Math.round((correct / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('resPct').textContent = pct + '%';
   document.getElementById('r-correct').textContent = correct;
   document.getElementById('r-wrong').textContent = wrong;
