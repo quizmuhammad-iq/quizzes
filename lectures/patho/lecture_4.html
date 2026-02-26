@@ -1197,6 +1197,10 @@ function showResult() {
   resultScreen.style.display = 'block';
 
   const pct = Math.round((correctCount / totalQ) * 100);
+   const pct = Math.round((score / total) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   document.getElementById('result-final-score').textContent = score;
   document.getElementById('r-correct').textContent = correctCount;
   document.getElementById('r-wrong').textContent = wrongCount;
