@@ -979,6 +979,9 @@ function showResults() {
   document.getElementById('results-screen').style.display = 'block';
 
   const pct = Math.round((score / questions.length) * 100);
+  if (window.parent && window.parent.saveScore) {
+      window.parent.saveScore(pct); 
+  }
   const m = String(Math.floor(seconds / 60)).padStart(2, '0');
   const s = String(seconds % 60).padStart(2, '0');
 
