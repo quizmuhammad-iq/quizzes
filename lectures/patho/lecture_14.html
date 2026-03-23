@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain and Central Nervous System Diseases - Quiz 14</title>
+<style>
+  /* Offline fallback fonts */
+  @font-face { font-family: 'Tajawal'; src: local('Tajawal'), local('Arial'), local('Segoe UI'); }
+  @font-face { font-family: 'Roboto'; src: local('Roboto'), local('Arial'), local('Segoe UI'); }
+</style>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #141929;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3a52;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(96,165,250,0.05) 0%, transparent 60%);
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f1829 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  header .lec-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  header h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: clamp(15px, 3vw, 22px);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  header .subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  header .tg-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    color: var(--accent2);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    transition: color 0.2s;
+  }
+  header .tg-link:hover { color: #fff; }
+  header .tg-link svg { width:16px; height:16px; fill: currentColor; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 14px 20px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .stat-chip .icon { font-size: 16px; }
+  #score-chip { border-color: var(--accent); }
+  #timer-chip { border-color: var(--warning); }
+  #progress-chip { border-color: var(--success); }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    padding: 0 20px 10px;
+    background: var(--card2);
+  }
+  .progress-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 6px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px 80px;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    animation: fadeUp 0.35s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .q-number {
+    font-size: 12px;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .q-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: clamp(14px, 2.5vw, 17px);
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 22px;
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    background: #111827;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    direction: ltr;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+    transform: translateX(-3px);
+  }
+  .opt-btn .opt-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--border);
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    transition: background 0.18s;
+  }
+  .opt-btn.correct {
+    background: rgba(34,197,94,0.12);
+    border-color: var(--success);
+  }
+  .opt-btn.correct .opt-letter { background: var(--success); color:#fff; }
+  .opt-btn.wrong {
+    background: rgba(239,68,68,0.12);
+    border-color: var(--danger);
+  }
+  .opt-btn.wrong .opt-letter { background: var(--danger); color:#fff; }
+  .opt-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 16px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #bfdbfe;
+    direction: ltr;
+    text-align: left;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent2); }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  /* NEXT BUTTON */
+  .next-wrap { margin-top: 20px; text-align: center; display:none; }
+  .next-wrap.show { display: block; }
+  .btn-next {
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 36px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(59,130,246,0.4); }
+
+  /* RESULT SCREEN */
+  #result-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeUp 0.4s ease;
+  }
+  .result-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) var(--pct), var(--border) 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    position: relative;
+  }
+  .result-circle::before {
+    content: '';
+    position: absolute;
+    width: 108px; height: 108px;
+    border-radius: 50%;
+    background: var(--card);
+  }
+  .result-score-text {
+    position: relative;
+    z-index: 1;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .result-grade {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .result-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .r-stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 22px;
+    font-size: 14px;
+  }
+  .r-stat .r-val { font-size: 24px; font-weight: 800; display: block; }
+  .btn-restart {
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 40px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+    transition: all 0.2s;
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: var(--card);
+    border-radius: 30px;
+    padding: 10px 24px;
+    font-weight: 700;
+    font-size: 14px;
+    border: 1.5px solid var(--border);
+    z-index: 9999;
+    transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+    white-space: nowrap;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    display: flex; align-items: center; gap: 8px;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.toast-correct { border-color: var(--success); color: var(--success); }
+  #toast.toast-wrong { border-color: var(--danger); color: var(--danger); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  footer a:hover { color: #fff; }
+
+  @media(max-width:480px) {
+    .q-card { padding: 18px; }
+    .opt-btn { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="toast">✓ إجابة صحيحة!</div>
+
+<header>
+  <div class="lec-badge">المحاضرة الرابعة عشر</div>
+  <h1>Brain and Central Nervous System Diseases</h1>
+  <div class="subtitle">علم الأمراض الوظيفي — قسم تقنيات الاشعة — المرحلة الثالثة</div>
+  <div class="subtitle" style="margin-top:4px">من إنشاء <strong style="color:var(--accent2)">محمد صبار</strong></div>
+  <a href="https://t.me/mulimcq" target="_blank" class="tg-link">
+    <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.88 13.47l-2.967-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.275.089z"/></svg>
+    <span>محمد صبار</span> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-chip" id="score-chip">
+    <span class="icon">🏆</span>
+    <span>النقاط: <span id="score-val">0</span> / <span id="total-val">45</span></span>
+  </div>
+  <div class="stat-chip" id="timer-chip">
+    <span class="icon">⏱</span>
+    <span id="timer-val">00:00</span>
+  </div>
+  <div class="stat-chip" id="progress-chip">
+    <span class="icon">📊</span>
+    <span>السؤال <span id="q-current">1</span> من 45</span>
+  </div>
+</div>
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<main>
+  <div id="quiz-screen">
+    <div class="q-card" id="q-card">
+      <div class="q-number" id="q-num">السؤال 1 من 45</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="explanation" id="explanation"></div>
+      <div class="next-wrap" id="next-wrap">
+        <button class="btn-next" onclick="nextQuestion()">السؤال التالي ←</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="result-screen">
+    <div class="q-card">
+      <div class="result-circle" id="result-circle">
+        <div class="result-score-text" id="result-pct">0%</div>
+      </div>
+      <div class="result-grade" id="result-grade"></div>
+      <div class="result-sub" id="result-sub"></div>
+      <div class="result-stats">
+        <div class="r-stat">
+          <span class="r-val" id="r-correct" style="color:var(--success)">0</span>
+          إجابات صحيحة ✓
+        </div>
+        <div class="r-stat">
+          <span class="r-val" id="r-wrong" style="color:var(--danger)">0</span>
+          إجابات خاطئة ✗
+        </div>
+        <div class="r-stat">
+          <span class="r-val" id="r-time" style="color:var(--warning)">0:00</span>
+          الوقت المستغرق
+        </div>
+      </div>
+      <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+      <div style="margin-top:16px">
+        <a href="https://t.me/mulimcq" target="_blank" style="color:var(--accent2);font-size:14px;font-weight:700;text-decoration:none;">
+          📱 محمد صبار — اضغط هنا للحصول على اختبارات باقي المحاضرات
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  اختبار المحاضرة الرابعة عشر | من إنشاء
+  <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+  — اضغط هنا للحصول على اختبارات باقي المحاضرات
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "Within how many hours of an irreversible hypoxic-ischemic insult does neuronal injury become evident on routine H&E staining?",
+    opts: ["6 hours", "12 hours", "24 hours", "48 hours"],
+    ans: 1,
+    exp: "Neuronal injury becomes evident on routine H&E staining within <strong>12 hours</strong> of an irreversible hypoxic-ischemic insult."
+  },
+  {
+    q: "Which of the following is NOT a feature of acute neuronal injury seen on H&E staining?",
+    opts: ["Shrinkage of the cell body", "Pyknosis of the nucleus", "Cell body enlargement and rounding", "Intense eosinophilia of the cytoplasm"],
+    ans: 2,
+    exp: "<strong>Cell body enlargement and rounding</strong> is a feature of <em>axonal</em> injury (central chromatolysis), not the typical acute hypoxic-ischemic neuronal injury pattern."
+  },
+  {
+    q: "The disappearance of rough endoplasmic reticulum staining in neurons is referred to as loss of:",
+    opts: ["Rosenthal fibers", "Nissl substance", "Lewy bodies", "Amyloid plaques"],
+    ans: 1,
+    exp: "Rough endoplasmic reticulum staining in neurons is referred to as <strong>Nissl substance</strong>. Its loss is a hallmark of acute neuronal injury."
+  },
+  {
+    q: "Central chromatolysis refers to:",
+    opts: ["Pyknosis of the nucleus", "Peripheral dispersion of Nissl substance due to axonal injury", "Accumulation of amyloid plaques", "Loss of cytoplasmic eosinophilia"],
+    ans: 1,
+    exp: "<strong>Central chromatolysis</strong> refers to peripheral dispersion of Nissl substance caused by axonal injury, along with cell body enlargement and peripheral displacement of the nucleus."
+  },
+  {
+    q: "Which cells are the principal cells responsible for repair and scar formation in the brain?",
+    opts: ["Fibroblasts", "Oligodendrocytes", "Astrocytes", "Microglial cells"],
+    ans: 2,
+    exp: "<strong>Astrocytes</strong> are the principal cells responsible for repair and scar formation in the brain, a process called gliosis."
+  },
+  {
+    q: "The process of repair and scar formation in the brain performed by astrocytes is termed:",
+    opts: ["Fibrosis", "Gliosis", "Myelination", "Chromatolysis"],
+    ans: 1,
+    exp: "The process is termed <strong>gliosis</strong>. Unlike the rest of the body, fibroblasts do not contribute to healing after brain injury (except in specific settings)."
+  },
+  {
+    q: "Rosenthal fibers are found in:",
+    opts: ["Neuronal cell bodies in acute injury", "Astrocytic processes in chronic gliosis and some low-grade gliomas", "Oligodendrocyte nuclei in viral infections", "Microglial cells after trauma"],
+    ans: 1,
+    exp: "<strong>Rosenthal fibers</strong> are thick, elongated, brightly eosinophilic protein aggregates found in astrocytic processes in chronic gliosis and in some low-grade gliomas."
+  },
+  {
+    q: "Which cells produce myelin in the CNS?",
+    opts: ["Astrocytes", "Microglial cells", "Oligodendrocytes", "Schwann cells"],
+    ans: 2,
+    exp: "<strong>Oligodendrocytes</strong> are the myelin-producing cells of the CNS. They show intranuclear viral inclusions in progressive multifocal leukoencephalopathy."
+  },
+  {
+    q: "Microglial cells are derived from:",
+    opts: ["Neural crest cells", "Embryonic yolk sac", "Bone marrow progenitors", "Ependymal cells"],
+    ans: 1,
+    exp: "Microglial cells are long-lived cells derived from the <strong>embryonic yolk sac</strong> and function as the resident phagocytes of the CNS."
+  },
+  {
+    q: "Vasogenic edema results from:",
+    opts: ["Increase in intracellular fluid due to hypoxia", "Disruption of the blood-brain barrier allowing fluid shift into extracellular spaces", "Overproduction of CSF by the choroid plexus", "Obstruction of CSF flow in the ventricles"],
+    ans: 1,
+    exp: "<strong>Vasogenic edema</strong> occurs when blood-brain barrier integrity is disrupted, allowing fluid to shift from the vascular compartment into the extracellular spaces of the brain."
+  },
+  {
+    q: "Cytotoxic edema is characterized by:",
+    opts: ["Extracellular fluid accumulation due to inflammation", "Increase in intracellular fluid secondary to neuronal and glial cell injury", "Obstruction of arachnoid granulations", "Blood-brain barrier disruption by a tumor"],
+    ans: 1,
+    exp: "<strong>Cytotoxic edema</strong> is an increase in intracellular fluid secondary to neuronal and glial cell injury, as may follow hypoxic/ischemic insult or exposure to toxins."
+  },
+  {
+    q: "In generalized cerebral edema, which of the following is expected?",
+    opts: ["Deep sulci and widened gyri", "Flattened gyri, narrowed sulci, and compressed ventricles", "Enlarged ventricles with normal gyri", "Loss of gray-white matter differentiation only"],
+    ans: 1,
+    exp: "In generalized edema, the brain appears softer, the <strong>gyri are flattened</strong>, the intervening sulci are narrowed, and the ventricular cavities are compressed."
+  },
+  {
+    q: "CSF is produced by:",
+    opts: ["Arachnoid granulations", "Choroid plexus within the ventricles", "Ependymal cells of the cerebral aqueduct", "Dural sinuses"],
+    ans: 1,
+    exp: "<strong>CSF is produced by the choroid plexus</strong> within the ventricles, then circulates through the ventricular system and flows into the subarachnoid space."
+  },
+  {
+    q: "CSF flows into the subarachnoid space through the foramina of:",
+    opts: ["Monro and Magendie", "Luschka and Magendie", "Luschka and Monro", "Magendie and Sylvius"],
+    ans: 1,
+    exp: "CSF flows through the <strong>foramina of Luschka and Magendie</strong> into the subarachnoid space, where it is absorbed by arachnoid granulations."
+  },
+  {
+    q: "Hydrocephalus is defined as:",
+    opts: ["Accumulation of excess fluid within the brain parenchyma", "Increase in the volume of CSF within the ventricular system", "Enlargement of the subarachnoid space", "Increased intracranial pressure without ventricular enlargement"],
+    ans: 1,
+    exp: "<strong>Hydrocephalus</strong> is defined as an increase in the volume of CSF within the ventricular system, most often due to impaired flow or decreased resorption."
+  },
+  {
+    q: "Non-communicating hydrocephalus is most commonly caused by:",
+    opts: ["Reduced CSF resorption by arachnoid granulations", "Masses obstructing the foramen of Monro or compressing the cerebral aqueduct", "Overproduction of CSF by the choroid plexus", "Generalized loss of brain volume"],
+    ans: 1,
+    exp: "<strong>Non-communicating hydrocephalus</strong> is most commonly caused by masses (tumor, hemorrhage, or infection) obstructing the foramen of Monro or compressing the cerebral aqueduct."
+  },
+  {
+    q: "In communicating hydrocephalus, the entire ventricular system is enlarged, usually secondary to:",
+    opts: ["Obstruction of the cerebral aqueduct", "Reduced CSF resorption", "Overproduction of CSF", "Increased blood-brain barrier permeability"],
+    ans: 1,
+    exp: "In <strong>communicating hydrocephalus</strong>, the entire ventricular system is enlarged, usually secondary to reduced CSF resorption, often for unknown reasons."
+  },
+  {
+    q: "When hydrocephalus develops in infancy before closure of the cranial sutures, the main finding is:",
+    opts: ["Ventricular expansion without head size change", "Increased intracranial pressure without head enlargement", "Enlargement of the head", "Compression of the brain parenchyma"],
+    ans: 2,
+    exp: "When hydrocephalus develops before closure of cranial sutures, the <strong>head enlarges</strong>. Once sutures fuse, hydrocephalus causes ventricular expansion and increased ICP without head circumference change."
+  },
+  {
+    q: "Hydrocephalus ex vacuo refers to:",
+    opts: ["Obstructive hydrocephalus due to tumor", "Compensatory increase in CSF volume secondary to loss of brain volume", "Hydrocephalus due to CSF overproduction", "Non-communicating hydrocephalus in infants"],
+    ans: 1,
+    exp: "<strong>Hydrocephalus ex vacuo</strong> is a compensatory increase in CSF volume that occurs secondary to loss of brain volume from any underlying cause (e.g., infarction, neurodegenerative disease)."
+  },
+  {
+    q: "Spina bifida is most frequently found in which region of the vertebral column?",
+    opts: ["Cervical region", "Thoracic region", "Lumbosacral region", "Occipital region"],
+    ans: 2,
+    exp: "Spina bifida most frequently occurs in the <strong>lumbosacral region</strong>. It results from incomplete embryologic closure of one or more vertebral arches."
+  },
+  {
+    q: "Spina bifida occulta is characterized by:",
+    opts: ["Herniation of the meninges through the bony defect", "Only a vertebral defect with no abnormality of the spinal cord or meninges", "Herniation of both the spinal cord and meninges", "An open flat neural tissue plate without skin covering"],
+    ans: 1,
+    exp: "<strong>Spina bifida occulta</strong> is the least serious form — there is only a vertebral defect with no abnormality of the spinal cord and its meninges. It may be marked by a small dimple or hairy pigment mole."
+  },
+  {
+    q: "A cystic swelling over the site of a bony vertebral defect is called:",
+    opts: ["Spina bifida occulta", "Meningocele", "Spina bifida cystica", "Myelocele"],
+    ans: 2,
+    exp: "The larger bony defect appears as a distinct cystic swelling called <strong>spina bifida cystica</strong>, which is associated with herniation of the meninges, spinal cord, or both."
+  },
+  {
+    q: "In meningocele, the herniated sac consists of:",
+    opts: ["Spinal cord roots only", "Dura and arachnoid", "Spinal cord, dura, and arachnoid", "Open neural tissue plate"],
+    ans: 1,
+    exp: "In <strong>meningocele</strong>, only the meninges herniate — the herniated sac consists of <strong>dura and arachnoid</strong>, without involvement of the spinal cord."
+  },
+  {
+    q: "The commonest and most serious form of spina bifida cystica is:",
+    opts: ["Meningocele", "Myelocele", "Meningomyelocele", "Syringomyelocele"],
+    ans: 2,
+    exp: "<strong>Meningomyelocele</strong> is the commonest and most serious form, in which the spinal cord or its roots also herniate through the defect and are attached to the posterior wall of the sac."
+  },
+  {
+    q: "In meningomyelocele, which structures are deficient in the sac?",
+    opts: ["Arachnoid and pia", "Dura and the skin", "Spinal cord and nerve roots", "Choroid plexus and ependyma"],
+    ans: 1,
+    exp: "In meningomyelocele, the <strong>dura and the skin</strong> in the sac are deficient, while the spinal cord or roots are attached to the posterior wall of the sac."
+  },
+  {
+    q: "Myelocele (syringomyelocele) is characterized by:",
+    opts: ["Herniation of meninges alone with intact skin", "Defective closure of the spinal canal with an open flat neural tissue plate and CSF leaking through it", "Spinal cord herniation with intact skin covering", "Only a bony defect with normal meninges"],
+    ans: 1,
+    exp: "<strong>Myelocele/syringomyelocele</strong> is a rare form in which there is defective closure of the spinal canal — the sac consists of an open flat neural tissue plate without skin covering, with CSF leaking through it."
+  },
+  {
+    q: "Cranial meningocele and encephalocele result from bony closure defects in:",
+    opts: ["Lumbosacral region", "Thoracic vertebrae", "Occipital bone or fronto-ethmoid junction", "Foramen magnum only"],
+    ans: 2,
+    exp: "Defects in bony closure in the region of the <strong>occipital bone or fronto-ethmoid junction</strong> may result in cranial meningocele and encephalocele."
+  },
+  {
+    q: "Polymicrogyria is characterized by:",
+    opts: ["Absence of cerebral gyri (smooth brain surface)", "Excessive abnormal small cerebral gyri with cortical over-folding", "Single large gyrus covering one hemisphere", "Abnormal separation of the two cerebral hemispheres"],
+    ans: 1,
+    exp: "<strong>Polymicrogyria</strong> is a focal brain abnormality characterized by excessive abnormal small cerebral gyri with cortical over-folding, creating an irregular cortical surface and ill-defined grey-white matter junction."
+  },
+  {
+    q: "On imaging, polymicrogyria often appears as:",
+    opts: ["Smooth cortex with no gyri", "Cortical thickening and simplification when small gyral folds are below imaging resolution", "Massive cortical thinning", "Cystic lesion within the cortex"],
+    ans: 1,
+    exp: "Polymicrogyria often appears as <strong>cortical thickening and simplification</strong> when the small gyral folds are below the resolution of the imaging modality or cortical surfaces are fused."
+  },
+  {
+    q: "Holoprosencephaly (HPE) results from:",
+    opts: ["Excessive gyral formation", "Incomplete separation of the two cerebral hemispheres", "Obstruction of CSF flow", "Failure of neural tube closure in the lumbosacral region"],
+    ans: 1,
+    exp: "<strong>Holoprosencephaly</strong> is a rare congenital brain malformation resulting from incomplete separation of the two cerebral hemispheres."
+  },
+  {
+    q: "Which subtype of holoprosencephaly is the most severe?",
+    opts: ["Lobar HPE", "Semilobar HPE", "Alobar HPE", "Microlobar HPE"],
+    ans: 2,
+    exp: "<strong>Alobar holoprosencephaly</strong> is the most severe subtype. The three main subtypes in order of decreasing severity are: alobar, semilobar, and lobar."
+  },
+  {
+    q: "Amyloid plaques are associated with which neurodegenerative disease?",
+    opts: ["Parkinson disease", "Huntington disease", "Alzheimer disease", "Multiple sclerosis"],
+    ans: 2,
+    exp: "<strong>Amyloid plaques</strong> are a hallmark abnormal protein accumulation associated with <strong>Alzheimer disease</strong>."
+  },
+  {
+    q: "Lewy bodies are intracellular inclusions associated with:",
+    opts: ["Alzheimer disease", "Parkinson disease", "Huntington disease", "Amyotrophic lateral sclerosis"],
+    ans: 1,
+    exp: "<strong>Lewy bodies</strong> are specific intracellular inclusions associated with <strong>Parkinson disease</strong>."
+  },
+  {
+    q: "Intranuclear viral inclusions in oligodendrocytes are seen in:",
+    opts: ["Herpes simplex encephalitis", "Progressive multifocal leukoencephalopathy", "Rabies encephalitis", "Cytomegalovirus infection"],
+    ans: 1,
+    exp: "Oligodendrocytes exhibit intranuclear viral inclusions in <strong>progressive multifocal leukoencephalopathy (PML)</strong>."
+  },
+  {
+    q: "After brain injury, fibroblasts contribute to healing:",
+    opts: ["Always, as in the rest of the body", "Never, as the brain lacks fibroblasts", "Only in specific settings such as penetrating brain trauma or around abscesses", "Only during fetal brain development"],
+    ans: 2,
+    exp: "Unlike the rest of the body, <strong>fibroblasts do not normally contribute to healing after brain injury</strong> except in specific settings (e.g., penetrating brain trauma or around abscesses)."
+  },
+  {
+    q: "In long-standing gliosis, reactive astrocytes undergo:",
+    opts: ["Hypertrophy and hyperplasia with large cytoplasm", "Shrinkage of cytoplasm with tightly interwoven processes (fibrillary astrocytes)", "Transformation into microglial cells", "Progressive demyelination"],
+    ans: 1,
+    exp: "In long-standing gliosis, the cytoplasm of reactive astrocytes <strong>shrinks in size</strong> and cellular processes become more tightly interwoven, forming <strong>fibrillary astrocytes</strong>."
+  },
+  {
+    q: "What is the primary function of microglial cells in the CNS?",
+    opts: ["Myelin production", "CSF production", "Resident phagocytes", "Blood-brain barrier maintenance"],
+    ans: 2,
+    exp: "Microglial cells function as the <strong>resident phagocytes of the CNS</strong>. When activated by injury, infection, or trauma, they proliferate and become more prominent histologically."
+  },
+  {
+    q: "Acute neuronal injury typically results in breakdown of which structure?",
+    opts: ["Choroid plexus", "Blood-brain barrier", "Arachnoid granulations", "Ventricular ependyma"],
+    ans: 1,
+    exp: "Acute injuries typically result in <strong>breakdown of the blood-brain barrier</strong> and variable degrees of cerebral edema."
+  },
+  {
+    q: "Pyknosis of the nucleus in neurons refers to:",
+    opts: ["Enlargement and vesicular appearance of the nucleus", "Condensation and shrinkage of the nucleus", "Disappearance of the nucleolus", "Peripheral displacement of the nucleus"],
+    ans: 1,
+    exp: "<strong>Pyknosis</strong> refers to the condensation and shrinkage of the nucleus, and is one of the key features of acute neuronal injury."
+  },
+  {
+    q: "Which type of edema can be localized due to increased vascular permeability from inflammation or a tumor?",
+    opts: ["Cytotoxic edema", "Interstitial edema", "Vasogenic edema", "Osmotic edema"],
+    ans: 2,
+    exp: "<strong>Vasogenic edema</strong> can be localized (e.g., due to increased vascular permeability from inflammation or a tumor) or generalized."
+  },
+  {
+    q: "The site of a spina bifida occulta bony defect is often marked by:",
+    opts: ["A large cystic swelling", "A small dimple or a hairy pigment mole in the overlying skin", "Visible herniation of neural tissue", "An open neural plate"],
+    ans: 1,
+    exp: "In spina bifida occulta, the site of bony defect is marked by a <strong>small dimple or a hairy pigment mole</strong> in the overlying skin."
+  },
+  {
+    q: "CSF absorption occurs at:",
+    opts: ["Choroid plexus", "Foramina of Luschka", "Arachnoid granulations", "Ependymal cells"],
+    ans: 2,
+    exp: "CSF flows into the subarachnoid space and is <strong>absorbed by arachnoid granulations</strong>."
+  },
+  {
+    q: "In axonal injury, which change occurs in the neuronal cell body?",
+    opts: ["Intense eosinophilia and shrinkage", "Cell body enlargement, rounding, and peripheral displacement of the nucleus", "Pyknosis of the nucleus and loss of nucleolus", "Central displacement of the nucleus"],
+    ans: 1,
+    exp: "Axonal injury leads to <strong>cell body enlargement and rounding, peripheral displacement of the nucleus, enlargement of the nucleolus</strong>, and peripheral dispersion of Nissl substance."
+  },
+  {
+    q: "Polymicrogyria creates which type of cortical surface?",
+    opts: ["Smooth (lissencephalic) surface", "Irregular cortical surface", "Uniformly thickened surface", "Normal-appearing surface"],
+    ans: 1,
+    exp: "Polymicrogyria creates an <strong>irregular cortical surface</strong> and ill-defined grey-white matter junction due to excessive cortical over-folding."
+  },
+  {
+    q: "The three classic subtypes of holoprosencephaly in order of DECREASING severity are:",
+    opts: [
+      "Lobar → Semilobar → Alobar",
+      "Alobar → Semilobar → Lobar",
+      "Semilobar → Alobar → Lobar",
+      "Lobar → Alobar → Semilobar"
+    ],
+    ans: 1,
+    exp: "The three main subtypes in order of <strong>decreasing severity</strong> are: <strong>Alobar → Semilobar → Lobar</strong> holoprosencephaly."
+  },
+  {
+    q: "Which neurodegenerative diseases are associated with accumulation of abnormal proteins or intracellular inclusions?",
+    opts: [
+      "Only viral encephalitides",
+      "Alzheimer disease (amyloid plaques) and Parkinson disease (Lewy bodies)",
+      "Only Huntington disease (polyglutamine aggregates)",
+      "Hydrocephalus and spina bifida"
+    ],
+    ans: 1,
+    exp: "Many neurodegenerative diseases are associated with abnormal protein accumulation: <strong>Alzheimer disease</strong> (amyloid plaques) and <strong>Parkinson disease</strong> (Lewy bodies) are classic examples."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+let startTime = Date.now();
+let timerInterval;
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const m = String(Math.floor(elapsed / 60)).padStart(2,'0');
+    const s = String(elapsed % 60).padStart(2,'0');
+    document.getElementById('timer-val').textContent = m + ':' + s;
+  }, 500);
+}
+
+function loadQuestion() {
+  const q = questions[current];
+  answered = false;
+  document.getElementById('q-num').textContent = `السؤال ${current+1} من ${questions.length}`;
+  document.getElementById('q-current').textContent = current + 1;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('progress-fill').style.width = ((current / questions.length) * 100) + '%';
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => selectAnswer(i);
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('next-wrap').className = 'next-wrap';
+
+  // Last question: change button text
+  const btn = document.querySelector('.btn-next');
+  if (btn) btn.textContent = current === questions.length - 1 ? 'إنهاء الاختبار ✓' : 'السؤال التالي ←';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const btns = document.querySelectorAll('.opt-btn');
+
+  btns.forEach(b => b.disabled = true);
+  btns[q.ans].classList.add('correct');
+
+  if (idx === q.ans) {
+    score++;
+    document.getElementById('score-val').textContent = score;
+    showToast('✓ إجابة صحيحة!', true);
+  } else {
+    btns[idx].classList.add('wrong');
+    const exp = document.getElementById('explanation');
+    exp.innerHTML = `<strong>💡 الشرح:</strong> ${q.exp}`;
+    exp.className = 'explanation show';
+    showToast('✗ إجابة خاطئة', false);
+  }
+
+  document.getElementById('next-wrap').className = 'next-wrap show';
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    loadQuestion();
+    // Scroll to top of card
+    document.getElementById('q-card').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const m = String(Math.floor(elapsed / 60)).padStart(2,'0');
+  const s = String(elapsed % 60).padStart(2,'0');
+
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById('result-pct').textContent = pct + '%';
+  document.getElementById('result-circle').style.setProperty('--pct', pct + '%');
+
+  let grade, color;
+  if (pct >= 90) { grade = '🏆 ممتاز!'; color = '#22c55e'; }
+  else if (pct >= 75) { grade = '🎯 جيد جداً'; color = '#3b82f6'; }
+  else if (pct >= 60) { grade = '👍 جيد'; color = '#f59e0b'; }
+  else { grade = '📚 تحتاج مراجعة'; color = '#ef4444'; }
+
+  document.getElementById('result-grade').textContent = grade;
+  document.getElementById('result-grade').style.color = color;
+  document.getElementById('result-sub').textContent = `لقد أجبت على ${score} من ${questions.length} سؤالاً بشكل صحيح`;
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = questions.length - score;
+  document.getElementById('r-time').textContent = m + ':' + s;
+  document.getElementById('progress-fill').style.width = '100%';
+
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function restartQuiz() {
+  current = 0;
+  score = 0;
+  answered = false;
+  startTime = Date.now();
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('result-screen').style.display = 'none';
+  clearInterval(timerInterval);
+  startTimer();
+  loadQuestion();
+}
+
+let toastTimer;
+function showToast(msg, correct) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + (correct ? 'toast-correct' : 'toast-wrong');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 1800);
+}
+
+// Init
+document.getElementById('total-val').textContent = questions.length;
+startTimer();
+loadQuestion();
+</script>
+</body>
+</html>

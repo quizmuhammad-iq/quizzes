@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pancreas Diseases – اختبار المحاضرة الثامنة</title>
+<style>
+  /* Offline fallback fonts */
+  @font-face { font-family: 'Tajawal'; src: local('Tajawal'), local('Arial'), local('Segoe UI'); }
+  @font-face { font-family: 'Roboto'; src: local('Roboto'), local('Arial'), local('Segoe UI'); }
+</style>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #131929;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #2d3f5e;
+    --glow: 0 0 24px rgba(59,130,246,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 70% 10%, rgba(59,130,246,0.07) 0%, transparent 60%),
+                      radial-gradient(ellipse at 10% 90%, rgba(96,165,250,0.05) 0%, transparent 50%);
+  }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f1626 0%, #1a2a4a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px 14px;
+    text-align: center;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+  header .university { font-size: 11px; color: var(--muted); letter-spacing: 1px; margin-bottom: 4px; }
+  header h1 {
+    font-size: clamp(16px, 3vw, 22px);
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  header h1 span { color: var(--accent2); }
+  header .subtitle { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  header .creator-link { font-size: 12px; margin-top: 6px; color: var(--muted); }
+  header .creator-link a { color: var(--accent2); font-weight: 700; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    padding: 12px 20px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'Roboto', sans-serif;
+  }
+  .stat-pill .icon { font-size: 15px; }
+  .stat-pill .val { font-weight: 700; color: var(--accent2); }
+  #timer-val { color: var(--warning); }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 10px 20px 6px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+  .progress-bar-bg {
+    background: var(--border);
+    border-radius: 99px; height: 6px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    border-radius: 99px; transition: width 0.4s ease;
+    box-shadow: 0 0 8px rgba(59,130,246,0.5);
+  }
+
+  /* MAIN */
+  main { max-width: 800px; margin: 0 auto; padding: 24px 16px 80px; }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--glow);
+    animation: fadeUp 0.35s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .q-num {
+    font-size: 11px; color: var(--accent2); font-weight: 700;
+    letter-spacing: 1px; margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+  }
+  .q-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px; line-height: 1.7;
+    color: var(--text); margin-bottom: 18px;
+    font-weight: 500;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: right;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px; color: var(--text);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+    transform: translateX(-2px);
+  }
+  .opt-btn .opt-letter {
+    min-width: 26px; height: 26px;
+    background: var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px; color: var(--accent2);
+    flex-shrink: 0;
+  }
+  .opt-btn.correct {
+    border-color: var(--success);
+    background: rgba(34,197,94,0.1);
+  }
+  .opt-btn.correct .opt-letter { background: var(--success); color: #fff; }
+  .opt-btn.wrong {
+    border-color: var(--danger);
+    background: rgba(239,68,68,0.1);
+  }
+  .opt-btn.wrong .opt-letter { background: var(--danger); color: #fff; }
+  .opt-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 14px;
+    background: rgba(59,130,246,0.07);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px; line-height: 1.7;
+    color: var(--muted);
+    font-family: 'Roboto', sans-serif;
+    display: none;
+  }
+  .explanation.show { display: block; animation: fadeUp 0.3s ease; }
+  .explanation strong { color: var(--accent2); display: block; margin-bottom: 4px; }
+
+  /* NEXT BTN */
+  .next-wrap { margin-top: 16px; text-align: left; display: none; }
+  .next-wrap.show { display: block; }
+  .btn-next {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none; border-radius: 10px;
+    padding: 11px 28px;
+    color: #fff; font-family: 'Tajawal', sans-serif;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+  }
+  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59,130,246,0.5); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+    padding: 12px 24px; border-radius: 50px;
+    font-size: 14px; font-weight: 700; font-family: 'Tajawal', sans-serif;
+    z-index: 999; transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), opacity 0.3s;
+    opacity: 0; pointer-events: none;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast.correct-toast { background: linear-gradient(135deg, #166534, #15803d); border: 1px solid #22c55e; }
+  .toast.wrong-toast   { background: linear-gradient(135deg, #7f1d1d, #991b1b); border: 1px solid #ef4444; }
+
+  /* RESULTS */
+  #result-screen {
+    display: none; text-align: center; padding: 40px 20px;
+    animation: fadeUp 0.4s ease;
+  }
+  #result-screen.show { display: block; }
+  .result-circle {
+    width: 130px; height: 130px; border-radius: 50%;
+    border: 4px solid var(--accent);
+    margin: 0 auto 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(59,130,246,0.08);
+    box-shadow: 0 0 40px rgba(59,130,246,0.2);
+  }
+  .result-circle .score-num { font-size: 38px; font-weight: 900; color: var(--accent2); font-family: 'Roboto', sans-serif; }
+  .result-circle .score-label { font-size: 12px; color: var(--muted); }
+  .result-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+  .result-sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  .result-stats {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;
+  }
+  .rs-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 22px; min-width: 100px;
+  }
+  .rs-card .rs-val { font-size: 26px; font-weight: 900; font-family: 'Roboto', sans-serif; }
+  .rs-card .rs-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .rs-card.green .rs-val { color: var(--success); }
+  .rs-card.red .rs-val { color: var(--danger); }
+  .rs-card.blue .rs-val { color: var(--accent2); }
+  .btn-restart {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none; border-radius: 12px;
+    padding: 14px 36px;
+    color: #fff; font-family: 'Tajawal', sans-serif;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.4);
+  }
+  .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(59,130,246,0.5); }
+
+  /* FOOTER */
+  footer {
+    background: var(--card2);
+    border-top: 1px solid var(--border);
+    text-align: center; padding: 16px;
+    font-size: 13px; color: var(--muted);
+  }
+  footer a { color: var(--accent2); font-weight: 700; }
+
+  /* INTRO */
+  #intro-screen { text-align: center; padding: 40px 16px; animation: fadeUp 0.4s ease; }
+  .intro-badge {
+    display: inline-block; background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.3); border-radius: 50px;
+    padding: 6px 18px; font-size: 12px; color: var(--accent2);
+    margin-bottom: 20px; font-family: 'Roboto', sans-serif; letter-spacing: 1px;
+  }
+  .intro-title { font-size: clamp(20px,4vw,30px); font-weight: 900; margin-bottom: 10px; }
+  .intro-title span { color: var(--accent2); }
+  .intro-desc { color: var(--muted); font-size: 14px; margin-bottom: 28px; line-height: 1.8; }
+  .intro-meta {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;
+  }
+  .im-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 20px; font-size: 14px;
+  }
+  .im-card .im-val { font-weight: 700; color: var(--accent2); font-family: 'Roboto', sans-serif; }
+  .btn-start {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: none; border-radius: 14px;
+    padding: 16px 44px;
+    color: #fff; font-family: 'Tajawal', sans-serif;
+    font-size: 18px; font-weight: 900;
+    cursor: pointer; transition: all 0.25s;
+    box-shadow: 0 6px 28px rgba(59,130,246,0.45);
+    letter-spacing: 1px;
+  }
+  .btn-start:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 40px rgba(59,130,246,0.6); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="university">Al-Hadi University – Radiological Technique Dept. | Systemic Pathology</div>
+  <h1>Pancreas Diseases &nbsp;|&nbsp; <span>المحاضرة الثامنة</span></h1>
+  <div class="subtitle">من إنشاء محمد صبار &nbsp;|&nbsp; 45 سؤال MCQ</div>
+  <div class="creator-link">
+    <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+    &nbsp;—&nbsp; اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </div>
+</header>
+
+<div class="stats-bar" id="stats-bar" style="display:none">
+  <div class="stat-pill"><span class="icon">⏱️</span> <span>الوقت:</span> <span class="val" id="timer-val">00:00</span></div>
+  <div class="stat-pill"><span class="icon">✅</span> <span>صحيح:</span> <span class="val" id="correct-val">0</span></div>
+  <div class="stat-pill"><span class="icon">❌</span> <span>خطأ:</span> <span class="val" id="wrong-val">0</span></div>
+  <div class="stat-pill"><span class="icon">⭐</span> <span>النقاط:</span> <span class="val" id="score-val">0</span></div>
+</div>
+
+<div class="progress-wrap" id="progress-wrap" style="display:none">
+  <div class="progress-info">
+    <span id="prog-text">السؤال 0 من 45</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<main>
+  <!-- INTRO -->
+  <div id="intro-screen">
+    <div class="intro-badge">LECTURE 8 – SYSTEMIC PATHOLOGY</div>
+    <div class="intro-title">Pancreas Diseases<br><span>اختبار المحاضرة الثامنة</span></div>
+    <div class="intro-desc">
+      اختبار شامل يغطي كامل محاضرة أمراض البنكرياس<br>
+      Cystic Fibrosis · Pancreatitis · Pseudocyst · Carcinoma of Pancreas
+    </div>
+    <div class="intro-meta">
+      <div class="im-card">عدد الأسئلة <div class="im-val">45</div></div>
+      <div class="im-card">كل سؤال <div class="im-val">نقطتان</div></div>
+      <div class="im-card">المجموع <div class="im-val">90</div></div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">🚀 ابدأ الاختبار</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-screen" style="display:none"></div>
+
+  <!-- RESULTS -->
+  <div id="result-screen">
+    <div class="result-circle">
+      <div class="score-num" id="res-score">0</div>
+      <div class="score-label">من 90</div>
+    </div>
+    <div class="result-title" id="res-title">—</div>
+    <div class="result-sub" id="res-sub">—</div>
+    <div class="result-stats">
+      <div class="rs-card green"><div class="rs-val" id="res-correct">0</div><div class="rs-lbl">إجابات صحيحة</div></div>
+      <div class="rs-card red"><div class="rs-val" id="res-wrong">0</div><div class="rs-lbl">إجابات خاطئة</div></div>
+      <div class="rs-card blue"><div class="rs-val" id="res-pct">0%</div><div class="rs-lbl">النسبة المئوية</div></div>
+      <div class="rs-card blue"><div class="rs-val" id="res-time">0:00</div><div class="rs-lbl">الوقت المستغرق</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+    <br><br>
+    <a href="https://t.me/mulimcq" target="_blank" style="font-size:14px; color:var(--accent2);">
+      محمد صبار — اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </a>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  من إنشاء &nbsp;<a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>&nbsp; — اضغط هنا للحصول على اختبارات باقي المحاضرات
+</footer>
+
+<script>
+const questions = [
+  // ── CYSTIC FIBROSIS ──────────────────────────────────────────────
+  {
+    q: "Cystic fibrosis is best described as a hereditary disorder characterized by:",
+    opts: ["Viscid mucous secretions in all exocrine glands","Excessive bile production in the liver","Hypersecretion of gastric acid","Abnormal insulin secretion"],
+    ans: 0,
+    exp: "Cystic fibrosis is characterised by viscid mucous secretions in all exocrine glands of the body, along with increased electrolyte concentrations in eccrine glands."
+  },
+  {
+    q: "The inheritance pattern of cystic fibrosis is:",
+    opts: ["Autosomal dominant","X-linked recessive","Autosomal recessive","X-linked dominant"],
+    ans: 2,
+    exp: "Cystic fibrosis has an autosomal recessive inheritance; clinical features appear only in homozygotes."
+  },
+  {
+    q: "Clinical features of cystic fibrosis are apparent in:",
+    opts: ["Heterozygotes only","Both homozygotes and heterozygotes equally","Homozygotes only","Neither homozygotes nor heterozygotes"],
+    ans: 2,
+    exp: "Although the inheritance is autosomal recessive, clinical manifestations are apparent in homozygotes only."
+  },
+  {
+    q: "Which of the following is NOT a recognised clinical manifestation of cystic fibrosis?",
+    opts: ["Pancreatic insufficiency","Hepatic cirrhosis","Respiratory complications","Hyperthyroidism"],
+    ans: 3,
+    exp: "Cystic fibrosis affects exocrine glands; recognised features include pancreatic insufficiency, steatorrhoea, malnutrition, hepatic cirrhosis, and respiratory complications. Hyperthyroidism is unrelated."
+  },
+  {
+    q: "On gross appearance, pancreatic lobules in cystic fibrosis are described as:",
+    opts: ["Rhomboid","Ovoid rather than rhomboid","Flat and fibrosed","Round and calcified"],
+    ans: 1,
+    exp: "Grossly, pancreatic lobules are ovoid rather than rhomboid in cystic fibrosis, with fatty replacement and grossly visible cysts."
+  },
+  {
+    q: "Microscopically, the acinar ducts in cystic fibrosis contain:",
+    opts: ["Purulent exudate","Laminated eosinophilic concretions","Basophilic calcifications","Mucous plugs of goblet cells"],
+    ans: 1,
+    exp: "Microscopically, acinar ducts in the pancreas contain laminated, eosinophilic concretions; the acini are atrophic with increased interlobular fibrosis."
+  },
+  {
+    q: "Liver changes in cystic fibrosis are initiated by:",
+    opts: ["Hepatitis B virus","Bile canaliculi plugged by viscid mucous","Autoimmune destruction of hepatocytes","Copper accumulation in hepatocytes"],
+    ans: 1,
+    exp: "In cystic fibrosis, bile canaliculi are plugged by viscid mucous, which may cause diffuse fatty change, portal fibrosis, and ductular proliferation."
+  },
+  {
+    q: "Respiratory complications in cystic fibrosis are primarily due to:",
+    opts: ["Direct viral invasion of alveoli","Viscid mucous secretions causing obstruction and infection of airways","Autoimmune destruction of bronchial epithelium","Excess surfactant production"],
+    ans: 1,
+    exp: "Viscid mucous secretions of submucosal glands in the respiratory tract cause obstruction, dilatation, and infection of the airways."
+  },
+  {
+    q: "Salivary gland changes in cystic fibrosis are similar to those in the:",
+    opts: ["Liver","Lung","Pancreas","Kidney"],
+    ans: 2,
+    exp: "Pathological changes in salivary glands in cystic fibrosis are similar to those in the pancreas: ductal obstruction, dilatation, fibrosis, and glandular atrophy."
+  },
+  {
+    q: "A characteristic sweat gland finding in cystic fibrosis is:",
+    opts: ["Hyposecretion of potassium","Hypersecretion of sodium and chloride","Hypersecretion of bicarbonate","Decreased sweat production"],
+    ans: 1,
+    exp: "In cystic fibrosis, sweat glands show hypersecretion of sodium and chloride — the basis of the sweat chloride test used for diagnosis."
+  },
+  // ── ACUTE PANCREATITIS ────────────────────────────────────────────
+  {
+    q: "Pancreatitis is defined as inflammation of the pancreas with:",
+    opts: ["Islet cell hypertrophy","Ductal hyperplasia","Acinic cell injury","Periductal fibrosis only"],
+    ans: 2,
+    exp: "Pancreatitis is defined as inflammation of the pancreas with acinic cell injury, classified into acute and chronic forms."
+  },
+  {
+    q: "The age group most commonly affected by acute pancreatitis is:",
+    opts: ["10–20 years","20–40 years","40–70 years","Over 80 years"],
+    ans: 2,
+    exp: "Acute pancreatitis occurs in adults between 40 and 70 years of age and is more common in females than males."
+  },
+  {
+    q: "Acute pancreatitis is commoner in:",
+    opts: ["Males","Females","Both sexes equally","Children"],
+    ans: 1,
+    exp: "Acute pancreatitis is commoner in females than in males."
+  },
+  {
+    q: "The two leading causes of acute pancreatitis account for more than what percentage of cases?",
+    opts: ["40%","60%","80%","95%"],
+    ans: 2,
+    exp: "Alcoholism and cholelithiasis together are implicated in more than 80% of acute pancreatitis cases."
+  },
+  {
+    q: "Which enzyme level is most specific for pancreatic disease in acute pancreatitis?",
+    opts: ["Serum amylase","Serum lipase","Serum ALT","Serum bilirubin"],
+    ans: 1,
+    exp: "Serum lipase (elevated after 3–4 days) is more specific for pancreatic disease than serum amylase (elevated within the first 24 hours)."
+  },
+  {
+    q: "Serum amylase in acute pancreatitis rises within:",
+    opts: ["6 hours","12 hours","First 24 hours","3–4 days"],
+    ans: 2,
+    exp: "Serum amylase rises within the first 24 hours of acute pancreatitis, though serum lipase (elevated after 3–4 days) is more specific."
+  },
+  {
+    q: "The gross (macroscopic) appearance of the pancreas in acute haemorrhagic pancreatitis shows:",
+    opts: ["Smooth grey nodular surface","Grey-white necrosis, chalky-white fat necrosis, and blue-black haemorrhages","Yellow fatty replacement with cysts","Diffuse calcification and stones"],
+    ans: 1,
+    exp: "Within a day or two, the characteristic variegated appearance includes grey-white pancreatic necrosis, chalky-white fat necrosis, and blue-black haemorrhages."
+  },
+  {
+    q: "Which inflammatory cell predominantly surrounds areas of necrosis and haemorrhage in acute pancreatitis?",
+    opts: ["Lymphocytes","Plasma cells","Eosinophils","Polymorphonuclear leucocytes (polymorphs)"],
+    ans: 3,
+    exp: "Microscopically, inflammatory reaction in acute pancreatitis is chiefly by polymorphonuclear leucocytes around areas of necrosis and haemorrhage."
+  },
+  {
+    q: "Which of the following is a LOCAL complication of acute pancreatitis?",
+    opts: ["Endotoxic shock","Acute renal failure","Pancreatic pseudocyst","Chemical peritonitis (systemic)"],
+    ans: 2,
+    exp: "Local sequelae include pancreatic abscess, pancreatic pseudocyst, and duodenal obstruction. Endotoxic shock and acute renal failure are systemic complications."
+  },
+  {
+    q: "Mortality in acute pancreatitis is approximately:",
+    opts: ["5–10%","10–15%","20–30%","50–60%"],
+    ans: 2,
+    exp: "Mortality in acute pancreatitis is high, approximately 20–30%. Patients succumb to hypotensive shock, infection, acute renal failure, and DIC."
+  },
+  {
+    q: "Which drug has been implicated as a less common cause of acute pancreatitis?",
+    opts: ["Aspirin","Oral contraceptives","Metformin","Atorvastatin"],
+    ans: 1,
+    exp: "Among the less common causes of acute pancreatitis are certain drugs, including oral contraceptives."
+  },
+  {
+    q: "The destructive changes in acute pancreatitis are mainly attributed to:",
+    opts: ["Direct bacterial invasion","Liberation and activation of pancreatic enzymes","Ischaemic necrosis of ductal cells","Autoimmune T-cell attack"],
+    ans: 1,
+    exp: "The pathogenesis of acute pancreatitis is attributed to liberation and activation of pancreatic enzymes, causing auto-digestion of the gland."
+  },
+  {
+    q: "Which of the following is a SYSTEMIC complication of acute pancreatitis?",
+    opts: ["Pancreatic abscess","Duodenal obstruction","Pancreatic pseudocyst","Acute renal failure"],
+    ans: 3,
+    exp: "Systemic complications include chemical and bacterial peritonitis, endotoxic shock, and acute renal failure. The others listed are local sequelae."
+  },
+  // ── CHRONIC PANCREATITIS ──────────────────────────────────────────
+  {
+    q: "Chronic pancreatitis is best described as:",
+    opts: ["A single severe episode of pancreatic inflammation","Progressive destruction of the pancreas due to repeated mild and subclinical attacks","An acute viral infection of the pancreatic parenchyma","A neoplastic transformation of pancreatic acini"],
+    ans: 1,
+    exp: "Chronic pancreatitis is progressive destruction of the pancreas due to repeated mild and subclinical attacks of acute pancreatitis."
+  },
+  {
+    q: "The most common cause of chronic pancreatitis is:",
+    opts: ["Biliary tract disease","Hypercalcaemia","Chronic alcoholism with protein-rich diet","Autoimmune disease"],
+    ans: 2,
+    exp: "Most commonly, chronic pancreatitis is related to chronic alcoholism accompanied by a protein-rich diet."
+  },
+  {
+    q: "Tropical chronic pancreatitis is related to:",
+    opts: ["Chronic alcoholism","Protein-calorie malnutrition","Hereditary mutations","Biliary obstruction"],
+    ans: 1,
+    exp: "Non-alcoholic chronic pancreatitis seen in tropical countries (tropical chronic pancreatitis) results from protein-calorie malnutrition."
+  },
+  {
+    q: "Gross appearance of the pancreas in chronic pancreatitis includes:",
+    opts: ["Small, soft, and lobulated gland","Enlarged, firm, nodular gland with foci of calcification","Shrunken, yellow, fatty gland","Normal-sized gland with cystic spaces"],
+    ans: 1,
+    exp: "Grossly, in chronic pancreatitis, the pancreas is enlarged, firm, and nodular; the cut surface is smooth grey with loss of normal lobulation, and foci of calcification with stones are frequently found."
+  },
+  {
+    q: "In chronic alcoholic pancreatitis, obstruction of ducts occurs due to:",
+    opts: ["Dense fibrotic bands","Increase in protein concentration in pancreatic juice","Mucous plugs from acinar cells","Haemorrhage within the ductal lumen"],
+    ans: 1,
+    exp: "Chronic alcoholism with high protein diet results in increased protein concentration in the pancreatic juice, which obstructs the ducts and causes damage."
+  },
+  {
+    q: "A late complication of chronic pancreatitis is:",
+    opts: ["Acute renal failure","Hepatic cirrhosis","Diabetes mellitus","Splenic vein thrombosis"],
+    ans: 2,
+    exp: "Late-stage chronic pancreatitis may be complicated by diabetes mellitus, pancreatic insufficiency with steatorrhoea and malabsorption, and formation of pancreatic pseudocysts."
+  },
+  {
+    q: "Patients with chronic pancreatitis typically present with:",
+    opts: ["Single episode of acute severe abdominal pain","Recurrent attacks of severe abdominal pain at intervals of months to years","Continuous dull ache without remission","Asymptomatic elevation of amylase only"],
+    ans: 1,
+    exp: "Most patients with chronic pancreatitis present with recurrent attacks of severe abdominal pain at intervals of months to years, often associated with weight loss and jaundice."
+  },
+  // ── PANCREATIC PSEUDOCYST ─────────────────────────────────────────
+  {
+    q: "A pancreatic pseudocyst is best defined as:",
+    opts: ["A true cyst lined by ductal epithelium","A localised collection of pancreatic juice, necrotic debris, and haemorrhages","A benign neoplasm of the pancreatic tail","An abscess caused by bacterial superinfection"],
+    ans: 1,
+    exp: "Pancreatic pseudocyst is a localised collection of pancreatic juice, necrotic debris, and haemorrhages — notably lacking an epithelial lining (hence 'pseudo')."
+  },
+  {
+    q: "Pancreatic pseudocyst develops following:",
+    opts: ["Pancreatic carcinoma","Either acute pancreatitis or trauma","Diabetes mellitus","Chronic alcoholism alone"],
+    ans: 1,
+    exp: "Pancreatic pseudocysts develop following either acute pancreatitis or trauma to the pancreas."
+  },
+  {
+    q: "Typical size of a pancreatic pseudocyst is:",
+    opts: ["Up to 2 cm","Up to 5 cm","Up to 10 cm","Greater than 20 cm"],
+    ans: 2,
+    exp: "The pseudocyst is usually solitary and unilocular, measuring up to 10 cm in diameter with a thin or thick wall."
+  },
+  {
+    q: "Microscopically, the wall of a pancreatic pseudocyst is composed of:",
+    opts: ["Ductal epithelium with goblet cells","Dense fibrous tissue with marked inflammatory reaction","Squamous epithelium","Transitional epithelium"],
+    ans: 1,
+    exp: "The cyst wall of a pancreatic pseudocyst is composed of dense fibrous tissue with marked inflammatory reaction; there is evidence of preceding haemorrhage and necrosis (haemosiderin, calcium, and cholesterol crystals)."
+  },
+  {
+    q: "Deposits found within the wall of a pancreatic pseudocyst include all of the following EXCEPT:",
+    opts: ["Haemosiderin pigment","Calcium crystals","Cholesterol crystals","Amyloid deposits"],
+    ans: 3,
+    exp: "Evidence of preceding haemorrhage and necrosis in the pseudocyst wall includes haemosiderin pigment, calcium, and cholesterol crystals. Amyloid is not a feature."
+  },
+  // ── CARCINOMA OF PANCREAS ─────────────────────────────────────────
+  {
+    q: "Carcinoma of the pancreas is more common in:",
+    opts: ["Females","Males","Both sexes equally","Children"],
+    ans: 1,
+    exp: "Pancreatic cancer is commoner in males than in females, and the incidence increases progressively after the age of 50 years."
+  },
+  {
+    q: "After age 50, the incidence of pancreatic cancer:",
+    opts: ["Decreases progressively","Plateaus","Increases progressively","Is unaffected"],
+    ans: 2,
+    exp: "The incidence of pancreatic cancer increases progressively after the age of 50 years."
+  },
+  {
+    q: "The most common location of pancreatic cancer is:",
+    opts: ["Body (50%)","Tail (40%)","Head (70%)","Diffuse (30%)"],
+    ans: 2,
+    exp: "The most common location of pancreatic cancer is the head of the pancreas (70%), followed by the body and tail."
+  },
+  {
+    q: "Carcinoma of the head of pancreas causes early jaundice because it:",
+    opts: ["Secretes bilirubin directly","Metastasises to the liver early","Extends into the ampulla of Vater, common bile duct, and duodenum","Causes portal hypertension"],
+    ans: 2,
+    exp: "Carcinoma of the head extends into the ampulla of Vater, common bile duct, and duodenum, producing obstructive biliary symptoms and jaundice early."
+  },
+  {
+    q: "Which is the most common microscopic pattern of pancreatic carcinoma?",
+    opts: ["Squamous cell carcinoma","Well-differentiated adenocarcinoma","Small cell carcinoma","Undifferentiated giant cell carcinoma"],
+    ans: 1,
+    exp: "Well-differentiated adenocarcinoma (both mucinous and non-mucin secreting types) is the most common microscopic pattern. Perineural invasion is commonly present and is diagnostic of malignancy."
+  },
+  {
+    q: "A histological feature that is diagnostic of malignancy in pancreatic carcinoma is:",
+    opts: ["Nuclear pleomorphism","Perineural invasion","Lymphocytic infiltration","Mucin production"],
+    ans: 1,
+    exp: "Perineural invasion is commonly present in well-differentiated pancreatic adenocarcinoma and is considered diagnostic of malignancy."
+  },
+  {
+    q: "Trousseau's syndrome (migratory thrombophlebitis) is associated with:",
+    opts: ["Acute pancreatitis","Pancreatic pseudocyst","Carcinoma of the pancreas","Cystic fibrosis"],
+    ans: 2,
+    exp: "Migratory thrombophlebitis (Trousseau's syndrome) is one of the clinical features associated with carcinoma of the pancreas."
+  },
+  {
+    q: "Which chemical carcinogens are linked to higher incidence of pancreatic cancer?",
+    opts: ["Aflatoxin B1 and nitrosamines","β-naphthylamine and benzidine","Vinyl chloride and benzene","Asbestos and chromium"],
+    ans: 1,
+    exp: "Individuals exposed to β-naphthylamine and benzidine have a higher incidence of carcinoma of the pancreas."
+  },
+  {
+    q: "Which infection has been reported to have an association with pancreatic cancer?",
+    opts: ["Hepatitis C virus","Epstein-Barr virus","Helicobacter pylori","Cytomegalovirus"],
+    ans: 2,
+    exp: "H. pylori infection has been reported to have an association with pancreatic cancer."
+  },
+  {
+    q: "The overall prognosis of pancreatic cancer is:",
+    opts: ["Excellent with surgery","Good with chemotherapy","Favourable with radiotherapy","Dismal"],
+    ans: 3,
+    exp: "The prognosis of pancreatic cancer is dismal, with very poor survival rates even after treatment."
+  },
+  {
+    q: "Adenoacanthoma of the pancreas is composed of:",
+    opts: ["Only glandular elements","Only squamous elements","Glandular carcinoma combined with benign squamous elements","Mucinous and clear cell components"],
+    ans: 2,
+    exp: "Adenoacanthoma consists of glandular carcinoma combined with benign squamous elements and is seen in a proportion of pancreatic cancer cases."
+  },
+  {
+    q: "Obstructive jaundice in pancreatic head carcinoma occurs in approximately what percentage of cases?",
+    opts: ["30%","50%","80%","100%"],
+    ans: 2,
+    exp: "Obstructive jaundice occurs more often and early in approximately 80% of cases with carcinoma of the head of the pancreas."
+  }
+];
+
+let current = 0, correctCount = 0, wrongCount = 0, score = 0;
+let timerInterval, seconds = 0, answered = false;
+
+function startQuiz() {
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('quiz-screen').style.display = 'block';
+  timerInterval = setInterval(tickTimer, 1000);
+  renderQuestion();
+}
+
+function tickTimer() {
+  seconds++;
+  const m = String(Math.floor(seconds/60)).padStart(2,'0');
+  const s = String(seconds%60).padStart(2,'0');
+  document.getElementById('timer-val').textContent = m+':'+s;
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[current];
+  const total = questions.length;
+  const pct = Math.round((current/total)*100);
+  document.getElementById('prog-text').textContent = `السؤال ${current+1} من ${total}`;
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('prog-fill').style.width = pct+'%';
+
+  const letters = ['A','B','C','D'];
+  let optsHTML = q.opts.map((o,i) => `
+    <button class="opt-btn" onclick="checkAnswer(${i})" id="opt-${i}">
+      <span class="opt-letter">${letters[i]}</span>
+      <span>${o}</span>
+    </button>`).join('');
+
+  document.getElementById('quiz-screen').innerHTML = `
+    <div class="q-card">
+      <div class="q-num">QUESTION ${current+1} / ${total}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optsHTML}</div>
+      <div class="explanation" id="exp-box">
+        <strong>📖 الشرح:</strong>${q.exp}
+      </div>
+    </div>
+    <div class="next-wrap" id="next-wrap">
+      <button class="btn-next" onclick="nextQuestion()">
+        ${current+1 < total ? 'السؤال التالي ←' : 'عرض النتيجة 🏁'}
+      </button>
+    </div>`;
+}
+
+function checkAnswer(i) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach(b => b.disabled = true);
+
+  if (i === q.ans) {
+    btns[i].classList.add('correct');
+    correctCount++; score += 2;
+    showToast('✅ إجابة صحيحة! +2 نقطة', 'correct-toast');
+  } else {
+    btns[i].classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+    wrongCount++;
+    document.getElementById('exp-box').classList.add('show');
+    showToast('❌ إجابة خاطئة', 'wrong-toast');
+  }
+
+  document.getElementById('correct-val').textContent = correctCount;
+  document.getElementById('wrong-val').textContent = wrongCount;
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('next-wrap').classList.add('show');
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) { showResults(); return; }
+  renderQuestion();
+}
+
+function showResults() {
+  clearInterval(timerInterval);
+  document.getElementById('stats-bar').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'none';
+  const rs = document.getElementById('result-screen');
+  rs.classList.add('show');
+  const pct = Math.round((correctCount/questions.length)*100);
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-correct').textContent = correctCount;
+  document.getElementById('res-wrong').textContent = wrongCount;
+  document.getElementById('res-pct').textContent = pct+'%';
+  const m = String(Math.floor(seconds/60)).padStart(2,'0');
+  const s = String(seconds%60).padStart(2,'0');
+  document.getElementById('res-time').textContent = m+':'+s;
+  let title, sub;
+  if (pct >= 90) { title = '🏆 ممتاز!'; sub = 'أداء رائع، أنت متمكن من هذه المحاضرة!'; }
+  else if (pct >= 75) { title = '🥇 جيد جداً!'; sub = 'إجاباتك في الغالب صحيحة، راجع ما أخطأت به.'; }
+  else if (pct >= 60) { title = '🥈 جيد'; sub = 'يمكنك تحسين أدائك بمراجعة المحاضرة مرة أخرى.'; }
+  else { title = '📚 يحتاج مراجعة'; sub = 'راجع المحاضرة مرة أخرى وأعد الاختبار.'; }
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-sub').textContent = sub;
+}
+
+function restartQuiz() {
+  current = 0; correctCount = 0; wrongCount = 0; score = 0; seconds = 0; answered = false;
+  clearInterval(timerInterval);
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('timer-val').textContent = '00:00';
+  document.getElementById('correct-val').textContent = '0';
+  document.getElementById('wrong-val').textContent = '0';
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('quiz-screen').style.display = 'block';
+  timerInterval = setInterval(tickTimer, 1000);
+  renderQuestion();
+}
+
+let toastTimeout;
+function showToast(msg, cls) {
+  const t = document.getElementById('toast');
+  t.className = 'toast ' + cls + ' show';
+  t.textContent = msg;
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => { t.className = 'toast'; }, 1800);
+}
+</script>
+</body>
+</html>

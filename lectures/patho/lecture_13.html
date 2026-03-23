@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة الثالثة عشر - Diseases of the Lymphatic System</title>
+<style>
+  /* Offline fallback fonts */
+  @font-face { font-family: 'Tajawal'; src: local('Tajawal'), local('Arial'), local('Segoe UI'); }
+  @font-face { font-family: 'Roboto'; src: local('Roboto'), local('Arial'), local('Segoe UI'); }
+</style>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #1e2a42;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #22c55e;
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3f5e;
+    --glow: rgba(59,130,246,0.25);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(96,165,250,0.05) 0%, transparent 50%);
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f1729 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  header .uni-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  header h1 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--accent2);
+    line-height: 1.4;
+  }
+  header h2 {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  header .tg-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--accent2);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--accent);
+    padding: 4px 14px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+  header .tg-link:hover { background: var(--accent); color: #fff; }
+  header .tg-link span { color: var(--text-muted); font-weight: 400; font-size: 12px; margin-right: 6px; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .stat-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+  .stat-value { font-size: 20px; font-weight: 800; color: var(--accent2); font-family: 'Roboto', sans-serif; }
+  .stat-value.timer-val { color: var(--warning); }
+  .stat-value.score-val { color: var(--success); }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    background: var(--card);
+    padding: 8px 16px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+  .progress-track {
+    background: #0f1729;
+    border-radius: 8px;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 8px var(--glow);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    animation: slideIn 0.35s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .q-number {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .q-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 22px;
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    background: #0f1729;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 18px;
+    color: var(--text);
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-align: left;
+    direction: ltr;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+    transform: translateX(-3px);
+  }
+  .option-btn .opt-letter {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--text-muted);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option-btn:hover:not(:disabled) .opt-letter {
+    background: var(--accent);
+    color: #fff;
+  }
+  .option-btn.correct {
+    border-color: var(--success);
+    background: rgba(34,197,94,0.1);
+  }
+  .option-btn.correct .opt-letter { background: var(--success); color: #fff; }
+  .option-btn.wrong {
+    border-color: var(--error);
+    background: rgba(239,68,68,0.1);
+  }
+  .option-btn.wrong .opt-letter { background: var(--error); color: #fff; }
+  .option-btn:disabled { cursor: not-allowed; opacity: 0.85; }
+  .option-btn .check-icon { margin-right: auto; font-size: 18px; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 16px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: var(--accent2);
+    direction: ltr;
+    text-align: left;
+    line-height: 1.7;
+    animation: fadeIn 0.3s ease;
+  }
+  .explanation.wrong-exp {
+    border-color: rgba(239,68,68,0.3);
+    background: rgba(239,68,68,0.06);
+    color: #fca5a5;
+  }
+  .explanation strong { color: var(--accent2); }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  /* NAV BUTTONS */
+  .nav-btns {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 11px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+  .btn-secondary {
+    background: var(--card2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { color: var(--text); border-color: var(--accent); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 999;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.correct { background: var(--success); color: #fff; }
+  .toast.wrong { background: var(--error); color: #fff; }
+
+  /* RESULT SCREEN */
+  .result-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 24px;
+    animation: slideIn 0.4s ease;
+  }
+  .result-screen.show { display: block; }
+  .result-circle {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Roboto', sans-serif;
+  }
+  .result-circle .big-score { font-size: 36px; font-weight: 800; }
+  .result-circle .out-of { font-size: 14px; color: var(--text-muted); }
+  .result-title { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+  .result-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6; }
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+  .rs-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    min-width: 100px;
+  }
+  .rs-val { font-size: 24px; font-weight: 800; font-family: 'Roboto', sans-serif; }
+  .rs-lbl { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .grade-a .result-circle { border: 4px solid var(--success); }
+  .grade-a .big-score { color: var(--success); }
+  .grade-b .result-circle { border: 4px solid var(--accent); }
+  .grade-b .big-score { color: var(--accent); }
+  .grade-c .result-circle { border: 4px solid var(--warning); }
+  .grade-c .big-score { color: var(--warning); }
+  .grade-d .result-circle { border: 4px solid var(--error); }
+  .grade-d .big-score { color: var(--error); }
+
+  /* FOOTER */
+  footer {
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  footer a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  footer a:hover { color: #fff; }
+
+  /* INTRO SCREEN */
+  .intro-screen {
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .intro-icon { font-size: 60px; margin-bottom: 20px; }
+  .intro-screen h2 { font-size: 22px; font-weight: 800; color: var(--accent2); margin-bottom: 10px; }
+  .intro-screen p { color: var(--text-muted); font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
+  .intro-badges {
+    display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 28px;
+  }
+  .badge {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--accent2);
+  }
+
+  @media (max-width: 520px) {
+    .q-text { font-size: 15px; }
+    .option-btn { font-size: 14px; padding: 11px 14px; }
+    header h1 { font-size: 16px; }
+    .stats-bar { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="uni-label">جامعة الهادي • قسم تقنيات الإشعة • المرحلة الثالثة</div>
+  <h1>Diseases of the Lymphatic System</h1>
+  <h2>المحاضرة الثالثة عشر</h2>
+  <a href="https://t.me/mulimcq" target="_blank" class="tg-link">
+    <span>اضغط هنا للحصول على اختبارات باقي المحاضرات —</span> محمد صبار
+  </a>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="statsBar" style="display:none">
+  <div class="stat-item">
+    <span class="stat-label">السؤال</span>
+    <span class="stat-value" id="qNum">1/45</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">النقاط</span>
+    <span class="stat-value score-val" id="scoreDisp">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">الوقت</span>
+    <span class="stat-value timer-val" id="timerDisp">00:00</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">صحيح</span>
+    <span class="stat-value" style="color:var(--success)" id="correctDisp">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">خطأ</span>
+    <span class="stat-value" style="color:var(--error)" id="wrongDisp">0</span>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap" id="progressWrap" style="display:none">
+  <div class="progress-info">
+    <span id="progText">التقدم: 0%</span>
+    <span id="progFrac">0 / 45</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <!-- INTRO SCREEN -->
+  <div class="intro-screen" id="introScreen">
+    <div class="intro-icon">🧬</div>
+    <h2>اختبار المحاضرة الثالثة عشر</h2>
+    <p>
+      يحتوي هذا الاختبار على <strong>45 سؤالاً</strong> متعدد الخيارات<br>
+      يغطي كامل محتوى محاضرة <strong>Diseases of the Lymphatic System</strong><br>
+      ستظهر لك نتيجتك الفورية مع شرح الإجابات الخاطئة
+    </p>
+    <div class="intro-badges">
+      <span class="badge">⏱ عداد الوقت</span>
+      <span class="badge">📊 شريط التقدم</span>
+      <span class="badge">💡 شرح الإجابات</span>
+      <span class="badge">🏆 45 سؤال</span>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()" style="font-size:18px;padding:14px 48px;">
+      ابدأ الاختبار 🚀
+    </button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quizScreen" style="display:none">
+    <div class="q-card" id="qCard">
+      <div class="q-number" id="qNumLabel">السؤال 1 من 45</div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="optionsDiv"></div>
+      <div class="explanation" id="expDiv" style="display:none"></div>
+      <div class="nav-btns">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQ()" style="display:none">⟶ السابق</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQ()" style="display:none">التالي ⟵</button>
+        <button class="btn btn-primary" id="finishBtn" onclick="showResult()" style="display:none;background:var(--success)">إنهاء الاختبار ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="result-screen" id="resultScreen">
+    <div id="resultGradeDiv">
+      <div class="result-circle" id="resultCircle">
+        <span class="big-score" id="bigScore">0</span>
+        <span class="out-of" id="outOf">/ 45</span>
+      </div>
+    </div>
+    <div class="result-title" id="resultTitle">نتيجتك</div>
+    <div class="result-sub" id="resultSub"></div>
+    <div class="result-stats">
+      <div class="rs-item">
+        <div class="rs-val" style="color:var(--success)" id="rsCorrect">0</div>
+        <div class="rs-lbl">إجابات صحيحة</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val" style="color:var(--error)" id="rsWrong">0</div>
+        <div class="rs-lbl">إجابات خاطئة</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val" style="color:var(--warning)" id="rsTime">0:00</div>
+        <div class="rs-lbl">الوقت المستغرق</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val" style="color:var(--accent2)" id="rsPercent">0%</div>
+        <div class="rs-lbl">نسبة النجاح</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="restartQuiz()" style="margin-left:10px">إعادة الاختبار 🔄</button>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  من إنشاء محمد صبار |
+  <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+  — اضغط هنا للحصول على اختبارات باقي المحاضرات
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "Lymph nodes are organized collections of lymphocytes, dendritic cells, and macrophages located along:",
+    opts: ["Blood vessels", "Lymphatic channels throughout the body", "Nerve pathways", "Bone marrow sinusoids"],
+    ans: 1,
+    exp: "Lymph nodes are encapsulated, organized collections of lymphocytes, dendritic cells, and macrophages located along lymphatic channels throughout the body."
+  },
+  {
+    q: "Which type of cancer spread is MORE typical of carcinomas?",
+    opts: ["Hematogenous spread", "Lymphatic spread", "Direct invasion", "Perineural spread"],
+    ans: 1,
+    exp: "Lymphatic spread is more typical of carcinomas, whereas hematogenous spread is favored by sarcomas."
+  },
+  {
+    q: "Which type of cancer spread is favored by sarcomas?",
+    opts: ["Lymphatic spread", "Transcoelomic spread", "Hematogenous spread", "Implantation spread"],
+    ans: 2,
+    exp: "Hematogenous spread is favored by sarcomas, while lymphatic spread is more typical of carcinomas."
+  },
+  {
+    q: "The pattern of lymph node involvement in cancer depends on:",
+    opts: ["The size of the primary tumor only", "The patient's age and immune status", "The site of the primary neoplasm and pathways of local lymphatic drainage", "The histological grade of the tumor"],
+    ans: 2,
+    exp: "The pattern of lymph node involvement depends on the site of the primary neoplasm and the pathways of local lymphatic drainage."
+  },
+  {
+    q: "Lung carcinomas arising in the respiratory passages first metastasize to:",
+    opts: ["Axillary lymph nodes", "Supraclavicular lymph nodes", "Regional bronchial lymph nodes", "Inguinal lymph nodes"],
+    ans: 2,
+    exp: "Lung carcinomas metastasize first to the regional bronchial lymph nodes and then to the tracheobronchial and hilar nodes."
+  },
+  {
+    q: "Carcinoma of the breast most commonly arises in:",
+    opts: ["Lower inner quadrant", "Lower outer quadrant", "Upper outer quadrant", "Retroareolar region"],
+    ans: 2,
+    exp: "Carcinoma of the breast usually arises in the upper outer quadrant and spreads first to the axillary nodes."
+  },
+  {
+    q: "What is a 'sentinel lymph node'?",
+    opts: ["The largest lymph node in a chain", "The first regional lymph node that receives lymph flow from a primary tumor", "The most distant lymph node from a tumor", "A lymph node containing Reed-Sternberg cells"],
+    ans: 1,
+    exp: "A 'sentinel lymph node' is the first regional lymph node that receives lymph flow from a primary tumor."
+  },
+  {
+    q: "Enlargement of lymph nodes near a primary neoplasm:",
+    opts: ["Always indicates cancerous involvement", "Always indicates benign disease", "Does not always indicate cancerous involvement — reactive hyperplasia can occur", "Is a definitive sign of skip metastases"],
+    ans: 2,
+    exp: "Enlargement of nodes near a primary neoplasm does not always indicate cancerous involvement; necrotic cells and tumor antigens can evoke reactive hyperplasia (lymphadenitis). Biopsy is necessary to determine involvement."
+  },
+  {
+    q: "What is the term for cancer cells that bypass immediately proximal lymph nodes and are trapped in subsequent nodes?",
+    opts: ["Sentinel metastases", "Skip metastases", "Hematogenous metastases", "Retrograde metastases"],
+    ans: 1,
+    exp: "When cancer cells travel in lymphatic channels through the immediately proximal nodes to be trapped in subsequent nodes, this is called 'skip metastases.'"
+  },
+  {
+    q: "Reactive lymphadenitis (lymphadenopathy) can be caused by:",
+    opts: ["Only bacterial infections", "Any immune response against foreign antigens", "Only viral infections", "Only autoimmune conditions"],
+    ans: 1,
+    exp: "Any immune response against foreign antigens can lead to lymph node enlargement (lymphadenopathy). Infections causing lymphadenitis are varied and numerous."
+  },
+  {
+    q: "Acute nonspecific lymphadenitis may be:",
+    opts: ["Isolated to nodes draining a local infection only", "Generalized in systemic infectious/inflammatory conditions only", "Either isolated to a local group of nodes OR generalized in systemic conditions", "Only found in lymph nodes of the neck"],
+    ans: 2,
+    exp: "Acute nonspecific lymphadenitis may be isolated to a group of nodes draining a local infection, or may be generalized as in systemic infectious and inflammatory conditions."
+  },
+  {
+    q: "Chronic nonspecific lymphadenitis can assume which of the following patterns?",
+    opts: ["Follicular hyperplasia, paracortical hyperplasia, or sinus histiocytosis", "Reed-Sternberg cell proliferation", "Granuloma formation only", "Plasma cell infiltration only"],
+    ans: 0,
+    exp: "Chronic nonspecific lymphadenitis can assume one of three patterns: follicular hyperplasia, paracortical hyperplasia, or sinus histiocytosis."
+  },
+  {
+    q: "Cat-Scratch Disease is caused by:",
+    opts: ["Staphylococcus aureus", "Bartonella henselae", "Streptococcus pyogenes", "Mycobacterium tuberculosis"],
+    ans: 1,
+    exp: "Cat-scratch disease is a self-limited lymphadenitis caused by the bacterium Bartonella henselae."
+  },
+  {
+    q: "Cat-Scratch Disease is primarily a disease of:",
+    opts: ["Elderly people over 65 years", "Childhood; 90% of patients are younger than 18 years", "Middle-aged adults 40–60 years", "Immunocompromised adults"],
+    ans: 1,
+    exp: "Cat-scratch disease is primarily a disease of childhood; 90% of the patients are younger than 18 years of age."
+  },
+  {
+    q: "In Cat-Scratch Disease, nodal enlargement appears approximately:",
+    opts: ["2 days after injury", "2 weeks after a feline scratch or injury", "2 months after exposure", "Immediately after the scratch"],
+    ans: 1,
+    exp: "The nodal enlargement appears approximately 2 weeks after a feline scratch or, less commonly, after a splinter or thorn injury."
+  },
+  {
+    q: "In Cat-Scratch Disease, lymph node enlargement most frequently occurs in:",
+    opts: ["Inguinal and femoral nodes", "Mediastinal and hilar nodes", "Axilla and neck", "Mesenteric nodes"],
+    ans: 2,
+    exp: "Cat-scratch disease manifests with regional lymphadenopathy, most frequently in the axilla and neck."
+  },
+  {
+    q: "In most patients with Cat-Scratch Disease, lymph node enlargement regresses after:",
+    opts: ["2–4 weeks", "2–4 months", "6–12 months", "It never regresses without antibiotics"],
+    ans: 1,
+    exp: "In most patients the lymph node enlargement regresses during a period of 2 to 4 months."
+  },
+  {
+    q: "Rare complications of Cat-Scratch Disease include all of the following EXCEPT:",
+    opts: ["Encephalitis", "Osteomyelitis", "Thrombocytopenia", "Reed-Sternberg cell formation"],
+    ans: 3,
+    exp: "Rarely, encephalitis, osteomyelitis, or thrombocytopenia may develop in Cat-Scratch Disease. Reed-Sternberg cells are associated with Hodgkin's Disease, not Cat-Scratch Disease."
+  },
+  {
+    q: "Hodgkin's Disease (HD) primarily arises within:",
+    opts: ["The spleen", "The bone marrow", "The lymph nodes", "The liver"],
+    ans: 2,
+    exp: "Hodgkin's disease primarily arises within the lymph nodes and involves the extranodal sites secondarily."
+  },
+  {
+    q: "The incidence of Hodgkin's Disease has bimodal peaks at:",
+    opts: ["5–10 years and 30–40 years", "15–35 years and after the 5th decade", "20–25 years and 70–80 years", "10–15 years and 50–60 years"],
+    ans: 1,
+    exp: "The incidence of Hodgkin's disease has bimodal peaks — one in young adults between age 15 and 35 years, and the other peak after the 5th decade of life."
+  },
+  {
+    q: "How many subtypes does the Rye classification of Hodgkin's Disease divide it into?",
+    opts: ["2", "3", "4", "5"],
+    ans: 2,
+    exp: "The Rye classification divides HD into 4 subtypes: lymphocyte-predominance, nodular-sclerosis, mixed-cellularity, and lymphocyte-depletion."
+  },
+  {
+    q: "Which of the following is NOT a subtype in the Rye classification of Hodgkin's Disease?",
+    opts: ["Lymphocyte-predominance type", "Nodular-sclerosis type", "Follicular type", "Mixed-cellularity type"],
+    ans: 2,
+    exp: "The Rye classification includes: lymphocyte-predominance, nodular-sclerosis, mixed-cellularity, and lymphocyte-depletion types. 'Follicular type' belongs to Non-Hodgkin's Lymphoma."
+  },
+  {
+    q: "The WHO classification of lymphoid neoplasms divides Hodgkin's Disease into how many main groups?",
+    opts: ["2", "3", "4", "5"],
+    ans: 0,
+    exp: "The WHO classification divides HD into 2 main groups: Nodular lymphocyte-predominant HD and Classic HD."
+  },
+  {
+    q: "What is central to the diagnosis of Hodgkin's Disease?",
+    opts: ["Identification of lymphoblasts", "Identification of Reed-Sternberg cells", "Presence of granulomas", "Elevated ESR alone"],
+    ans: 1,
+    exp: "Central to the diagnosis of HD is the essential identification of Reed-Sternberg (RS) cells, though this is not the sole criterion."
+  },
+  {
+    q: "Reed-Sternberg cells can also occur (uncommonly) in:",
+    opts: ["Cat-scratch disease and tuberculosis", "Infectious mononucleosis and other forms of lymphomas", "Follicular lymphoma only", "Acute lymphoblastic leukemia exclusively"],
+    ans: 1,
+    exp: "Although RS cell identification is central to HD diagnosis, uncommonly similar cells can occur in infectious mononucleosis and other forms of lymphomas."
+  },
+  {
+    q: "In the gross appearance of advanced Hodgkin's Disease, lymph nodes:",
+    opts: ["Remain discrete and separate", "Form a large matted mass due to infiltration into surrounding connective tissue", "Become calcified", "Completely disappear"],
+    ans: 1,
+    exp: "Initially lymph nodes are discrete, but later they form a large matted mass due to infiltration into the surrounding connective tissue."
+  },
+  {
+    q: "In Hodgkin's Disease, which histologic subtype is equally common in both sexes (NOT more common in males)?",
+    opts: ["Lymphocyte-predominance type", "Mixed-cellularity type", "Nodular sclerosis variety", "Lymphocyte-depletion type"],
+    ans: 2,
+    exp: "All histologic subtypes of HD, EXCEPT the nodular sclerosis variety, are more common in males."
+  },
+  {
+    q: "The most common initial presentation of Hodgkin's Disease is:",
+    opts: ["Painful, fixed lymphadenopathy", "Painless, movable and firm lymphadenopathy", "Hepatomegaly", "Bone pain"],
+    ans: 1,
+    exp: "Most commonly, patients present with painless, movable and firm lymphadenopathy."
+  },
+  {
+    q: "Approximately what proportion of Hodgkin's Disease patients develop splenomegaly during the course of disease?",
+    opts: ["10%", "25%", "Half (50%)", "75%"],
+    ans: 2,
+    exp: "Approximately half the patients develop splenomegaly during the course of the disease. Liver enlargement may also occur."
+  },
+  {
+    q: "Constitutional symptoms occur in what percentage of Hodgkin's Disease patients?",
+    opts: ["5–10%", "10–15%", "25–40%", "60–70%"],
+    ans: 2,
+    exp: "Constitutional symptoms are present in 25–40% of Hodgkin's Disease patients."
+  },
+  {
+    q: "Which hematological finding is described in Hodgkin's Disease?",
+    opts: ["Macrocytic anemia", "Moderate normocytic normochromic anemia", "Severe hemolytic anemia", "Sickle cell anemia"],
+    ans: 1,
+    exp: "Laboratory findings in HD include moderate, normocytic and normochromic anaemia."
+  },
+  {
+    q: "In Hodgkin's Disease, serum iron and TIBC (Total Iron-Binding Capacity) are:",
+    opts: ["Both elevated", "Both low", "Iron elevated, TIBC low", "Iron low, TIBC elevated"],
+    ans: 1,
+    exp: "In Hodgkin's Disease, serum iron and TIBC are both low."
+  },
+  {
+    q: "ESR (Erythrocyte Sedimentation Rate) in Hodgkin's Disease is:",
+    opts: ["Normal", "Reduced", "Invariably elevated", "Variable with no consistent pattern"],
+    ans: 2,
+    exp: "ESR is invariably elevated in Hodgkin's Disease."
+  },
+  {
+    q: "With appropriate treatment, the overall 5-year survival rate for Stage I and II-A Hodgkin's Disease is:",
+    opts: ["About 50%", "About 70%", "About 80%", "As high as about 100%"],
+    ans: 3,
+    exp: "With appropriate treatment, the overall 5-year survival rate for stage I and II-A is as high as about 100%, while advanced stage may have up to 50% 5-year survival."
+  },
+  {
+    q: "Which subtype of Hodgkin's Disease tends to have localized disease and excellent prognosis?",
+    opts: ["Mixed-cellularity type", "Lymphocyte-depletion type", "Lymphocyte-predominance type", "Classic HD"],
+    ans: 2,
+    exp: "Patients with lymphocyte-predominance type of HD tend to have localized form of the disease and have excellent prognosis. Nodular sclerosis variety also has very good prognosis."
+  },
+  {
+    q: "Non-Hodgkin's Lymphomas (NHLs) are far more common than HD, comprising what percentage?",
+    opts: ["8%", "25%", "62%", "80%"],
+    ans: 2,
+    exp: "NHLs have several types and are far more common (62%) than HD (8%)."
+  },
+  {
+    q: "Acute Lymphoblastic Leukemia (ALL) originating from precursor B or T cells is the most common form of cancer in:",
+    opts: ["Adults over 60 years", "Children under 4 years of age", "Teenagers between 14–18 years", "Immunocompromised adults"],
+    ans: 1,
+    exp: "Lymphoid malignancy originating from precursor B or T cell is the most common form of cancer in children under 4 years of age."
+  },
+  {
+    q: "Precursor B and T-cell ALL/lymphoma together constitute what percentage of all lymphoid malignancies?",
+    opts: ["4%", "10%", "20%", "30%"],
+    ans: 0,
+    exp: "Precursor B and T-cell ALL/lymphoma together constitute 4% of all lymphoid malignancies."
+  },
+  {
+    q: "Precursor T-cell lymphoma often presents as:",
+    opts: ["Painless cervical lymphadenopathy only", "Mediastinal mass and pleural effusion", "Isolated splenomegaly", "Skin rash and peripheral eosinophilia"],
+    ans: 1,
+    exp: "Since precursor T-cells differentiate in the thymus, this tumor often presents as mediastinal mass and pleural effusion and progresses rapidly to develop leukemia."
+  },
+  {
+    q: "Compared to B-cell ALL/lymphoma, precursor T-cell lymphoma-leukemia is:",
+    opts: ["Less aggressive", "Equally aggressive", "More aggressive", "Has better prognosis"],
+    ans: 2,
+    exp: "Precursor T-cell lymphoma-leukemia is more aggressive than its B-cell counterpart."
+  },
+  {
+    q: "In the peripheral blood of ALL patients, what is typically found?",
+    opts: ["Polycythemia and thrombocytosis", "Anaemia and thrombocytopenia", "Leukopenia only", "Normal blood count"],
+    ans: 1,
+    exp: "Blood examination in ALL generally shows anaemia and thrombocytopenia."
+  },
+  {
+    q: "On bone marrow examination in ALL, malignant undifferentiated cells constitute:",
+    opts: ["1–5% of cells", "5–10% of cells", "20–95% of cells", "100% of cells exclusively"],
+    ans: 2,
+    exp: "Bone marrow examination shows 20–95% malignant undifferentiated cells of precursor B or T cell origin. Megakaryocytes are usually reduced or absent."
+  },
+  {
+    q: "The treatment plan for children with pre-B or pre-T cell ALL involves:",
+    opts: ["Surgery alone", "Radiation therapy only", "Intensive remission induction with combination therapy", "Watchful waiting"],
+    ans: 2,
+    exp: "Treatment plan for children with pre-B or pre-T cell ALL is intensive remission induction with combination therapy."
+  },
+  {
+    q: "Follicular Lymphoma constitutes approximately what percentage of Non-Hodgkin's Lymphomas in adults in the United States?",
+    opts: ["10%", "20%", "30%", "50%"],
+    ans: 2,
+    exp: "Follicular Lymphoma constitutes approximately 30% of NHLs in adults in the United States."
+  },
+  {
+    q: "In Follicular Lymphoma, the predominant neoplastic cells are called centrocytes. These cells have:",
+    opts: ["Round nuclei with prominent nucleoli", "Angular 'cleaved' nuclei with prominent indentations and linear infoldings", "Bilobed nuclei resembling owl eyes", "Convoluted nuclei with coarse chromatin"],
+    ans: 1,
+    exp: "Centrocytes are cells slightly larger than resting lymphocytes that have angular 'cleaved' nuclei with prominent indentations and linear infoldings."
+  },
+  {
+    q: "Follicular Lymphoma mainly occurs in adults older than 50 years. It usually manifests as:",
+    opts: ["Painful localized lymphadenopathy", "Painless, generalized lymphadenopathy", "Mediastinal mass only", "Isolated hepatosplenomegaly"],
+    ans: 1,
+    exp: "Follicular lymphoma mainly occurs in adults older than 50 years and affects males and females equally. It usually manifests as painless, generalized lymphadenopathy."
+  }
+];
+
+let current = 0;
+let score = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let answered = new Array(45).fill(null);
+let timerInterval = null;
+let seconds = 0;
+
+function startQuiz() {
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('statsBar').style.display = 'flex';
+  document.getElementById('progressWrap').style.display = 'block';
+  startTimer();
+  loadQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    document.getElementById('timerDisp').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function loadQuestion() {
+  const q = questions[current];
+  document.getElementById('qNumLabel').textContent = `السؤال ${current+1} من 45`;
+  document.getElementById('qNum').textContent = `${current+1}/45`;
+  document.getElementById('qText').textContent = q.q;
+
+  const opts = document.getElementById('optionsDiv');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}<span class="check-icon" id="ci-${i}"></span>`;
+    btn.onclick = () => selectAnswer(i);
+    if (answered[current] !== null) {
+      btn.disabled = true;
+      if (i === q.ans) { btn.classList.add('correct'); btn.querySelector('.check-icon').textContent = '✓'; }
+      else if (i === answered[current]) { btn.classList.add('wrong'); btn.querySelector('.check-icon').textContent = '✗'; }
+    }
+    opts.appendChild(btn);
+  });
+
+  const expDiv = document.getElementById('expDiv');
+  if (answered[current] !== null) {
+    const isCorrect = answered[current] === q.ans;
+    expDiv.style.display = 'block';
+    expDiv.className = 'explanation' + (isCorrect ? '' : ' wrong-exp');
+    expDiv.innerHTML = `<strong>${isCorrect ? '✅ صحيح!' : '❌ خطأ!'}</strong> ${q.exp}`;
+  } else {
+    expDiv.style.display = 'none';
+  }
+
+  updateNav();
+  updateProgress();
+}
+
+function selectAnswer(i) {
+  if (answered[current] !== null) return;
+  answered[current] = i;
+  const q = questions[current];
+  const isCorrect = i === q.ans;
+
+  if (isCorrect) {
+    score++;
+    correctCount++;
+  } else {
+    wrongCount++;
+  }
+
+  document.getElementById('scoreDisp').textContent = score;
+  document.getElementById('correctDisp').textContent = correctCount;
+  document.getElementById('wrongDisp').textContent = wrongCount;
+
+  showToast(isCorrect);
+  loadQuestion();
+}
+
+function showToast(correct) {
+  const t = document.getElementById('toast');
+  t.textContent = correct ? '✅ إجابة صحيحة!' : '❌ إجابة خاطئة!';
+  t.className = 'toast show ' + (correct ? 'correct' : 'wrong');
+  setTimeout(() => { t.className = 'toast'; }, 2000);
+}
+
+function updateNav() {
+  document.getElementById('prevBtn').style.display = current > 0 ? 'block' : 'none';
+  const nextBtn = document.getElementById('nextBtn');
+  const finishBtn = document.getElementById('finishBtn');
+  if (current === questions.length - 1) {
+    nextBtn.style.display = 'none';
+    finishBtn.style.display = answered[current] !== null ? 'block' : 'none';
+  } else {
+    finishBtn.style.display = 'none';
+    nextBtn.style.display = answered[current] !== null ? 'block' : 'none';
+  }
+}
+
+function nextQ() {
+  if (current < questions.length - 1) { current++; loadQuestion(); }
+}
+
+function prevQ() {
+  if (current > 0) { current--; loadQuestion(); }
+}
+
+function updateProgress() {
+  const done = answered.filter(a => a !== null).length;
+  const pct = Math.round((done/45)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progText').textContent = `التقدم: ${pct}%`;
+  document.getElementById('progFrac').textContent = `${done} / 45`;
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('statsBar').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+
+  const resultScreen = document.getElementById('resultScreen');
+  resultScreen.classList.add('show');
+
+  const pct = Math.round((score/45)*100);
+  document.getElementById('bigScore').textContent = score;
+  document.getElementById('rsCorrect').textContent = correctCount;
+  document.getElementById('rsWrong').textContent = wrongCount;
+  const m = String(Math.floor(seconds/60)).padStart(2,'0');
+  const s = String(seconds%60).padStart(2,'0');
+  document.getElementById('rsTime').textContent = `${m}:${s}`;
+  document.getElementById('rsPercent').textContent = pct + '%';
+
+  let gradeClass, title, sub;
+  if (pct >= 90) {
+    gradeClass = 'grade-a'; title = '🏆 ممتاز!'; sub = `حصلت على ${score} من 45 سؤالاً. أداء رائع جداً!`;
+  } else if (pct >= 70) {
+    gradeClass = 'grade-b'; title = '👍 جيد جداً!'; sub = `حصلت على ${score} من 45 سؤالاً. أداء جيد!`;
+  } else if (pct >= 50) {
+    gradeClass = 'grade-c'; title = '📚 بحاجة لمراجعة'; sub = `حصلت على ${score} من 45 سؤالاً. راجع المحاضرة مرة أخرى.`;
+  } else {
+    gradeClass = 'grade-d'; title = '💪 حاول مجدداً'; sub = `حصلت على ${score} من 45 سؤالاً. راجع المحاضرة بعناية.`;
+  }
+
+  document.getElementById('resultGradeDiv').className = gradeClass;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent = sub;
+}
+
+function restartQuiz() {
+  current = 0; score = 0; correctCount = 0; wrongCount = 0;
+  answered = new Array(45).fill(null);
+  seconds = 0;
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('scoreDisp').textContent = '0';
+  document.getElementById('correctDisp').textContent = '0';
+  document.getElementById('wrongDisp').textContent = '0';
+  document.getElementById('timerDisp').textContent = '00:00';
+  document.getElementById('statsBar').style.display = 'flex';
+  document.getElementById('progressWrap').style.display = 'block';
+  document.getElementById('quizScreen').style.display = 'block';
+  startTimer();
+  loadQuestion();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة العاشرة - Lower Urinary Tract Diseases</title>
+<style>
+  /* Offline fallback fonts */
+  @font-face { font-family: 'Tajawal'; src: local('Tajawal'), local('Arial'), local('Segoe UI'); }
+  @font-face { font-family: 'Roboto'; src: local('Roboto'), local('Arial'), local('Segoe UI'); }
+</style>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #212d45;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #22c55e;
+    --error: #ef4444;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3f5e;
+    --glow: rgba(59,130,246,0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(59,130,246,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 90%, rgba(96,165,250,0.05) 0%, transparent 60%);
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .header-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  header h1 {
+    font-size: clamp(16px, 3vw, 22px);
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  header h1 span {
+    font-family: 'Roboto', sans-serif;
+    color: var(--accent2);
+    font-size: clamp(13px, 2.5vw, 17px);
+    display: block;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .header-link {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .header-link a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s;
+  }
+  .header-link a:hover { color: #fff; text-decoration: underline; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 14px 20px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .stat-chip .icon { font-size: 16px; }
+  #score-val { color: var(--accent2); }
+  #timer-val { color: #facc15; font-family: 'Roboto', monospace; }
+  #q-val { color: var(--success); }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 10px 20px 0;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+  .progress-bar-bg {
+    height: 7px;
+    background: var(--card);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 860px;
+    margin: 24px auto;
+    padding: 0 16px 80px;
+  }
+
+  /* START SCREEN */
+  #start-screen {
+    text-align: center;
+    padding: 50px 20px;
+  }
+  .start-icon { font-size: 60px; margin-bottom: 20px; }
+  #start-screen h2 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+  #start-screen p { color: var(--text-muted); font-size: 15px; margin-bottom: 30px; line-height: 1.7; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+  }
+  .info-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 12px;
+    text-align: center;
+  }
+  .info-box .num { font-size: 28px; font-weight: 800; color: var(--accent2); }
+  .info-box .lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  /* QUIZ SCREEN */
+  #quiz-screen { display: none; }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 24px 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 18px 18px 0 0;
+  }
+  .q-number {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .q-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.65;
+    margin-bottom: 22px;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 11px; }
+  .option-btn {
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: all 0.2s;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn:hover:not(.disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+    transform: translateX(-3px);
+    box-shadow: 0 0 0 2px var(--glow);
+  }
+  .option-letter {
+    min-width: 28px; height: 28px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+    color: var(--accent2);
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-family: 'Roboto', sans-serif;
+  }
+  .option-btn.correct {
+    border-color: var(--success) !important;
+    background: rgba(34,197,94,0.12) !important;
+  }
+  .option-btn.correct .option-letter {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+  }
+  .option-btn.wrong {
+    border-color: var(--error) !important;
+    background: rgba(239,68,68,0.10) !important;
+  }
+  .option-btn.wrong .option-letter {
+    background: var(--error);
+    border-color: var(--error);
+    color: #fff;
+  }
+  .option-btn.disabled { cursor: default; pointer-events: none; }
+
+  /* EXPLANATION */
+  .explanation-box {
+    display: none;
+    background: rgba(59,130,246,0.07);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-top: 16px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    animation: fadeIn 0.3s ease;
+  }
+  .explanation-box.show { display: block; }
+  .explanation-box strong { color: var(--accent2); display: block; margin-bottom: 5px; font-family: 'Tajawal', sans-serif; }
+
+  /* NEXT BTN */
+  .next-btn {
+    display: none;
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+  }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.4); }
+  .next-btn.show { display: block; }
+
+  /* RESULT SCREEN */
+  #result-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .result-circle {
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    border: 5px solid var(--accent);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    background: var(--card);
+    box-shadow: 0 0 40px rgba(59,130,246,0.2);
+    position: relative;
+  }
+  .result-score-num { font-size: 42px; font-weight: 800; color: var(--accent2); line-height: 1; }
+  .result-score-total { font-size: 15px; color: var(--text-muted); }
+  .result-grade { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+  .result-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; }
+  .result-stats {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;
+  }
+  .rs-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 24px;
+    min-width: 110px;
+  }
+  .rs-box .rs-num { font-size: 26px; font-weight: 800; }
+  .rs-box .rs-lbl { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .restart-btn {
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: #fff; border: none;
+    border-radius: 12px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 17px; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+    transition: all 0.2s;
+  }
+  .restart-btn:hover { transform: translateY(-2px); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px; font-weight: 700;
+    opacity: 0; pointer-events: none;
+    transition: all 0.3s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.correct { background: var(--success); color: #fff; }
+  .toast.wrong { background: var(--error); color: #fff; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 22px 16px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 40px;
+  }
+  footer a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  footer a:hover { text-decoration: underline; }
+
+  /* START BTN */
+  .start-btn {
+    padding: 16px 48px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    color: #fff; border: none;
+    border-radius: 14px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 18px; font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(59,130,246,0.35);
+    transition: all 0.2s;
+  }
+  .start-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(59,130,246,0.45); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .question-card { animation: fadeIn 0.35s ease; }
+
+  @media (max-width: 600px) {
+    .q-text { font-size: 15px; }
+    .option-btn { font-size: 13px; padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-badge">المحاضرة العاشرة · Lecture 10</div>
+  <h1>
+    اختبار المحاضرة العاشرة · من إنشاء محمد صبار
+    <span>Lower Urinary Tract Diseases — Systemic Pathology | 3rd Stage</span>
+  </h1>
+  <div class="header-link">
+    <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+    &nbsp;← اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="stats-bar" style="display:none">
+  <div class="stat-chip"><span class="icon">⏱️</span> الوقت: <span id="timer-val">00:00</span></div>
+  <div class="stat-chip"><span class="icon">🏆</span> النقاط: <span id="score-val">0</span></div>
+  <div class="stat-chip"><span class="icon">📋</span> السؤال: <span id="q-val">1 / 45</span></div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap" id="progress-wrap" style="display:none">
+  <div class="progress-info">
+    <span id="prog-label">التقدم</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- START -->
+  <div id="start-screen">
+    <div class="start-icon">🫁</div>
+    <h2>اختبار Lower Urinary Tract Diseases</h2>
+    <p>اختبار شامل يغطي جميع محاور المحاضرة العاشرة<br>في مادة علم الأمراض الوظيفي — المرحلة الثالثة</p>
+    <div class="info-grid">
+      <div class="info-box"><div class="num">45</div><div class="lbl">سؤال</div></div>
+      <div class="info-box"><div class="num">45</div><div class="lbl">نقطة</div></div>
+      <div class="info-box"><div class="num">4</div><div class="lbl">خيارات لكل سؤال</div></div>
+      <div class="info-box"><div class="num">∞</div><div class="lbl">وقت غير محدود</div></div>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">🚀 ابدأ الاختبار</button>
+    <div style="margin-top:20px;font-size:13px;color:var(--text-muted)">
+      <a href="https://t.me/mulimcq" target="_blank" style="color:var(--accent2);font-weight:700;text-decoration:none">محمد صبار</a>
+      &nbsp;← اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="question-card" id="q-card">
+      <div class="q-number" id="q-num-label">السؤال 1 من 45</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="explanation-box" id="explanation"></div>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">السؤال التالي ←</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-screen">
+    <div class="result-circle">
+      <div class="result-score-num" id="res-score">0</div>
+      <div class="result-score-total">من 45</div>
+    </div>
+    <div class="result-grade" id="res-grade"></div>
+    <div class="result-sub" id="res-sub"></div>
+    <div class="result-stats">
+      <div class="rs-box"><div class="rs-num" id="res-correct" style="color:var(--success)">0</div><div class="rs-lbl">✅ صحيح</div></div>
+      <div class="rs-box"><div class="rs-num" id="res-wrong" style="color:var(--error)">0</div><div class="rs-lbl">❌ خطأ</div></div>
+      <div class="rs-box"><div class="rs-num" id="res-time" style="color:#facc15">0:00</div><div class="rs-lbl">⏱️ الوقت</div></div>
+      <div class="rs-box"><div class="rs-num" id="res-pct" style="color:var(--accent2)">0%</div><div class="rs-lbl">📊 الدرجة</div></div>
+    </div>
+    <button class="restart-btn" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+    <div style="margin-top:20px;font-size:13px;color:var(--text-muted)">
+      <a href="https://t.me/mulimcq" target="_blank" style="color:var(--accent2);font-weight:700;text-decoration:none">محمد صبار</a>
+      &nbsp;← اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  اختبارات المحاضرة العاشرة · من إنشاء
+  <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+  &nbsp;← اضغط هنا للحصول على اختبارات باقي المحاضرات
+  <br><span style="font-size:11px;margin-top:6px;display:block">جامعة الهادي - الكلية التقنية الصحية والطبية - قسم تقنيات الأشعة - المرحلة الثالثة</span>
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "What type of epithelium lines the renal pelvis, ureter, bladder, and urethra?",
+    opts: ["Stratified squamous epithelium", "Simple columnar epithelium", "Transitional epithelium (urothelium)", "Pseudostratified epithelium"],
+    ans: 2,
+    exp: "The renal pelvis, ureter, bladder, and urethra are lined by specialized multilayer transitional epithelium called urothelium."
+  },
+  {
+    q: "What is the name of the muscle layer that makes up the bladder wall?",
+    opts: ["Sphincter muscle", "Detrusor muscle (muscularis propria)", "Lamina propria", "Submucosa"],
+    ans: 1,
+    exp: "The muscularis propria (detrusor muscle) makes up the bladder wall, beneath the mucosa and lamina propria."
+  },
+  {
+    q: "Which layer lies between the urothelium and the muscularis propria?",
+    opts: ["Adventitia", "Serosa", "Lamina propria", "Submucosa only"],
+    ans: 2,
+    exp: "Beneath the mucosa (urothelium) lies the lamina propria, and deeper yet is the muscularis propria."
+  },
+  {
+    q: "What is the most frequent cause of hydronephrosis in infants and children?",
+    opts: ["Ureterocele", "Retroperitoneal fibrosis", "Ureteropelvic junction (UPJ) obstruction", "Double ureter"],
+    ans: 2,
+    exp: "Ureteropelvic junction (UPJ) obstruction is the most frequent cause of hydronephrosis in infants and children."
+  },
+  {
+    q: "UPJ obstruction is a congenital disorder that is more common in which gender?",
+    opts: ["Girls", "Boys", "Equal in both", "Only in females"],
+    ans: 1,
+    exp: "UPJ obstruction is much more common in boys than in girls."
+  },
+  {
+    q: "What is the most common type of malignant tumor of the ureter?",
+    opts: ["Adenocarcinoma", "Squamous cell carcinoma", "Urothelial carcinoma", "Sarcoma"],
+    ans: 2,
+    exp: "Most malignant tumors of the ureter are urothelial carcinomas, pathologically similar to those arising in the renal pelvis, calyces, and bladder."
+  },
+  {
+    q: "Retroperitoneal fibrosis causes ureteral narrowing by what mechanism?",
+    opts: ["Direct tumor invasion", "Fibrous proliferative inflammatory process encasing retroperitoneal structures", "Calcification of the ureter", "Vascular compression only"],
+    ans: 1,
+    exp: "Retroperitoneal fibrosis is characterized by a fibrous proliferative inflammatory process that encases the retroperitoneal structures and causes hydronephrosis."
+  },
+  {
+    q: "Retroperitoneal fibrosis occurs more commonly in which age group and gender?",
+    opts: ["Young females", "Middle to old age, more common in men", "Children and adolescents", "Equal in all ages"],
+    ans: 1,
+    exp: "Retroperitoneal fibrosis occurs in middle to old age and is more common in men than in women."
+  },
+  {
+    q: "A subset of retroperitoneal fibrosis cases is associated with which disease characterized by fibroinflammatory lesions?",
+    opts: ["Crohn's disease", "IgA nephropathy", "IgG4-related disease", "Systemic lupus erythematosus"],
+    ans: 2,
+    exp: "A subset of retroperitoneal fibrosis cases occurs in association with IgG4-related disease, characterized by fibroinflammatory lesions rich in IgG4-secreting plasma cells."
+  },
+  {
+    q: "When retroperitoneal fibrosis has no obvious cause, it is termed:",
+    opts: ["Secondary fibrosis", "Primary or idiopathic fibrosis", "Reactive fibrosis", "Metaplastic fibrosis"],
+    ans: 1,
+    exp: "Most cases of retroperitoneal fibrosis have no obvious cause and are considered primary, or idiopathic."
+  },
+  {
+    q: "What is double ureter?",
+    opts: ["Duplication of the renal pelvis only", "Condition where the entire ureter or only the upper part is duplicated", "Bifurcation of the ureter at the bladder", "An acquired condition after surgery"],
+    ans: 1,
+    exp: "Double ureter is a condition in which the entire ureter or only the upper part is duplicated, invariably associated with a double renal pelvis."
+  },
+  {
+    q: "Double ureter is always associated with:",
+    opts: ["A single renal pelvis", "Double renal pelvis", "Bladder exstrophy", "Horseshoe kidney"],
+    ans: 1,
+    exp: "Double ureter is invariably associated with a double renal pelvis, one in the upper part and the other in the lower part of the kidney."
+  },
+  {
+    q: "What is a ureterocele?",
+    opts: ["A diverticulum of the ureter", "Cystic dilatation of the terminal part of the ureter within the bladder wall", "Inflammation of the ureter", "Calcification of the ureter"],
+    ans: 1,
+    exp: "Ureterocele is cystic dilatation of the terminal part of the ureter which lies within the bladder wall."
+  },
+  {
+    q: "Ectopia vesicae (exstrophy) results from:",
+    opts: ["Traumatic rupture of the bladder", "Congenital developmental deficiency of the anterior wall of the bladder", "Bacterial infection of the bladder", "Obstruction of the ureterovesical junction"],
+    ans: 1,
+    exp: "Ectopia vesicae is a rare condition owing to congenital developmental deficiency of anterior wall of the bladder, associated with splitting of the overlying anterior abdominal wall."
+  },
+  {
+    q: "In males, bladder exstrophy (ectopia vesicae) is often associated with:",
+    opts: ["Hypospadias", "Epispadias", "Phimosis", "Cryptorchidism"],
+    ans: 1,
+    exp: "In males, ectopia vesicae is often associated with epispadias, in which the urethra opens on the dorsal aspect of the penis."
+  },
+  {
+    q: "In epispadias, where does the urethra open?",
+    opts: ["Ventral aspect of the penis", "Dorsal aspect of the penis", "Perineum", "At the glans only"],
+    ans: 1,
+    exp: "In epispadias, the urethra opens on the dorsal aspect of the penis."
+  },
+  {
+    q: "Persistence of the urachus may result in urine passing from the bladder to:",
+    opts: ["The rectum", "The umbilicus", "The peritoneal cavity", "The vagina"],
+    ans: 1,
+    exp: "Rarely, there may be persistence of the urachus in which urine passes from the bladder to the umbilicus."
+  },
+  {
+    q: "Persistence of the central portion of the urachus gives rise to:",
+    opts: ["Bladder diverticulum", "Urachal cyst lined by transitional or squamous epithelium", "Patent urachus", "Vesico-urachal diverticulum"],
+    ans: 1,
+    exp: "Persistence of the central portion of the urachus gives rise to a urachal cyst lined by transitional or squamous epithelium."
+  },
+  {
+    q: "Which malignancy may develop in a urachal cyst?",
+    opts: ["Squamous cell carcinoma", "Urothelial carcinoma", "Adenocarcinoma", "Transitional cell carcinoma"],
+    ans: 2,
+    exp: "Adenocarcinoma may develop in a urachal cyst."
+  },
+  {
+    q: "Which of the following is NOT a urachal remnant abnormality?",
+    opts: ["Patent urachus", "Urachal umbilical sinus", "Vesico-urachal diverticulum", "Double ureter"],
+    ans: 3,
+    exp: "Double ureter is a ureteral anomaly, not related to urachal remnants. Urachal remnant abnormalities include patent urachus, urachal umbilical sinus, and vesico-urachal diverticulum."
+  },
+  {
+    q: "The male urethra consists of how many parts?",
+    opts: ["2 parts", "3 parts", "4 parts", "5 parts"],
+    ans: 1,
+    exp: "The male urethra consists of 3 parts: prostatic, membranous, and penile."
+  },
+  {
+    q: "What are the three parts of the male urethra?",
+    opts: ["Penile, scrotal, and perineal", "Prostatic, membranous, and penile", "Proximal, middle, and distal", "Internal, external, and terminal"],
+    ans: 1,
+    exp: "The male urethra consists of 3 parts: prostatic, membranous, and penile."
+  },
+  {
+    q: "What type of epithelium lines the prostatic part of the male urethra?",
+    opts: ["Stratified squamous", "Columnar", "Urothelium (transitional epithelium)", "Pseudostratified"],
+    ans: 2,
+    exp: "The male urethra is lined in the prostatic part by urothelium, but elsewhere by stratified columnar epithelium except near its orifice where the epithelium is stratified squamous."
+  },
+  {
+    q: "Near the external orifice of the male urethra, the epithelium is:",
+    opts: ["Urothelium", "Simple columnar", "Stratified squamous", "Pseudostratified columnar"],
+    ans: 2,
+    exp: "Near its orifice, the epithelium of the male urethra is stratified squamous."
+  },
+  {
+    q: "The female urethra runs from the bladder parallel to:",
+    opts: ["The posterior vaginal wall", "The anterior wall of the vagina", "The cervix", "The uterus"],
+    ans: 1,
+    exp: "The female urethra runs from the bladder parallel with the anterior wall of the vagina."
+  },
+  {
+    q: "What type of epithelium lines most of the female urethra?",
+    opts: ["Transitional epithelium", "Stratified squamous epithelium", "Columnar epithelium", "Simple cuboidal"],
+    ans: 2,
+    exp: "The mucous membrane in the female urethra is lined throughout by columnar epithelium except near the bladder where the epithelium is transitional."
+  },
+  {
+    q: "Near the bladder, the female urethra is lined by:",
+    opts: ["Stratified squamous epithelium", "Simple columnar epithelium", "Transitional epithelium", "Pseudostratified ciliated epithelium"],
+    ans: 2,
+    exp: "Near the bladder, the female urethral epithelium is transitional (urothelium)."
+  },
+  {
+    q: "Posterior urethral valves (PUV) are also referred to as:",
+    opts: ["Congenital obstructing anterior urethral membranes", "Congenital obstructing posterior urethral membranes (COPUM)", "Acquired urethral strictures", "Urethral diverticula"],
+    ans: 1,
+    exp: "Posterior urethral valves (PUV) are also referred to as congenital obstructing posterior urethral membranes (COPUM)."
+  },
+  {
+    q: "Posterior urethral valves are the most common congenital obstructive lesion of:",
+    opts: ["The bladder", "The ureter", "The urethra", "The renal pelvis"],
+    ans: 2,
+    exp: "Posterior urethral valves (PUV) are the most common congenital obstructive lesion of the urethra."
+  },
+  {
+    q: "Posterior urethral valves are seen only in:",
+    opts: ["Female infants", "Male infants", "Both genders equally", "Adults"],
+    ans: 1,
+    exp: "PUV is a common cause of obstructive uropathy in infancy and is only seen in male infants."
+  },
+  {
+    q: "Gonococcal urethritis is caused by:",
+    opts: ["E. coli", "Chlamydia trachomatis", "Neisseria gonorrhoeae", "Staphylococcus aureus"],
+    ans: 2,
+    exp: "Gonococcal (gonorrhoeal) urethritis is an acute suppurative condition caused by gonococci (Neisseria gonorrhoeae)."
+  },
+  {
+    q: "Which type of urethritis is more common: gonococcal or non-gonococcal?",
+    opts: ["Gonococcal urethritis", "Non-gonococcal urethritis", "They are equally common", "Neither is common"],
+    ans: 1,
+    exp: "Non-gonococcal urethritis is more common than gonococcal urethritis."
+  },
+  {
+    q: "Non-gonococcal urethritis is most frequently caused by:",
+    opts: ["Neisseria gonorrhoeae", "Chlamydia trachomatis", "E. coli", "Staphylococcus saprophyticus"],
+    ans: 2,
+    exp: "Non-gonococcal urethritis is most frequently caused by E. coli."
+  },
+  {
+    q: "In females, urethral infection often accompanies:",
+    opts: ["Prostatitis", "Cystitis", "Pyelonephritis", "Retroperitoneal fibrosis"],
+    ans: 1,
+    exp: "In females, infection of the urethra often accompanies cystitis."
+  },
+  {
+    q: "In males, urethral infection often accompanies:",
+    opts: ["Cystitis", "Pyelonephritis", "Prostatitis", "Ureteritis"],
+    ans: 2,
+    exp: "In males, infection of the urethra often accompanies prostatitis."
+  },
+  {
+    q: "Gonococcal urethritis is described as which type of condition?",
+    opts: ["Chronic granulomatous", "Acute suppurative", "Fibrosing", "Hemorrhagic"],
+    ans: 1,
+    exp: "Gonococcal urethritis is an acute suppurative condition caused by Neisseria gonorrhoeae."
+  },
+  {
+    q: "The lower urinary tract includes all of the following EXCEPT:",
+    opts: ["Ureter", "Bladder", "Urethra", "Renal cortex"],
+    ans: 3,
+    exp: "The lower urinary tract includes the renal pelvis, ureter, bladder, and urethra. The renal cortex is part of the kidney parenchyma, not the lower urinary tract."
+  },
+  {
+    q: "Which condition is associated with splitting of the anterior abdominal wall?",
+    opts: ["Ureterocele", "Ectopia vesicae (exstrophy)", "Patent urachus", "UPJ obstruction"],
+    ans: 1,
+    exp: "Ectopia vesicae (exstrophy) is associated with splitting of the overlying anterior abdominal wall due to congenital deficiency of the anterior wall of the bladder."
+  },
+  {
+    q: "Retroperitoneal fibrosis can be associated with all of the following EXCEPT:",
+    opts: ["Lymphomas", "Urinary tract carcinomas", "Radiation exposure", "Ureterocele"],
+    ans: 3,
+    exp: "Retroperitoneal fibrosis is associated with IgG4-related disease, lymphomas, urinary tract carcinomas, radiation, prior surgery, and drug exposures. Ureterocele is a separate congenital anomaly of the ureter."
+  },
+  {
+    q: "What is the primary characteristic of IgG4-related disease in the context of retroperitoneal fibrosis?",
+    opts: ["Eosinophil-rich lesions", "Fibroinflammatory lesions rich in IgG4-secreting plasma cells", "Granuloma formation", "Lymphocyte-predominant infiltrate"],
+    ans: 1,
+    exp: "IgG4-related disease is characterized by fibroinflammatory lesions rich in IgG4-secreting plasma cells."
+  },
+  {
+    q: "Which of the following best describes the urothelium?",
+    opts: ["Simple squamous epithelium", "Specialized multilayer transitional epithelium", "Pseudostratified columnar with cilia", "Simple cuboidal epithelium"],
+    ans: 1,
+    exp: "The urothelium is specialized multilayer transitional epithelium that lines the renal pelvis, ureter, bladder, and urethra."
+  },
+  {
+    q: "In double ureter, how many renal pelvises are typically present?",
+    opts: ["One", "Two", "Three", "Four"],
+    ans: 1,
+    exp: "Double ureter is invariably associated with a double renal pelvis, one in the upper part and the other in the lower part of the kidney."
+  },
+  {
+    q: "Which congenital anomaly of the ureter is cystic in nature?",
+    opts: ["Double ureter", "UPJ obstruction", "Ureterocele", "Retroperitoneal fibrosis"],
+    ans: 2,
+    exp: "Ureterocele is a cystic dilatation of the terminal part of the ureter which lies within the bladder wall."
+  },
+  {
+    q: "PUV (posterior urethral valves) is a common cause of which condition in male infants?",
+    opts: ["Bladder exstrophy", "Obstructive uropathy", "Ureterocele", "Gonococcal urethritis"],
+    ans: 1,
+    exp: "PUV is a common cause of obstructive uropathy in infancy and is only seen in male infants."
+  },
+  {
+    q: "The lamina propria of the bladder lies:",
+    opts: ["Above the urothelium", "Between the urothelium and the muscularis propria", "Below the detrusor muscle", "Outside the bladder wall"],
+    ans: 1,
+    exp: "The lamina propria lies beneath the mucosa (urothelium) and above the muscularis propria (detrusor muscle)."
+  },
+  {
+    q: "Clinically significant disorders of the lower urinary tract include all of the following EXCEPT:",
+    opts: ["Congenital anomalies", "Neoplasms", "Inflammatory diseases", "Autoimmune hepatitis"],
+    ans: 3,
+    exp: "Clinically significant disorders of the lower urinary tract include congenital anomalies, infectious and other inflammatory diseases, and neoplasms. Autoimmune hepatitis is a liver disease, not related to the urinary tract."
+  }
+];
+
+let current = 0, score = 0, correct = 0, wrong = 0;
+let timerInterval, seconds = 0;
+let answered = false;
+
+function startQuiz() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('progress-wrap').style.display = 'block';
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    document.getElementById('timer-val').textContent = m+':'+s;
+  }, 1000);
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[current];
+  document.getElementById('q-num-label').textContent = `السؤال ${current+1} من ${questions.length}`;
+  document.getElementById('q-val').textContent = `${current+1} / ${questions.length}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const optDiv = document.getElementById('options');
+  optDiv.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, btn);
+    optDiv.appendChild(btn);
+  });
+
+  document.getElementById('explanation').classList.remove('show');
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('next-btn').classList.remove('show');
+
+  // Progress
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+}
+
+function selectAnswer(idx, btn) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => b.classList.add('disabled'));
+
+  if (idx === q.ans) {
+    btn.classList.add('correct');
+    score++;
+    correct++;
+    document.getElementById('score-val').textContent = score;
+    showToast('✅ إجابة صحيحة!', 'correct');
+  } else {
+    btn.classList.add('wrong');
+    allBtns[q.ans].classList.add('correct');
+    wrong++;
+    showToast('❌ إجابة خاطئة!', 'wrong');
+    const expBox = document.getElementById('explanation');
+    expBox.innerHTML = `<strong>📖 الشرح:</strong>${q.exp}`;
+    expBox.classList.add('show');
+  }
+
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.textContent = current < questions.length - 1 ? 'السؤال التالي ←' : '🏁 عرض النتيجة';
+  nextBtn.classList.add('show');
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  document.getElementById('stats-bar').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+
+  // Progress 100%
+  document.getElementById('prog-fill').style.width = '100%';
+
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent = wrong;
+  document.getElementById('res-pct').textContent = pct + '%';
+  const m = String(Math.floor(seconds/60)).padStart(2,'0');
+  const s = String(seconds%60).padStart(2,'0');
+  document.getElementById('res-time').textContent = m+':'+s;
+
+  let grade, sub;
+  if (pct >= 90) { grade = '🏆 ممتاز!'; sub = 'أداء استثنائي! أنت ملم تمامًا بالمادة.'; document.querySelector('.result-circle').style.borderColor = '#22c55e'; }
+  else if (pct >= 75) { grade = '👍 جيد جداً'; sub = 'إجاباتك ممتازة في معظمها. استمر!'; document.querySelector('.result-circle').style.borderColor = '#3b82f6'; }
+  else if (pct >= 60) { grade = '📚 جيد'; sub = 'أداء معقول، راجع الأجزاء التي أخطأت فيها.'; document.querySelector('.result-circle').style.borderColor = '#facc15'; }
+  else { grade = '🔄 يحتاج مراجعة'; sub = 'راجع المحاضرة مرة أخرى وأعد الاختبار.'; document.querySelector('.result-circle').style.borderColor = '#ef4444'; }
+
+  document.getElementById('res-grade').textContent = grade;
+  document.getElementById('res-sub').textContent = sub;
+}
+
+function restartQuiz() {
+  current = 0; score = 0; correct = 0; wrong = 0; seconds = 0;
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('timer-val').textContent = '00:00';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('prog-fill').style.width = '0%';
+  clearInterval(timerInterval);
+  startTimer();
+  renderQuestion();
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+</script>
+</body>
+</html>

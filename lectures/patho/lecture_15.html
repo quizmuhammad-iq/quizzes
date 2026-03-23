@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة الخامسة عشر - Breast Diseases</title>
+<style>
+  /* Offline fallback fonts */
+  @font-face { font-family: 'Tajawal'; src: local('Tajawal'), local('Arial'), local('Segoe UI'); }
+  @font-face { font-family: 'Roboto'; src: local('Roboto'), local('Arial'), local('Segoe UI'); }
+</style>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #1e2a42;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #2d3f5e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 20%, #1a2a4a33 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 80%, #0f1f3a33 0%, transparent 60%);
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f1829 0%, #1a2a4a 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 18px 24px;
+    text-align: center;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 4px 24px #0008;
+  }
+  header h1 {
+    font-size: 1.1rem; font-weight: 800; color: var(--accent2);
+    letter-spacing: 0.5px;
+  }
+  header .sub {
+    font-size: 0.82rem; color: var(--muted); margin-top: 3px;
+  }
+  header .sub span { color: var(--text); font-weight: 600; }
+  .tg-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, #1a3a5e, #2563eb);
+    color: #fff; text-decoration: none;
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 0.82rem; font-weight: 700;
+    margin-top: 8px;
+    border: 1px solid #3b82f688;
+    transition: all 0.2s;
+  }
+  .tg-link:hover { background: linear-gradient(135deg, #2563eb, #3b82f6); transform: scale(1.03); }
+  .tg-link svg { width: 16px; height: 16px; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex; justify-content: center; align-items: center; gap: 20px;
+    padding: 12px 24px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.9rem;
+  }
+  .stat-label { color: var(--muted); font-size: 0.8rem; }
+  .stat-val { font-weight: 700; font-size: 1rem; color: var(--accent2); }
+  #timer-val { color: #fbbf24; }
+  #score-val { color: var(--success); }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 10px 24px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-info {
+    display: flex; justify-content: space-between;
+    font-size: 0.78rem; color: var(--muted); margin-bottom: 5px;
+  }
+  .progress-bar-bg {
+    height: 8px; background: #1e2a42; border-radius: 99px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  /* MAIN */
+  main { max-width: 780px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 32px #0005;
+    animation: fadeSlide 0.35s ease;
+  }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .q-num {
+    font-size: 0.78rem; font-weight: 700;
+    color: var(--accent); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 10px;
+  }
+  .q-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.05rem; font-weight: 500;
+    line-height: 1.7; color: var(--text);
+    margin-bottom: 22px;
+    direction: ltr; text-align: left;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    background: #1e2a42;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 18px;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.95rem; font-weight: 400;
+    color: var(--text);
+    text-align: left; direction: ltr;
+    transition: all 0.18s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--accent); background: #1e3258;
+    transform: translateX(-3px);
+  }
+  .opt-btn .opt-letter {
+    min-width: 28px; height: 28px;
+    background: var(--border); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem; color: var(--muted);
+    transition: all 0.18s;
+  }
+  .opt-btn.correct { border-color: var(--success); background: #14532d44; }
+  .opt-btn.correct .opt-letter { background: var(--success); color: #fff; }
+  .opt-btn.wrong   { border-color: var(--danger);  background: #7f1d1d44; }
+  .opt-btn.wrong .opt-letter   { background: var(--danger);  color: #fff; }
+  .opt-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    display: none;
+    margin-top: 16px;
+    background: #0f1e38;
+    border: 1px solid #2563eb55;
+    border-right: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem; line-height: 1.65;
+    color: #93c5fd;
+    direction: ltr; text-align: left;
+    animation: fadeSlide 0.25s ease;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent2); }
+
+  /* NEXT BTN */
+  .next-wrap { text-align: center; margin-top: 20px; }
+  .btn-next {
+    display: none;
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    color: #fff; border: none; border-radius: 10px;
+    padding: 13px 38px; font-family: 'Tajawal', sans-serif;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px #3b82f644;
+  }
+  .btn-next:hover { transform: scale(1.04); box-shadow: 0 6px 24px #3b82f666; }
+  .btn-next.show { display: inline-block; }
+
+  /* RESULT SCREEN */
+  #result-screen {
+    display: none;
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 28px;
+    box-shadow: 0 8px 48px #0007;
+    animation: fadeSlide 0.4s ease;
+  }
+  #result-screen.show { display: block; }
+  .result-circle {
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    border: 5px solid var(--accent);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    background: #1e2a42;
+    box-shadow: 0 0 40px #3b82f644;
+  }
+  .result-score { font-size: 2.4rem; font-weight: 800; color: var(--accent2); }
+  .result-total { font-size: 0.85rem; color: var(--muted); }
+  .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+  .result-msg   { font-size: 0.95rem; color: var(--muted); margin-bottom: 24px; }
+  .result-stats {
+    display: flex; justify-content: center; gap: 24px;
+    flex-wrap: wrap; margin-bottom: 28px;
+  }
+  .rs-item {
+    background: #1e2a42; border-radius: 10px;
+    padding: 14px 22px; min-width: 100px;
+  }
+  .rs-item .rs-val { font-size: 1.5rem; font-weight: 800; }
+  .rs-item .rs-lbl { font-size: 0.78rem; color: var(--muted); }
+  .btn-restart {
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    color: #fff; border: none; border-radius: 10px;
+    padding: 13px 38px; font-family: 'Tajawal', sans-serif;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; box-shadow: 0 4px 16px #3b82f644;
+  }
+  .btn-restart:hover { transform: scale(1.04); }
+
+  /* TOAST */
+  #toast {
+    position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
+    padding: 10px 22px; border-radius: 30px;
+    font-family: 'Tajawal', sans-serif; font-size: 0.95rem; font-weight: 700;
+    z-index: 999; opacity: 0; pointer-events: none;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px #0006;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #toast.correct-t { background: #14532d; color: #4ade80; border: 1px solid #22c55e88; }
+  #toast.wrong-t   { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef444488; }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 0.82rem;
+    background: var(--card);
+  }
+
+  @media(max-width:600px){
+    .q-card { padding: 18px 14px; }
+    main { padding: 14px 8px 40px; }
+    .stats-bar { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🩺 Breast Diseases — اختبار المحاضرة الخامسة عشر</h1>
+  <div class="sub">من إنشاء <span>محمد صبار</span> &nbsp;|&nbsp; 45 سؤال MCQ</div>
+  <a href="https://t.me/mulimcq" target="_blank" class="tg-link">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.01 13.617l-2.99-.93c-.65-.204-.664-.65.136-.965l11.677-4.504c.542-.197 1.016.131.86.965l.001-.962z"/></svg>
+    محمد صبار — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-label">⏱ الوقت</span>
+    <span class="stat-val" id="timer-val">00:00</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">✅ النقاط</span>
+    <span class="stat-val" id="score-val">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">❌ أخطاء</span>
+    <span class="stat-val" id="wrong-val" style="color:#ef4444">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">📋 السؤال</span>
+    <span class="stat-val"><span id="qnum-val">1</span>/45</span>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-info">
+    <span>التقدم</span>
+    <span id="pct-val">0%</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="prog-bar"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<main>
+  <div id="quiz-area">
+    <div class="q-card" id="q-card">
+      <div class="q-num" id="q-num-lbl">السؤال 1 من 45</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options-wrap"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <div class="next-wrap">
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+        التالي ←
+      </button>
+    </div>
+  </div>
+
+  <div id="result-screen">
+    <div class="result-circle">
+      <div class="result-score" id="res-score">0</div>
+      <div class="result-total" id="res-total">من 45</div>
+    </div>
+    <div class="result-title" id="res-title">🎉</div>
+    <div class="result-msg"  id="res-msg"></div>
+    <div class="result-stats">
+      <div class="rs-item">
+        <div class="rs-val" id="rs-correct" style="color:#22c55e">0</div>
+        <div class="rs-lbl">إجابات صحيحة</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val" id="rs-wrong" style="color:#ef4444">0</div>
+        <div class="rs-lbl">إجابات خاطئة</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val" id="rs-time" style="color:#fbbf24">0:00</div>
+        <div class="rs-lbl">إجمالي الوقت</div>
+      </div>
+      <div class="rs-item">
+        <div class="rs-val" id="rs-pct" style="color:#3b82f6">0%</div>
+        <div class="rs-lbl">النسبة المئوية</div>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">🔄 إعادة الاختبار</button>
+  </div>
+</main>
+
+<footer>
+  من إنشاء محمد صبار &nbsp;|&nbsp;
+  <a href="https://t.me/mulimcq" target="_blank" class="tg-link" style="margin-top:0;font-size:0.8rem;">
+    محمد صبار — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "Acute mastitis occurs chiefly during which period?",
+    opts: ["Menopause","First few weeks of lactation","Puberty","Old age"],
+    ans: 1,
+    exp: "Acute pyogenic infection of the breast occurs chiefly during the first few weeks of lactation, when bacteria gain entry through cracks and fissures in the nipple."
+  },
+  {
+    q: "Which bacteria most commonly cause acute mastitis?",
+    opts: ["E. coli and Klebsiella","Staphylococci and Streptococci","Mycobacterium tuberculosis","Pseudomonas aeruginosa"],
+    ans: 1,
+    exp: "Staphylococci and streptococci are the main causative organisms. They gain entry via cracks and fissures in the nipple during lactation."
+  },
+  {
+    q: "What is the entry route of bacteria in acute mastitis?",
+    opts: ["Lymphatic spread","Blood-borne","Cracks and fissures in the nipple","Direct inoculation"],
+    ans: 2,
+    exp: "Bacteria such as staphylococci and streptococci gain entry into the breast by development of cracks and fissures in the nipple."
+  },
+  {
+    q: "Untreated acute mastitis may progress to:",
+    opts: ["Fibroadenoma","Single or multiple breast abscesses","Carcinoma in situ","Gynaecomastia"],
+    ans: 1,
+    exp: "If not effectively treated, acute mastitis may cause single or multiple breast abscesses."
+  },
+  {
+    q: "Mammary duct ectasia is characterised by:",
+    opts: ["Dilatation of larger ducts filled with inspissated secretions","Proliferation of lobular epithelium","Invasion of breast stroma","Formation of calcified nodules"],
+    ans: 0,
+    exp: "Mammary duct ectasia is a condition in which one or more of the larger ducts are dilated and filled with inspissated secretions, associated with periductal chronic inflammatory changes."
+  },
+  {
+    q: "Another name for mammary duct ectasia is:",
+    opts: ["Acute mastitis","Plasma cell mastitis","Obliterative mastitis","Fibrocystic disease"],
+    ans: 1,
+    exp: "When plasma cells are present in impressive numbers in mammary duct ectasia, the condition is termed plasma cell mastitis."
+  },
+  {
+    q: "Which age group is most affected by mammary duct ectasia?",
+    opts: ["Teenagers (13–17)","Women in their 4th to 7th decades","Post-menopausal women over 70","Children under 10"],
+    ans: 1,
+    exp: "Duct ectasia affects women in their 4th to 7th decades of life."
+  },
+  {
+    q: "The pathogenesis of mammary duct ectasia begins with:",
+    opts: ["Ductal carcinoma in situ","Periductal inflammation followed by elastic tissue destruction","Lobular hyperplasia","Hormonal imbalance causing duct proliferation"],
+    ans: 1,
+    exp: "The condition appears to begin with periductal inflammation followed by destruction of the elastic tissue to cause ectasia and periductal fibrosis."
+  },
+  {
+    q: "On cut section, mammary duct ectasia shows dilated ducts containing:",
+    opts: ["Blood clots","Calcified deposits","Cheesy inspissated secretions","Clear serous fluid"],
+    ans: 2,
+    exp: "Cut section shows dilated ducts containing cheesy inspissated secretions. This is a characteristic gross appearance of mammary duct ectasia."
+  },
+  {
+    q: "Obliterative mastitis refers to:",
+    opts: ["Obliteration of ducts by fibrous tissue with varying inflammation","Complete destruction of breast parenchyma","Suppurative infection causing abscess","Lobular carcinoma in situ"],
+    ans: 0,
+    exp: "Obliterative mastitis refers to obliteration of the ducts by fibrous tissue with varying amounts of inflammation."
+  },
+  {
+    q: "Microscopically, what type of cells are found in the lumen in duct ectasia?",
+    opts: ["Neutrophils and pus cells","Foam cells and granular amorphous pink debris","Malignant ductal cells","Reed-Sternberg cells"],
+    ans: 1,
+    exp: "Microscopically, the lumen contains granular, amorphous, pink debris and foam cells, with either necrotic or atrophic lining flattened epithelium."
+  },
+  {
+    q: "Gynaecomastia refers to:",
+    opts: ["Carcinoma of the male breast","Unilateral or bilateral enlargement of the male breast","Atrophy of the male breast","Infection of the male breast"],
+    ans: 1,
+    exp: "Unilateral or bilateral enlargement of the male breast is known as gynaecomastia."
+  },
+  {
+    q: "Why does the male breast not contain secretory lobules?",
+    opts: ["Due to lack of prolactin receptors","Because the male breast is anatomically different and lacks secretory lobules","Due to absence of oestrogen","Because ductal tissue is absent"],
+    ans: 1,
+    exp: "Since the male breast does not contain secretory lobules, enlargement in gynaecomastia is mainly due to proliferation of ducts and increased periductal stroma."
+  },
+  {
+    q: "Gynaecomastia occurs mainly in response to which hormone?",
+    opts: ["Testosterone","Progesterone","Oestrogen","Prolactin"],
+    ans: 2,
+    exp: "Gynaecomastia occurs in response to hormonal stimulation, mainly oestrogen. Excessive oestrogenic activity in males causes this condition."
+  },
+  {
+    q: "Pubertal gynaecomastia affects males of which age range?",
+    opts: ["5–12 years","13–17 years","25–35 years","50–60 years"],
+    ans: 1,
+    exp: "Excessive oestrogenic activity causing pubertal gynaecomastia is seen in young boys between 13 and 17 years of age."
+  },
+  {
+    q: "Senescent gynaecomastia affects men over:",
+    opts: ["30 years","40 years","50 years","60 years"],
+    ans: 2,
+    exp: "Senescent gynaecomastia is seen in men over 50 years of age due to altered hormonal balance."
+  },
+  {
+    q: "Microscopically, gynaecomastia shows proliferation of:",
+    opts: ["Secretory lobules with acini","Branching ducts with epithelial hyperplasia and increased fibrous stroma","Malignant ductal cells","Plasma cells and lymphocytes"],
+    ans: 1,
+    exp: "Microscopically, gynaecomastia shows proliferation of branching ducts with epithelial hyperplasia and papillary projections, along with increased fibrous stroma with myxoid appearance."
+  },
+  {
+    q: "Fibroadenoma is a benign tumour composed of:",
+    opts: ["Only fibrous tissue","Only epithelial elements","Fibrous and epithelial elements","Adipose and muscular tissue"],
+    ans: 2,
+    exp: "Fibroadenoma (adenofibroma) is a benign tumour of fibrous and epithelial elements. It is the most common benign tumour of the female breast."
+  },
+  {
+    q: "Fibroadenoma is most common in women aged:",
+    opts: ["Under 10","15 to 30 years","40 to 50 years","Over 60"],
+    ans: 1,
+    exp: "Though fibroadenoma can occur at any age during reproductive life, most patients are between 15 to 30 years of age."
+  },
+  {
+    q: "Clinically, fibroadenoma presents as:",
+    opts: ["A fixed, hard irregular lump","A solitary, discrete, freely mobile nodule","A painful area of redness","Multiple bilateral cysts"],
+    ans: 1,
+    exp: "Clinically, fibroadenoma generally appears as a solitary, discrete, freely mobile nodule within the breast."
+  },
+  {
+    q: "The typical diameter of a fibroadenoma is:",
+    opts: ["Less than 1 cm","2–4 cm","5–10 cm","More than 15 cm"],
+    ans: 1,
+    exp: "Typical fibroadenoma is a small (2–4 cm diameter), solitary, well-encapsulated, spherical or discoid mass."
+  },
+  {
+    q: "A fibroadenoma larger than usual (up to 15 cm) is called:",
+    opts: ["Phyllodes tumour","Giant fibroadenoma","Cystosarcoma","Medullary carcinoma"],
+    ans: 1,
+    exp: "A fibroadenoma that is fairly large in size (up to 15 cm in diameter) is called a giant fibroadenoma."
+  },
+  {
+    q: "What is the triple technique used for early diagnosis of breast carcinoma?",
+    opts: ["MRI, CT, and biopsy","Palpation, mammography, and FNAC","Ultrasound, X-ray, and bone scan","Blood tests, urine analysis, and cytology"],
+    ans: 1,
+    exp: "Currently, emphasis is on early diagnosis by triple technique: palpation, mammography, and fine needle aspiration cytology (FNAC)."
+  },
+  {
+    q: "First-degree relatives of women with breast cancer have how much higher risk of breast cancer?",
+    opts: ["No increased risk","1.5 to 2-fold","2 to 6-fold","10-fold"],
+    ans: 2,
+    exp: "First-degree relatives (mother, sister, daughter) of women with breast cancer have 2 to 6-fold higher risk of development of breast cancer."
+  },
+  {
+    q: "Fibrocystic change with atypical epithelial hyperplasia has approximately how much higher risk of breast cancer?",
+    opts: ["2-fold","3-fold","5-fold","8-fold"],
+    ans: 2,
+    exp: "Fibrocystic change, particularly when associated with atypical epithelial hyperplasia, has about 5-fold higher risk of developing breast cancer subsequently."
+  },
+  {
+    q: "Which quadrant of the breast is the most common site for breast carcinoma?",
+    opts: ["Lower inner quadrant","Lower outer quadrant","Upper inner quadrant","Upper outer quadrant"],
+    ans: 3,
+    exp: "Anatomically, the upper outer quadrant is the site of tumour in half the breast cancers, followed in frequency by the central portion."
+  },
+  {
+    q: "What percentage of breast carcinomas arise from ductal epithelium?",
+    opts: ["50%","70%","80%","90%"],
+    ans: 3,
+    exp: "Carcinoma of the breast arises from the ductal epithelium in 90% of cases while the remaining 10% originate from the lobular epithelium."
+  },
+  {
+    q: "Which is the most common type of invasive breast carcinoma?",
+    opts: ["Medullary carcinoma","Colloid carcinoma","Infiltrating duct carcinoma-NOS","Tubular carcinoma"],
+    ans: 2,
+    exp: "Infiltrating (invasive) duct carcinoma-NOS (not otherwise specified) accounts for 80% of invasive breast carcinomas, making it the most common type."
+  },
+  {
+    q: "Infiltrating lobular carcinoma accounts for what percentage of breast cancers?",
+    opts: ["2%","6%","10%","20%"],
+    ans: 2,
+    exp: "Infiltrating (invasive) lobular carcinoma accounts for 10% of invasive breast carcinomas."
+  },
+  {
+    q: "Tubular (cribriform) carcinoma accounts for approximately:",
+    opts: ["2%","6%","10%","15%"],
+    ans: 1,
+    exp: "Tubular (cribriform) carcinoma accounts for approximately 6% of breast carcinomas."
+  },
+  {
+    q: "Medullary carcinoma and colloid (mucinous) carcinoma each account for:",
+    opts: ["1%","2%","5%","10%"],
+    ans: 1,
+    exp: "Both medullary carcinoma and colloid (mucinous) carcinoma each account for approximately 2% of breast carcinomas."
+  },
+  {
+    q: "Paget's disease of the nipple is classified as:",
+    opts: ["A type of invasive lobular carcinoma","A benign condition","A separate category of breast carcinoma","A form of acute mastitis"],
+    ans: 2,
+    exp: "Paget's disease of the nipple is classified as a separate category (C) alongside non-invasive and invasive carcinomas in breast cancer classification."
+  },
+  {
+    q: "Non-invasive carcinoma of the breast includes which two types?",
+    opts: ["Medullary and colloid carcinoma","Intraductal carcinoma and lobular carcinoma in situ","Tubular and mucinous carcinoma","Paget's disease and tubular carcinoma"],
+    ans: 1,
+    exp: "Only 2 types of non-invasive carcinoma have been described: intraductal carcinoma and lobular carcinoma in situ."
+  },
+  {
+    q: "Before invading breast stroma, tumour cells remain confined within:",
+    opts: ["Adipose tissue","Lymphatics","Ducts or lobules (non-invasive carcinoma)","Blood vessels"],
+    ans: 2,
+    exp: "For a variable period, tumour cells remain confined within the ducts or lobules (non-invasive carcinoma) before they invade the breast stroma (invasive carcinoma)."
+  },
+  {
+    q: "Which additional technique is described as immensely valuable for immediate pathological diagnosis in doubtful breast cancer cases?",
+    opts: ["CT scan","MRI scan","Stereotactic biopsy and frozen section","PET scan"],
+    ans: 2,
+    exp: "Additional techniques such as stereotactic biopsy and frozen section are immensely valuable to the surgeon for immediate pathological diagnosis in doubtful cases."
+  },
+  {
+    q: "Exposure to which type of radiation during breast development increases cancer risk?",
+    opts: ["Ultraviolet radiation","Infrared radiation","Ionising radiation","Microwave radiation"],
+    ans: 2,
+    exp: "Exposure to ionising radiation during breast development is listed among the miscellaneous risk factors for breast carcinoma."
+  },
+  {
+    q: "Periductal chronic inflammation in duct ectasia is chiefly composed of:",
+    opts: ["Neutrophils and eosinophils","Lymphocytes and histiocytes with multinucleate histiocytic giant cells","Plasma cells only","Mast cells and basophils"],
+    ans: 1,
+    exp: "Periductal and interstitial chronic inflammation in duct ectasia consists chiefly of lymphocytes and histiocytes with multinucleate histiocytic giant cells."
+  },
+  {
+    q: "In gynaecomastia, the increased stroma has what microscopic appearance?",
+    opts: ["Dense hyalinised fibrous tissue","Myxoid appearance","Mucinous degeneration","Amyloid deposits"],
+    ans: 1,
+    exp: "Microscopically, gynaecomastia shows increased fibrous stroma with a myxoid appearance."
+  },
+  {
+    q: "Which dietary factor is listed as a miscellaneous risk for breast cancer?",
+    opts: ["High protein, low fat diet","Consumption of large amounts of animal fats and high calorie foods","Vegetarian diet","Low carbohydrate intake"],
+    ans: 1,
+    exp: "Miscellaneous factors include consumption of large amounts of animal fats and high calorie foods as a risk factor for breast carcinoma."
+  },
+  {
+    q: "Breast augmentation surgery is considered a risk factor for:",
+    opts: ["Fibroadenoma","Acute mastitis","Breast carcinoma","Gynaecomastia"],
+    ans: 2,
+    exp: "Breast augmentation surgery is listed among the miscellaneous factors that increase the risk of developing breast carcinoma."
+  },
+  {
+    q: "What is the gross appearance of mammary duct ectasia?",
+    opts: ["A well-circumscribed encapsulated mass","A poorly-defined indurated area with ropiness on the surface","Multiple bilateral cysts","A pigmented lesion of the nipple skin"],
+    ans: 1,
+    exp: "Grossly (G/A), duct ectasia appears as a single, poorly-defined indurated area in the breast with ropiness on the surface."
+  },
+  {
+    q: "The 'total length of menstrual life' is directly related to:",
+    opts: ["Risk of fibroadenoma","Increased risk of breast cancer","Risk of acute mastitis","Probability of gynaecomastia"],
+    ans: 1,
+    exp: "Menstrual and obstetric history: total length of menstrual life is directly related to increased risk of breast carcinoma."
+  },
+  {
+    q: "Decline in breast cancer mortality in developed countries is due to:",
+    opts: ["Reduced smoking rates","Early diagnosis and modern therapy","Hormonal contraceptive use","Dietary improvements alone"],
+    ans: 1,
+    exp: "There has been some decline in mortality from breast cancer in recent years in developed countries due to both early diagnosis and modern therapy."
+  },
+  {
+    q: "Fibroadenoma is described as the most common benign tumour of:",
+    opts: ["The male breast","The female breast","The lymph nodes","The axilla"],
+    ans: 1,
+    exp: "Fibroadenoma is the most common benign tumour of the female breast."
+  },
+  {
+    q: "Cigarette smoking is listed as a risk factor for:",
+    opts: ["Fibroadenoma only","Gynaecomastia only","Breast carcinoma","Duct ectasia only"],
+    ans: 2,
+    exp: "Cigarette smoking is listed among the miscellaneous factors that increase the risk of breast carcinoma."
+  },
+  {
+    q: "Alcohol consumption is associated with increased risk of:",
+    opts: ["Acute mastitis","Breast carcinoma","Fibroadenoma","Mammary duct ectasia"],
+    ans: 1,
+    exp: "Alcohol consumption is listed among the miscellaneous risk factors for breast carcinoma."
+  }
+];
+
+let current = 0, score = 0, wrong = 0, answered = false;
+let timerSec = 0, timerInterval;
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timerSec++;
+    const m = String(Math.floor(timerSec/60)).padStart(2,'0');
+    const s = String(timerSec%60).padStart(2,'0');
+    document.getElementById('timer-val').textContent = m+':'+s;
+  }, 1000);
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('q-num-lbl').textContent = `السؤال ${current+1} من 45`;
+  document.getElementById('qnum-val').textContent = current+1;
+  document.getElementById('q-text').textContent = q.q;
+
+  const wrap = document.getElementById('options-wrap');
+  wrap.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => selectAnswer(i);
+    wrap.appendChild(btn);
+  });
+
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('btn-next').className = 'btn-next';
+  answered = false;
+
+  // progress
+  const pct = Math.round((current/45)*100);
+  document.getElementById('prog-bar').style.width = pct+'%';
+  document.getElementById('pct-val').textContent = pct+'%';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const btns = document.querySelectorAll('.opt-btn');
+
+  btns.forEach(b => b.disabled = true);
+
+  if (idx === q.ans) {
+    btns[idx].classList.add('correct');
+    score++;
+    document.getElementById('score-val').textContent = score;
+    showToast('✅ إجابة صحيحة!', 'correct-t');
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+    wrong++;
+    document.getElementById('wrong-val').textContent = wrong;
+    showToast('❌ إجابة خاطئة!', 'wrong-t');
+    const exp = document.getElementById('explanation');
+    exp.innerHTML = `<strong>التفسير:</strong> ${q.exp}`;
+    exp.classList.add('show');
+  }
+
+  document.getElementById('btn-next').classList.add('show');
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+    const card = document.getElementById('q-card');
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = 'fadeSlide 0.35s ease';
+  }
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-area').style.display = 'none';
+  const rs = document.getElementById('result-screen');
+  rs.classList.add('show');
+
+  const pct = Math.round((score/45)*100);
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-total').textContent = 'من 45';
+  document.getElementById('rs-correct').textContent = score;
+  document.getElementById('rs-wrong').textContent = wrong;
+  document.getElementById('rs-pct').textContent = pct+'%';
+  const m = String(Math.floor(timerSec/60)).padStart(2,'0');
+  const s = String(timerSec%60).padStart(2,'0');
+  document.getElementById('rs-time').textContent = m+':'+s;
+
+  // progress full
+  document.getElementById('prog-bar').style.width = '100%';
+  document.getElementById('pct-val').textContent = '100%';
+
+  let title, msg;
+  if (pct >= 90) { title='🏆 ممتاز!'; msg='أداء رائع جداً! أنت متمكن من المادة.'; }
+  else if (pct >= 75) { title='🎉 جيد جداً!'; msg='نتيجة ممتازة، استمر في المراجعة.'; }
+  else if (pct >= 60) { title='👍 جيد'; msg='نتيجة جيدة، راجع النقاط التي أخطأت فيها.'; }
+  else { title='📚 يحتاج مراجعة'; msg='راجع المحاضرة مرة أخرى لتحسين نتيجتك.'; }
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-msg').textContent = msg;
+}
+
+function restart() {
+  current = 0; score = 0; wrong = 0; timerSec = 0;
+  answered = false;
+  clearInterval(timerInterval);
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('wrong-val').textContent = '0';
+  document.getElementById('timer-val').textContent = '00:00';
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('quiz-area').style.display = 'block';
+  renderQuestion();
+  startTimer();
+}
+
+let toastTimeout;
+function showToast(msg, cls) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + cls;
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => { t.className = ''; }, 1800);
+}
+
+// Shuffle questions
+for (let i = questions.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [questions[i], questions[j]] = [questions[j], questions[i]];
+}
+
+renderQuestion();
+startTimer();
+</script>
+</body>
+</html>

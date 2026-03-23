@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Endocrine Diseases - MCQ Quiz | المحاضرة 12</title>
+<style>
+  /* Offline fallback fonts */
+  @font-face { font-family: 'Tajawal'; src: local('Tajawal'), local('Arial'), local('Segoe UI'); }
+  @font-face { font-family: 'Roboto'; src: local('Roboto'), local('Arial'), local('Segoe UI'); }
+</style>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #202d45;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3f5e;
+    --glow: rgba(59,130,246,0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(96,165,250,0.05) 0%, transparent 60%);
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    text-align: center;
+    position: relative;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.4);
+    color: var(--accent2);
+    font-size: 0.72rem;
+    font-family: 'Roboto', sans-serif;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #e2e8f0, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.3;
+  }
+  header h1 span {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+  }
+  .header-sub {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    margin-top: 5px;
+  }
+  .telegram-link {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(96,165,250,0.4);
+    transition: all 0.2s;
+  }
+  .telegram-link:hover { color: #fff; border-color: #fff; }
+
+  /* MAIN */
+  main { max-width: 780px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .stat-label { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; }
+  .stat-value { font-size: 1.3rem; font-weight: 800; color: var(--accent2); font-family: 'Roboto', sans-serif; }
+  #timer-val { color: #fbbf24; }
+
+  /* PROGRESS */
+  .progress-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .progress-info strong { color: var(--text); font-size: 0.9rem; }
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.07);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(59,130,246,0.5);
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px 22px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .q-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .q-number {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .q-num-badge {
+    background: rgba(59,130,246,0.2);
+    border: 1px solid rgba(59,130,246,0.5);
+    color: var(--accent2);
+    font-size: 0.75rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+  }
+  .q-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text);
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+  .option-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    text-align: left;
+    direction: ltr;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .option-btn:hover:not(:disabled) {
+    background: rgba(59,130,246,0.1);
+    border-color: var(--accent);
+    transform: translateX(-3px);
+  }
+  .option-label {
+    background: rgba(59,130,246,0.15);
+    color: var(--accent2);
+    border-radius: 6px;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option-btn.correct {
+    background: rgba(34,197,94,0.12);
+    border-color: var(--correct);
+  }
+  .option-btn.correct .option-label { background: var(--correct); color: #fff; }
+  .option-btn.wrong {
+    background: rgba(239,68,68,0.12);
+    border-color: var(--wrong);
+  }
+  .option-btn.wrong .option-label { background: var(--wrong); color: #fff; }
+  .option-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 14px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.88rem;
+    direction: ltr;
+    text-align: left;
+    line-height: 1.6;
+    color: #fca5a5;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: #fecaca; }
+
+  /* NAV BUTTON */
+  .nav-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .btn-next {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 40px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(59,130,246,0.45); }
+  .btn-next:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    z-index: 999;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.correct-toast { background: var(--correct); color: #fff; }
+  .toast.wrong-toast { background: var(--wrong); color: #fff; }
+
+  /* RESULTS */
+  #results-screen {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .result-circle {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    background: rgba(59,130,246,0.1);
+    box-shadow: 0 0 40px rgba(59,130,246,0.3);
+  }
+  .result-score { font-size: 2.5rem; font-weight: 800; color: var(--accent2); font-family: 'Roboto', sans-serif; }
+  .result-total { font-size: 0.85rem; color: var(--text-muted); }
+  .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+  .result-sub { color: var(--text-muted); margin-bottom: 24px; font-size: 0.9rem; }
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .res-stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .res-stat-num { font-size: 1.6rem; font-weight: 800; font-family: 'Roboto', sans-serif; }
+  .res-stat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+  .btn-restart {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 44px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+    transition: all 0.2s;
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 500px) {
+    .stats-bar { grid-template-columns: repeat(2,1fr); }
+    header h1 { font-size: 1.2rem; }
+    .q-text { font-size: 0.95rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">Systemic Pathology — 3rd Stage / 2nd Course</div>
+  <h1><span>Endocrine Diseases</span><br>المحاضرة الثانية عشر</h1>
+  <div class="header-sub">
+    من إنشاء <a class="telegram-link" href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+    &nbsp;|&nbsp; اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </div>
+</header>
+
+<main>
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">السؤال</div>
+      <div class="stat-value" id="q-counter">1 / 45</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">النقاط</div>
+      <div class="stat-value" id="score-val">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">الصحيح</div>
+      <div class="stat-value" style="color:#22c55e" id="correct-val">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">الوقت</div>
+      <div class="stat-value" id="timer-val">00:00</div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span>التقدم</span>
+      <strong id="progress-pct">0%</strong>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Quiz screen -->
+  <div id="quiz-screen">
+    <div class="q-card">
+      <div class="q-number">
+        <div class="q-num-badge" id="q-badge">Q 1</div>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options-list"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-next" id="btn-next" disabled onclick="nextQuestion()">التالي ←</button>
+    </div>
+  </div>
+
+  <!-- Results screen -->
+  <div id="results-screen">
+    <div class="result-circle">
+      <div class="result-score" id="final-score">0</div>
+      <div class="result-total">من 45</div>
+    </div>
+    <div class="result-title" id="result-title">نتيجتك النهائية</div>
+    <div class="result-sub" id="result-sub"></div>
+    <div class="result-stats">
+      <div class="res-stat">
+        <div class="res-stat-num" style="color:#22c55e" id="r-correct">0</div>
+        <div class="res-stat-lbl">إجابة صحيحة</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-stat-num" style="color:#ef4444" id="r-wrong">0</div>
+        <div class="res-stat-lbl">إجابة خاطئة</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-stat-num" style="color:#fbbf24" id="r-time">0:00</div>
+        <div class="res-stat-lbl">إجمالي الوقت</div>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة الاختبار</button>
+  </div>
+</main>
+
+<footer>
+  <a class="telegram-link" href="https://t.me/mulimcq" target="_blank">محمد صبار</a>
+  &nbsp;— اضغط هنا للحصول على اختبارات باقي المحاضرات
+  <br><span style="opacity:.5;font-size:.75rem;">جامعة الهادي | كلية التقنيات الصحية والطبية | قسم تقنيات الأشعة | المرحلة الثالثة</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const questions = [
+  // PITUITARY - ANATOMY & HISTOLOGY
+  {
+    q: "Where is the pituitary gland situated in the brain?",
+    opts: ["In the sella turcica of the sphenoid bone","In the temporal fossa","In the foramen magnum","In the ethmoid sinus"],
+    ans: 0,
+    exp: "The pituitary gland (hypophysis) is situated at the base of the brain in a hollow called sella turcica, formed out of the sphenoid bone."
+  },
+  {
+    q: "Which cells of the anterior pituitary produce Growth Hormone (GH)?",
+    opts: ["Lactotrophs","Corticotrophs","Somatotrophs","Gonadotrophs"],
+    ans: 2,
+    exp: "Somatotrophs (GH cells) in the anterior pituitary produce growth hormone (GH)."
+  },
+  {
+    q: "Which hormone produced by the posterior pituitary causes contraction of myometrium at term?",
+    opts: ["ADH","Prolactin","Oxytocin","FSH"],
+    ans: 2,
+    exp: "Oxytocin causes contraction of mammary myoepithelial cells and contraction of myometrium of the uterus at term."
+  },
+  {
+    q: "What is the main function of ADH secreted by the posterior pituitary?",
+    opts: ["Stimulate milk production","Reabsorption of water from renal tubules","Stimulate GH secretion","Cause uterine contraction"],
+    ans: 1,
+    exp: "ADH causes reabsorption of water from the renal tubules and is essential for maintenance of osmolality of the plasma."
+  },
+  {
+    q: "Which cells of the anterior pituitary produce both ACTH and MSH?",
+    opts: ["Thyrotrophs","Lactotrophs","Somatotrophs","Corticotrophs"],
+    ans: 3,
+    exp: "Corticotrophs (ACTH-MSH cells) produce ACTH and melanocyte stimulating hormone (MSH)."
+  },
+  // HYPERPITUITARISM
+  {
+    q: "Gigantism results from excess GH secretion that occurs:",
+    opts: ["After epiphyseal closure","Before epiphyseal closure","In elderly adults only","After puberty in females"],
+    ans: 1,
+    exp: "Gigantism occurs when GH excess develops prior to epiphyseal closure, predominantly in prepubertal boys and girls."
+  },
+  {
+    q: "Acromegaly is characterized by all of the following EXCEPT:",
+    opts: ["Enlargement of hands and feet","Proportionate overgrowth in children","Prominent supraorbital ridges","Protrusion of lower teeth in front of upper teeth"],
+    ans: 1,
+    exp: "Acromegaly occurs in adults after cessation of bone growth and causes disproportionate features, NOT the proportionate growth seen in childhood gigantism."
+  },
+  {
+    q: "Which drug can cause hyperprolactinaemia by inhibiting hypothalamic PRL secretion?",
+    opts: ["Metformin","Chlorpromazine","Aspirin","Warfarin"],
+    ans: 1,
+    exp: "Drugs such as chlorpromazine, reserpine, and methyldopa can cause hyperprolactinaemia by hypothalamic inhibition of PRL secretion."
+  },
+  {
+    q: "Inappropriate release of ADH results in:",
+    opts: ["Passage of dilute urine","Hyponatraemia and haemodilution","Hypercalcaemia","Polyuria and polydipsia"],
+    ans: 1,
+    exp: "Inappropriate ADH release causes concentrated urine, hyponatraemia, haemodilution, and expansion of intra- and extracellular fluid volume."
+  },
+  {
+    q: "Precocious puberty may be caused by a tumour in which region?",
+    opts: ["Cerebellum","Hypothalamus or pineal gland","Medulla oblongata","Frontal lobe"],
+    ans: 1,
+    exp: "A tumour in the region of the hypothalamus or the pineal gland may result in premature release of gonadotropins causing onset of pubertal changes before age 9."
+  },
+  // HYPOPITUITARISM
+  {
+    q: "What percentage of the anterior pituitary must be destroyed to cause panhypopituitarism?",
+    opts: ["More than 25%","More than 50%","More than 75%","More than 90%"],
+    ans: 2,
+    exp: "Adenohypophyseal hypofunction is invariably due to destruction of more than 75% of the anterior lobe because it possesses a large functional reserve."
+  },
+  {
+    q: "Sheehan's syndrome is defined as pituitary insufficiency due to:",
+    opts: ["Radiation therapy","Postpartum pituitary necrosis","Head trauma","Autoimmune destruction"],
+    ans: 1,
+    exp: "Sheehan's syndrome is pituitary insufficiency occurring due to postpartum pituitary (Sheehan's) necrosis."
+  },
+  {
+    q: "What is the FIRST clinical manifestation of Sheehan's syndrome?",
+    opts: ["Hypothyroidism","Adrenal insufficiency","Failure of lactation following delivery","Diabetes insipidus"],
+    ans: 2,
+    exp: "The first clinical manifestation of Sheehan's syndrome is failure of lactation following delivery due to deficiency of prolactin."
+  },
+  {
+    q: "Diabetes insipidus is caused by:",
+    opts: ["Excess ADH","Deficient secretion of ADH","Excess oxytocin","Deficient cortisol"],
+    ans: 1,
+    exp: "Deficient secretion of ADH causes diabetes insipidus. Its main features are excretion of a very large volume of dilute urine, polyuria and polydipsia."
+  },
+  {
+    q: "Main clinical features of diabetes insipidus include all EXCEPT:",
+    opts: ["Polyuria","Polydipsia","Dilute urine","Concentrated urine"],
+    ans: 3,
+    exp: "Diabetes insipidus is characterised by excretion of a very large volume of DILUTE urine, polyuria, and polydipsia — NOT concentrated urine."
+  },
+  // PITUITARY TUMOURS
+  {
+    q: "A pituitary adenoma less than 10 mm in size is called:",
+    opts: ["Macroadenoma","Microadenoma","Craniopharyngioma","Null cell adenoma"],
+    ans: 1,
+    exp: "Pituitary adenomas less than 10 mm in size are termed microadenomas, while those greater than 1 cm are called macroadenomas."
+  },
+  {
+    q: "The most common functional pituitary adenoma in decreasing order of frequency is:",
+    opts: ["Somatotroph adenoma","Corticotroph adenoma","Lactotroph (PRL-secreting) adenoma","Thyrotroph adenoma"],
+    ans: 2,
+    exp: "In decreasing order of frequency, lactotroph (PRL-secreting) adenoma is the most common, followed by somatotroph (GH-secreting) and corticotroph (ACTH-secreting) adenomas."
+  },
+  {
+    q: "Less than 5% of pituitary adenomas are familial and involve mutation in which gene?",
+    opts: ["BRCA1","MEN1","TP53","RB1"],
+    ans: 1,
+    exp: "Less than 5% of pituitary adenomas are familial, having germline mutation in MEN1 gene, occurring as part of Multiple Endocrine Neoplasia type I (MEN-I)."
+  },
+  {
+    q: "In MEN type I syndrome, pituitary adenoma is associated with adenomas of:",
+    opts: ["Thyroid and adrenal glands","Pancreatic islets and parathyroids","Liver and kidney","Thymus and spleen"],
+    ans: 1,
+    exp: "In MEN-I syndrome, pituitary adenoma is associated with adenomas of pancreatic islets and parathyroids."
+  },
+  // HYPERTHYROIDISM
+  {
+    q: "Which of the following is NOT a common cause of hyperthyroidism?",
+    opts: ["Graves' disease","Toxic multinodular goitre","Hashimoto's thyroiditis","Toxic adenoma"],
+    ans: 2,
+    exp: "The three most common causes of hyperthyroidism are Graves' disease, toxic multinodular goitre, and a toxic adenoma. Hashimoto's thyroiditis typically causes hypothyroidism."
+  },
+  {
+    q: "In hyperthyroidism, which cardiac manifestation is invariably present?",
+    opts: ["Bradycardia","Tachycardia and cardiomegaly","Complete heart block","Mitral stenosis"],
+    ans: 1,
+    exp: "Cardiac manifestations in the form of tachycardia, palpitations, and cardiomegaly are invariably present in hyperthyroidism."
+  },
+  {
+    q: "The skin of patients with hyperthyroidism is typically described as:",
+    opts: ["Cold, dry and pale","Warm, moist and flushed","Thick and waxy","Hyperpigmented"],
+    ans: 1,
+    exp: "The skin of hyperthyroid patients is warm, moist and flushed due to the hypermetabolic state."
+  },
+  // HYPOTHYROIDISM
+  {
+    q: "Severe hypothyroidism developing during infancy and childhood is called:",
+    opts: ["Myxoedema","Cretinism","Graves' disease","Hashimoto's disease"],
+    ans: 1,
+    exp: "Cretinism (congenital hypothyroidism) is the development of severe hypothyroidism during infancy and childhood."
+  },
+  {
+    q: "Adulthood hypothyroidism is known as:",
+    opts: ["Cretinism","Gigantism","Myxoedema","Acromegaly"],
+    ans: 2,
+    exp: "Myxoedema is the term used for adulthood hypothyroidism, a hypometabolic clinical state from inadequate thyroid hormone production."
+  },
+  // HASHIMOTO'S THYROIDITIS
+  {
+    q: "Hashimoto's thyroiditis is characterized by all of the following EXCEPT:",
+    opts: ["Diffuse goitrous enlargement","Lymphocytic infiltration","Thyroid autoantibodies","Suppressed TSH levels"],
+    ans: 3,
+    exp: "The three principal features of Hashimoto's thyroiditis are: diffuse goitrous enlargement, lymphocytic infiltration, and thyroid autoantibodies. TSH is typically elevated, not suppressed."
+  },
+  {
+    q: "Hashimoto's thyroiditis shows approximately what preponderance among females?",
+    opts: ["Two-fold","Five-fold","Ten-fold","Twenty-fold"],
+    ans: 2,
+    exp: "Hashimoto's thyroiditis shows an approximately ten-fold preponderance among females, occurring most frequently between ages 30 and 50."
+  },
+  // GRAVES' DISEASE
+  {
+    q: "Which is NOT part of the classic triad of Graves' disease?",
+    opts: ["Hyperthyroidism","Diffuse thyroid enlargement","Ophthalmopathy","Nephrolithiasis"],
+    ans: 3,
+    exp: "The classic triad of Graves' disease consists of: hyperthyroidism (thyrotoxicosis), diffuse thyroid enlargement, and ophthalmopathy. Nephrolithiasis is associated with hyperparathyroidism."
+  },
+  {
+    q: "Graves' disease is most frequent at which age range?",
+    opts: ["10–20 years","30–40 years","50–60 years","70–80 years"],
+    ans: 1,
+    exp: "Graves' disease is more frequent between the age of 30 and 40 years and has a five-fold increased prevalence among females."
+  },
+  {
+    q: "Graves' disease is best classified as:",
+    opts: ["Infectious disease","Autoimmune disease","Neoplastic disease","Metabolic disease"],
+    ans: 1,
+    exp: "Graves' disease is an autoimmune disease with many immunologic similarities to Hashimoto's thyroiditis."
+  },
+  // NODULAR GOITRE
+  {
+    q: "Nodular goitre is regarded as the end-stage of:",
+    opts: ["Graves' disease","Long-standing simple goitre","Hashimoto's thyroiditis","Subacute thyroiditis"],
+    ans: 1,
+    exp: "Nodular goitre is regarded as the end-stage of long-standing simple goitre, characterized by extreme tumour-like enlargement and characteristic nodularity."
+  },
+  {
+    q: "The typical weight of the thyroid in nodular goitre is:",
+    opts: ["10–20 gm","20–50 gm","100–500 gm","500–1000 gm"],
+    ans: 2,
+    exp: "In nodular goitre, the thyroid shows asymmetric and extreme enlargement, weighing 100–500 gm or even more."
+  },
+  {
+    q: "Which of these is NOT one of the five cardinal macroscopic features of nodular goitre?",
+    opts: ["Nodularity with poor encapsulation","Fibrous scarring","Lymphocytic infiltration","Focal calcification"],
+    ans: 2,
+    exp: "The five cardinal macroscopic features of nodular goitre are: nodularity with poor encapsulation, fibrous scarring, haemorrhages, focal calcification, and cystic degeneration. Lymphocytic infiltration is a feature of Hashimoto's thyroiditis."
+  },
+  // PRIMARY HYPERPARATHYROIDISM
+  {
+    q: "The most common cause of primary hyperparathyroidism is:",
+    opts: ["Parathyroid carcinoma","Primary hyperplasia","Parathyroid adenoma","Vitamin D deficiency"],
+    ans: 2,
+    exp: "Most commonly, parathyroid adenomas account for approximately 80% of primary hyperparathyroidism cases."
+  },
+  {
+    q: "Biochemical changes in primary hyperparathyroidism include all EXCEPT:",
+    opts: ["Elevated PTH","Hypercalcaemia","Hypophosphataemia","Hypocalciuria"],
+    ans: 3,
+    exp: "Primary hyperparathyroidism causes elevated PTH, hypercalcaemia, hypophosphataemia, and HYPERCALCIURIA (not hypocalciuria)."
+  },
+  {
+    q: "The most common clinical presentation of primary hyperparathyroidism is:",
+    opts: ["Hypertension","Neuropsychiatric disturbances","Nephrolithiasis and/or nephrocalcinosis","Generalised osteitis fibrosa cystica"],
+    ans: 2,
+    exp: "The most common clinical presentation of primary hyperparathyroidism is nephrolithiasis and/or nephrocalcinosis."
+  },
+  {
+    q: "What percentage of cases of primary hyperparathyroidism are caused by parathyroid carcinoma?",
+    opts: ["2–3%","10–15%","20–25%","Less than 1%"],
+    ans: 0,
+    exp: "Carcinoma of the parathyroid glands accounts for only 2–3% of patients with primary hyperparathyroidism."
+  },
+  // SECONDARY & TERTIARY HYPERPARATHYROIDISM
+  {
+    q: "Secondary hyperparathyroidism is most commonly caused by:",
+    opts: ["Parathyroid adenoma","Chronic renal insufficiency","Vitamin A toxicity","Primary hyperplasia"],
+    ans: 1,
+    exp: "Chronic renal insufficiency resulting in retention of phosphate and impaired intestinal absorption of calcium is the most important cause of secondary hyperparathyroidism."
+  },
+  {
+    q: "Tertiary hyperparathyroidism is best described as:",
+    opts: ["Primary parathyroid adenoma","Secondary hyperparathyroidism that resolves after treatment","Autonomous parathyroid hyperfunction persisting after removal of the cause of secondary hyperplasia","Vitamin D deficiency-induced parathyroid failure"],
+    ans: 2,
+    exp: "Tertiary hyperparathyroidism is a complication of secondary hyperparathyroidism where hyperfunction persists despite removal of the original cause, due to development of a partially autonomous hyperplastic nodule."
+  },
+  {
+    q: "In secondary hyperparathyroidism, hypocalcaemia causes:",
+    opts: ["Suppression of parathyroid glands","Compensatory hyperplasia of parathyroid glands","Atrophy of parathyroid glands","Necrosis of parathyroid glands"],
+    ans: 1,
+    exp: "Hypocalcaemia stimulates compensatory hyperplasia of the parathyroid glands, causing secondary hyperparathyroidism."
+  },
+  // HYPOPARATHYROIDISM
+  {
+    q: "The most common cause of primary hypoparathyroidism is:",
+    opts: ["Autoimmune destruction","Radiation therapy","Surgical procedures involving thyroid or parathyroid","Infiltration by amyloid"],
+    ans: 2,
+    exp: "The most common causes of primary hypoparathyroidism are surgical procedures involving thyroid, parathyroid, or radical neck dissection for cancer."
+  },
+  {
+    q: "Biochemical findings in primary hypoparathyroidism include:",
+    opts: ["Hypercalcaemia, hypophosphataemia","Hypocalcaemia, hyperphosphataemia, hypocalciuria","Hypercalcaemia, hyperphosphataemia","Normal calcium, elevated PTH"],
+    ans: 1,
+    exp: "The main biochemical dysfunctions in primary hypoparathyroidism are hypocalcaemia, hyperphosphataemia, and hypocalciuria."
+  },
+  {
+    q: "Which clinical manifestation is caused by hypocalcaemia in hypoparathyroidism?",
+    opts: ["Polyuria","Increased neuromuscular irritability and tetany","Weight gain","Hyperpigmentation"],
+    ans: 1,
+    exp: "Hypocalcaemia in hypoparathyroidism causes increased neuromuscular irritability and tetany as a major clinical manifestation."
+  },
+  // PSEUDO & PSEUDOPSEUDO
+  {
+    q: "In pseudo-hypoparathyroidism, which statement is CORRECT?",
+    opts: ["PTH is deficient","The parathyroid glands are absent","Tissues fail to respond to PTH despite normal glands","Calcium levels are elevated"],
+    ans: 2,
+    exp: "In pseudo-hypoparathyroidism, the tissues fail to respond to parathyroid hormone though parathyroid glands are usually normal. It is a rare inherited autosomal dominant condition."
+  },
+  {
+    q: "Pseudopseudo-hypoparathyroidism differs from pseudo-hypoparathyroidism in that:",
+    opts: ["Calcium and phosphate are normal and tissues respond normally to PTH","PTH levels are severely elevated","Parathyroid glands are absent","Patients have mental retardation only"],
+    ans: 0,
+    exp: "In pseudopseudo-hypoparathyroidism, all the clinical features of pseudo-hypoparathyroidism are present EXCEPT there is no hypocalcaemia or hyperphosphataemia, and tissues respond normally to PTH."
+  },
+  // PARATHYROID TUMOURS
+  {
+    q: "The commonest tumour of the parathyroid glands is:",
+    opts: ["Carcinoma","Adenoma","Lymphoma","Metastatic deposit"],
+    ans: 1,
+    exp: "The commonest tumour of the parathyroid glands is an adenoma. Most adenomas are brought to attention because of excessive secretion of parathyroid hormone causing hyperparathyroidism."
+  },
+  {
+    q: "Parathyroid carcinoma compared to parathyroid adenoma:",
+    opts: ["Is more common","Is rare and causes more pronounced hyperparathyroidism","Causes hypocalcaemia","Never causes hormonal excess"],
+    ans: 1,
+    exp: "Carcinoma of the parathyroid is rare and produces manifestations of hyperparathyroidism which are often more pronounced than in adenoma."
+  },
+  {
+    q: "Nodular goitre compression of adjacent structures can cause all EXCEPT:",
+    opts: ["Dysphagia","Choking","Cosmetic disfigurement","Hypocalcaemia"],
+    ans: 3,
+    exp: "Nodular goitre enlargement may cause dysphagia and choking due to compression of oesophagus and trachea, as well as cosmetic disfigurement. Hypocalcaemia is related to parathyroid disorders, not goitre."
+  }
+];
+
+let current = 0, score = 0, correctCount = 0, answered = false;
+let timerInterval, seconds = 0;
+
+function pad(n){ return n < 10 ? '0'+n : n; }
+function formatTime(s){ return pad(Math.floor(s/60))+':'+pad(s%60); }
+
+function startTimer(){
+  timerInterval = setInterval(()=>{
+    seconds++;
+    document.getElementById('timer-val').textContent = formatTime(seconds);
+  }, 1000);
+}
+
+function showToast(msg, type){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type === 'correct' ? 'correct-toast' : 'wrong-toast');
+  setTimeout(()=>{ t.className = 'toast'; }, 1600);
+}
+
+function updateStats(){
+  document.getElementById('q-counter').textContent = (current+1) + ' / 45';
+  document.getElementById('q-badge').textContent = 'Q ' + (current+1);
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('correct-val').textContent = correctCount;
+  const pct = Math.round((current / 45) * 100);
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function loadQuestion(){
+  answered = false;
+  const q = questions[current];
+  document.getElementById('q-text').textContent = q.q;
+  const ol = document.getElementById('options-list');
+  ol.innerHTML = '';
+  const labels = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.disabled = false;
+    btn.innerHTML = `<span class="option-label">${labels[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, btn);
+    ol.appendChild(btn);
+  });
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('btn-next').disabled = true;
+  updateStats();
+}
+
+function selectAnswer(idx, btn){
+  if(answered) return;
+  answered = true;
+  const q = questions[current];
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  if(idx === q.ans){
+    btn.classList.add('correct');
+    score++;
+    correctCount++;
+    document.getElementById('score-val').textContent = score;
+    document.getElementById('correct-val').textContent = correctCount;
+    showToast('✓ إجابة صحيحة!', 'correct');
+  } else {
+    btn.classList.add('wrong');
+    allBtns[q.ans].classList.add('correct');
+    const exp = document.getElementById('explanation');
+    exp.innerHTML = '<strong>📚 التوضيح:</strong> ' + q.exp;
+    exp.className = 'explanation show';
+    showToast('✗ إجابة خاطئة!', 'wrong');
+  }
+  document.getElementById('btn-next').disabled = false;
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= questions.length){
+    showResults();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showResults(){
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('progress-pct').textContent = '100%';
+  const rs = document.getElementById('results-screen');
+  rs.style.display = 'block';
+  const pct = Math.round((score / 45) * 100);
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('r-correct').textContent = correctCount;
+  document.getElementById('r-wrong').textContent = 45 - correctCount;
+  document.getElementById('r-time').textContent = formatTime(seconds);
+  let title, sub;
+  if(pct >= 85){ title = '🏆 ممتاز!'; sub = 'أداء رائع، أتقنت هذه المحاضرة بامتياز!'; }
+  else if(pct >= 70){ title = '✅ جيد جداً!'; sub = 'نتيجة جيدة، راجع الأسئلة التي أخطأت بها.'; }
+  else if(pct >= 50){ title = '📖 مقبول'; sub = 'تحتاج إلى مراجعة المحاضرة مجدداً.'; }
+  else { title = '📚 يحتاج تحسين'; sub = 'راجع المحاضرة بالكامل وأعد الاختبار.'; }
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+}
+
+function restartQuiz(){
+  current = 0; score = 0; correctCount = 0; seconds = 0; answered = false;
+  clearInterval(timerInterval);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  loadQuestion();
+  startTimer();
+}
+
+// Init
+loadQuestion();
+startTimer();
+</script>
+</body>
+</html>

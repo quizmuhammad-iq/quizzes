@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة 11 - Female Reproductive System Diseases</title>
+<style>
+  /* Offline fallback fonts */
+  @font-face { font-family: 'Tajawal'; src: local('Tajawal'), local('Arial'), local('Segoe UI'); }
+  @font-face { font-family: 'Roboto'; src: local('Roboto'), local('Arial'), local('Segoe UI'); }
+</style>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --success: #22c55e;
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --border: #2d3f5e;
+    --card2: #111827;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(96,165,250,0.05) 0%, transparent 50%);
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1a2236 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  .header-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent2);
+    letter-spacing: 0.5px;
+  }
+
+  .header-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+  }
+
+  .header-link {
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+  }
+  .header-link:hover { color: var(--accent2); }
+  .header-link .tg-icon { font-size: 1rem; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 12px 24px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+  }
+
+  .stat-icon { font-size: 1.1rem; }
+  .stat-label { color: var(--text-muted); }
+  .stat-value { font-weight: 700; color: var(--text); font-size: 1rem; }
+  #timer-val { color: var(--warning); }
+  #score-val { color: var(--success); }
+  #progress-val { color: var(--accent2); }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    padding: 0 24px 0;
+    background: var(--card2);
+    padding-bottom: 10px;
+  }
+
+  .progress-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  /* MAIN CONTAINER */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px 18px 60px;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 26px 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.3);
+    animation: fadeSlide 0.4s ease;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .q-number::before {
+    content: '';
+    display: inline-block;
+    width: 22px; height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .q-text {
+    font-size: 1.05rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 22px;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    text-align: right;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.93rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+    transform: translateX(-3px);
+  }
+
+  .option-letter {
+    min-width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.82rem;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .option-btn.correct {
+    border-color: var(--success);
+    background: rgba(34,197,94,0.1);
+  }
+  .option-btn.correct .option-letter {
+    background: var(--success); color: #fff;
+  }
+
+  .option-btn.wrong {
+    border-color: var(--error);
+    background: rgba(239,68,68,0.1);
+  }
+  .option-btn.wrong .option-letter {
+    background: var(--error); color: #fff;
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 14px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    display: none;
+    animation: fadeSlide 0.3s ease;
+  }
+
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent2); font-family: 'Roboto', sans-serif; }
+
+  /* NEXT BUTTON */
+  .btn-next {
+    margin-top: 18px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+  }
+  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59,130,246,0.4); }
+  .btn-next.show { display: block; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 90px; left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    padding: 10px 24px;
+    border-radius: 99px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    opacity: 0;
+    transition: all 0.35s;
+    z-index: 9999;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.correct-toast { background: var(--success); color: #fff; box-shadow: 0 4px 20px rgba(34,197,94,0.4); }
+  .toast.wrong-toast   { background: var(--error);   color: #fff; box-shadow: 0 4px 20px rgba(239,68,68,0.4); }
+
+  /* RESULTS SCREEN */
+  #results-screen {
+    display: none;
+    animation: fadeSlide 0.5s ease;
+  }
+
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  .result-circle {
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 800;
+    position: relative;
+  }
+
+  .result-circle .big-score { font-size: 2.2rem; line-height: 1; }
+  .result-circle .out-of { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+
+  .result-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .result-sub {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .r-stat { text-align: center; }
+  .r-stat .r-val { font-size: 1.6rem; font-weight: 800; font-family: 'Roboto', sans-serif; }
+  .r-stat .r-lbl { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+  .btn-retry {
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+  }
+  .btn-retry:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(59,130,246,0.4); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    margin-top: 20px;
+  }
+
+  footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
+  footer a:hover { color: var(--accent2); }
+
+  /* START SCREEN */
+  #start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 50px 20px;
+    gap: 18px;
+  }
+
+  .start-icon { font-size: 3.5rem; }
+  .start-title { font-size: 1.6rem; font-weight: 800; color: var(--text); line-height: 1.3; }
+  .start-subtitle { font-family: 'Roboto', sans-serif; color: var(--text-muted); font-size: 0.95rem; }
+
+  .start-info {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .info-chip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 7px 18px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-start {
+    margin-top: 10px;
+    padding: 16px 56px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 24px rgba(59,130,246,0.4);
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(59,130,246,0.5); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">Female Reproductive System Diseases</div>
+  <div class="header-sub">المحاضرة الحادية عشر — Systemic Pathology | 3rd Stage</div>
+  <div style="margin-top:4px">
+    <a class="header-link" href="https://t.me/mulimcq" target="_blank">
+      <span class="tg-icon">✈️</span>
+      <strong>محمد صبار</strong>
+    </a>
+    <span style="color:var(--text-muted); font-size:0.8rem; margin-right:6px">— اضغط هنا للحصول على اختبارات باقي المحاضرات</span>
+  </div>
+</header>
+
+<div class="stats-bar" id="stats-bar" style="display:none">
+  <div class="stat-item">
+    <span class="stat-icon">⏱️</span>
+    <span class="stat-label">الوقت:</span>
+    <span class="stat-value" id="timer-val">00:00</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">⭐</span>
+    <span class="stat-label">النقاط:</span>
+    <span class="stat-value" id="score-val">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-icon">📋</span>
+    <span class="stat-label">التقدم:</span>
+    <span class="stat-value" id="progress-val">0 / 45</span>
+  </div>
+</div>
+
+<div class="progress-wrap" id="progress-wrap" style="display:none">
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="container">
+
+  <!-- START SCREEN -->
+  <div id="start-screen">
+    <div class="start-icon">🔬</div>
+    <div class="start-title">اختبار المحاضرة 11<br>Female Reproductive System Diseases</div>
+    <div class="start-subtitle">من إنشاء محمد صبار — قسم تقنيات الأشعة</div>
+    <div class="start-info">
+      <div class="info-chip">📝 <span>45 سؤال</span></div>
+      <div class="info-chip">🌐 <span>أسئلة إنجليزية</span></div>
+      <div class="info-chip">⚡ <span>إجابة فورية</span></div>
+      <div class="info-chip">📊 <span>شريط تقدم</span></div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">ابدأ الاختبار</button>
+    <a href="https://t.me/mulimcq" target="_blank" style="color:var(--accent); font-size:0.85rem; text-decoration:none;">
+      ✈️ <strong>محمد صبار</strong> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+    </a>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" style="display:none">
+    <div class="question-card" id="question-card">
+      <div class="q-number" id="q-number">السؤال 1 من 45</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="explanation" id="explanation"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">السؤال التالي ←</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen">
+    <div class="result-card">
+      <div class="result-circle" id="result-circle">
+        <div class="big-score" id="final-score-num">0</div>
+        <div class="out-of" id="final-score-out">من 45</div>
+      </div>
+      <div class="result-title" id="result-title">أحسنت!</div>
+      <div class="result-sub" id="result-sub"></div>
+      <div class="result-stats">
+        <div class="r-stat">
+          <div class="r-val" id="r-correct" style="color:var(--success)">0</div>
+          <div class="r-lbl">✅ إجابات صحيحة</div>
+        </div>
+        <div class="r-stat">
+          <div class="r-val" id="r-wrong" style="color:var(--error)">0</div>
+          <div class="r-lbl">❌ إجابات خاطئة</div>
+        </div>
+        <div class="r-stat">
+          <div class="r-val" id="r-time" style="color:var(--warning)">0:00</div>
+          <div class="r-lbl">⏱️ الوقت المستغرق</div>
+        </div>
+      </div>
+      <button class="btn-retry" onclick="retryQuiz()">🔄 إعادة الاختبار</button>
+      <div style="margin-top:20px">
+        <a href="https://t.me/mulimcq" target="_blank" style="color:var(--accent); font-size:0.88rem; text-decoration:none;">
+          ✈️ <strong>محمد صبار</strong> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  من إنشاء <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a> —
+  اضغط هنا للحصول على اختبارات باقي المحاضرات |
+  قسم تقنيات الأشعة — المرحلة الثالثة
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "Bartholin's adenitis is primarily an inflammation of which anatomical structure?",
+    opts: ["A. Urethral glands", "B. Bartholin's vulvovaginal glands", "C. Skene's glands", "D. Cervical glands"],
+    ans: 1,
+    exp: "Bartholin's adenitis refers to inflammation of Bartholin's vulvovaginal glands, which may occur due to bacterial infection, notably gonorrhoeal infection."
+  },
+  {
+    q: "Acute Bartholin's adenitis results in the formation of:",
+    opts: ["A. A fibroma", "B. A Bartholin's cyst", "C. A Bartholin's abscess", "D. A cervical polyp"],
+    ans: 2,
+    exp: "Acute Bartholin's adenitis occurs from obstruction and dilatation of the duct by infection, resulting in formation of a Bartholin's abscess."
+  },
+  {
+    q: "Microscopically, acute Bartholin's adenitis shows:",
+    opts: ["A. Lymphocytic infiltration with fibrosis", "B. Neutrophilic infiltration, hyperaemia, oedema and epithelial degeneration", "C. Granuloma formation", "D. Squamous metaplasia"],
+    ans: 1,
+    exp: "M/E of acute Bartholin's adenitis shows the usual appearance of acute suppurative inflammation with neutrophilic infiltration, hyperaemia, oedema and epithelial degeneration."
+  },
+  {
+    q: "Chronic Bartholin's adenitis typically terminates into:",
+    opts: ["A. Carcinoma", "B. Calcification", "C. Fluid-filled Bartholin's cyst", "D. Abscess rupture"],
+    ans: 2,
+    exp: "Chronic Bartholin's adenitis results from a less virulent infection so that the process is slow and prolonged, and the chronic inflammatory process terminates into a fluid-filled Bartholin's cyst."
+  },
+  {
+    q: "Condyloma acuminata are induced by:",
+    opts: ["A. Herpes Simplex Virus (HSV)", "B. Human Papilloma Virus (HPV)", "C. Treponema pallidum", "D. Neisseria gonorrhoeae"],
+    ans: 1,
+    exp: "Condyloma acuminata (anogenital warts) are induced by human papilloma virus (HPV)."
+  },
+  {
+    q: "Condyloma acuminata are described as:",
+    opts: ["A. Malignant ulcerating lesions", "B. Benign papillary lesions of squamous epithelium", "C. Cystic adenomatous lesions", "D. Infiltrating fibrous masses"],
+    ans: 1,
+    exp: "Condyloma acuminata or anogenital warts are benign papillary lesions of squamous epithelium which can be transmitted venereally to male sex partners."
+  },
+  {
+    q: "Common locations of condyloma acuminata include all of the following EXCEPT:",
+    opts: ["A. Anus", "B. Perineum", "C. Bartholin's gland", "D. Vaginal wall"],
+    ans: 2,
+    exp: "The common locations of condyloma acuminata are the anus, perineum, vaginal wall, vulva and vagina. Bartholin's gland is not a typical site."
+  },
+  {
+    q: "Cervical polyps are found in what percentage of adult women?",
+    opts: ["A. 0.5–1%", "B. 2–5%", "C. 10–15%", "D. 20–25%"],
+    ans: 1,
+    exp: "Cervical polyps are found in 2–5% of adult women and produce irregular vaginal spotting."
+  },
+  {
+    q: "Grossly, a cervical polyp is characterized by:",
+    opts: ["A. Large (>10 cm), pale, firm mass", "B. Small (up to 5 cm), bright red, fragile growth, frequently pedunculated", "C. Grey, calcified sessile mass", "D. Dark brown cystic lesion"],
+    ans: 1,
+    exp: "G/A: Cervical polyp is a small (up to 5 cm in size), bright red, fragile growth which is frequently pedunculated but may be sessile."
+  },
+  {
+    q: "Most cervical polyps are covered with which type of epithelium?",
+    opts: ["A. Transitional epithelium", "B. Columnar epithelium with mucous secretion", "C. Endocervical epithelium which may show squamous metaplasia", "D. Stratified squamous epithelium only"],
+    ans: 2,
+    exp: "M/E: Most cervical polyps are endocervical polyps and are covered with endocervical epithelium which may show squamous metaplasia."
+  },
+  {
+    q: "Approximately what percentage of invasive cervical cancers are squamous cell (epidermoid) carcinoma?",
+    opts: ["A. 20–25%", "B. 50%", "C. 80%", "D. 95%"],
+    ans: 2,
+    exp: "Invasive cervical cancer in about 80% of cases is epidermoid (squamous cell) carcinoma."
+  },
+  {
+    q: "The declining trend of invasive cervical carcinoma in developed countries is mainly attributed to:",
+    opts: ["A. Improved nutrition", "B. Increased use of Pap smear technique for early detection", "C. HPV vaccination alone", "D. Reduced sexual activity"],
+    ans: 1,
+    exp: "The incidence of invasive carcinoma of the cervix has shown a declining trend in developed countries due to increased use of Pap smear technique for early detection and diagnosis."
+  },
+  {
+    q: "Which pattern comprises about 70% of invasive cervical carcinomas?",
+    opts: ["A. Adenocarcinoma", "B. Adenosquamous carcinoma", "C. Epidermoid (Squamous cell) carcinoma", "D. Small cell carcinoma"],
+    ans: 2,
+    exp: "Epidermoid (squamous cell) carcinoma comprises the vast majority of invasive cervical carcinomas (about 70%)."
+  },
+  {
+    q: "Adenocarcinoma of the cervix comprises approximately what percentage of cases?",
+    opts: ["A. 5%", "B. 20–25%", "C. 40%", "D. 60%"],
+    ans: 1,
+    exp: "Adenocarcinoma comprises about 20–25% of cases of invasive cervical carcinoma."
+  },
+  {
+    q: "Dysfunctional Uterine Bleeding (DUB) is defined as excessive bleeding:",
+    opts: ["A. Due to an endometrial polyp", "B. Without a causative uterine lesion such as tumour, polyp, infection, or pregnancy", "C. Always associated with fibroids", "D. Only occurring during menstruation"],
+    ans: 1,
+    exp: "DUB may be defined as excessive bleeding occurring during or between menstrual periods without a causative uterine lesion such as tumour, polyp, infection, hyperplasia, trauma, blood dyscrasia or pregnancy."
+  },
+  {
+    q: "In adolescent girls, the most common cause of DUB is:",
+    opts: ["A. Endometrial carcinoma", "B. Anovulatory cycles at the onset of menstruation", "C. Polycystic ovary disease", "D. Leiomyoma"],
+    ans: 1,
+    exp: "In adolescence, DUB is caused by anovulatory cycles at the onset of menstruation."
+  },
+  {
+    q: "Adenomyosis is defined as:",
+    opts: ["A. Endometrial glands outside the uterus", "B. Abnormal distribution of benign endometrial tissue within the myometrium with myometrial hypertrophy", "C. A malignant transformation of the endometrium", "D. Cystic dilation of endometrial glands"],
+    ans: 1,
+    exp: "Adenomyosis is defined as abnormal distribution of histologically benign endometrial tissue within the myometrium along with myometrial hypertrophy."
+  },
+  {
+    q: "The underlying cause of adenomyosis is thought to be related to:",
+    opts: ["A. Bacterial infection", "B. Metaplasia or oestrogenic stimulation due to endocrine dysfunction of the ovary", "C. Chromosomal abnormality", "D. Trauma to the uterus"],
+    ans: 1,
+    exp: "The possible underlying cause of adenomyosis appears to be either a metaplasia or oestrogenic stimulation due to endocrine dysfunction of the ovary."
+  },
+  {
+    q: "Grossly, the uterus in adenomyosis shows:",
+    opts: ["A. Multiple well-defined nodules", "B. Diffuse thickness of uterine wall with coarsely trabecular, ill-defined areas of haemorrhages", "C. Thin, atrophic wall with calcifications", "D. Smooth serosal surface without wall changes"],
+    ans: 1,
+    exp: "G/A in adenomyosis: diffuse thickness of the uterine wall with presence of coarsely trabecular, ill-defined areas of haemorrhages."
+  },
+  {
+    q: "Endometriosis refers to the presence of endometrial glands and stroma:",
+    opts: ["A. Within the myometrium only", "B. In abnormal locations outside the uterus", "C. Inside the endometrial cavity as polyps", "D. Within the cervical canal"],
+    ans: 1,
+    exp: "Endometriosis refers to the presence of endometrial glands and stroma in abnormal locations outside the uterus."
+  },
+  {
+    q: "The most common location of endometriosis is:",
+    opts: ["A. Vagina", "B. Umbilicus", "C. Ovaries", "D. Laparotomy scars"],
+    ans: 2,
+    exp: "The chief locations where abnormal endometrial development may occur, in descending order of frequency, begin with the ovaries."
+  },
+  {
+    q: "'Chocolate cysts' of the ovary seen in endometriosis are:",
+    opts: ["A. Sebaceous cysts filled with keratin", "B. Larger cysts filled with old dark brown blood", "C. Mucinous cysts with greenish fluid", "D. Serous cysts with clear fluid"],
+    ans: 1,
+    exp: "Larger cysts (3–5 cm in diameter) filled with old dark brown blood form 'chocolate cysts' of the ovary in endometriosis."
+  },
+  {
+    q: "The most important presenting complaint of endometrial carcinoma in postmenopausal women is:",
+    opts: ["A. Pelvic pressure", "B. Abnormal uterine bleeding", "C. Fever and chills", "D. Urinary incontinence"],
+    ans: 1,
+    exp: "The most important presenting complaint is abnormal bleeding in postmenopausal women or excessive flow in the premenopausal years."
+  },
+  {
+    q: "Which of the following is NOT a recognized etiological factor of endometrial carcinoma?",
+    opts: ["A. Chronic unopposed oestrogen excess", "B. Nulliparous state", "C. Multiparity", "D. Diabetes mellitus"],
+    ans: 2,
+    exp: "Recognized factors include chronic unopposed oestrogen excess, obesity, diabetes mellitus, hypertension, nulliparous state, and heredity. Multiparity (having many children) is NOT a risk factor."
+  },
+  {
+    q: "Women with oestrogen-secreting tumours (e.g., granulosa cell tumour) have:",
+    opts: ["A. Decreased risk of endometrial carcinoma", "B. Increased risk of endometrial carcinoma", "C. No change in endometrial carcinoma risk", "D. Increased risk of cervical carcinoma only"],
+    ans: 1,
+    exp: "Women having oestrogen-secreting tumours (e.g., granulosa cell tumour) have an increased risk of endometrial carcinoma due to prolonged oestrogenic stimulation."
+  },
+  {
+    q: "Most endometrial carcinomas are histologically classified as:",
+    opts: ["A. Squamous cell carcinoma", "B. Adenocarcinomas (endometrioid adenocarcinomas)", "C. Small cell carcinoma", "D. Clear cell carcinoma"],
+    ans: 1,
+    exp: "Most endometrial carcinomas are adenocarcinomas, commonly termed endometrioid adenocarcinomas."
+  },
+  {
+    q: "Tamoxifen use in breast cancer patients is associated with increased risk of:",
+    opts: ["A. Cervical carcinoma", "B. Ovarian carcinoma", "C. Endometrial carcinoma", "D. Vulvar carcinoma"],
+    ans: 2,
+    exp: "Women of breast cancer receiving tamoxifen for a prolonged period have an increased risk of endometrial carcinoma."
+  },
+  {
+    q: "Leiomyomas (fibroids) are tumours originating from:",
+    opts: ["A. Endometrial glands", "B. Smooth muscle of the uterus", "C. Peritoneal epithelium", "D. Fallopian tube epithelium"],
+    ans: 1,
+    exp: "Leiomyomas are the most common uterine tumours of smooth muscle origin, often admixed with variable amount of fibrous tissue component."
+  },
+  {
+    q: "Approximately what percentage of women above age 30 years harbour uterine myomas?",
+    opts: ["A. 5%", "B. 10%", "C. 20%", "D. 40%"],
+    ans: 2,
+    exp: "About 20% of women above the age of 30 years harbour uterine myomas of varying size."
+  },
+  {
+    q: "Malignant transformation occurs in what percentage of leiomyomas?",
+    opts: ["A. Less than 0.5%", "B. About 5%", "C. About 10%", "D. About 25%"],
+    ans: 0,
+    exp: "Malignant transformation occurs in less than 0.5% of leiomyomas."
+  },
+  {
+    q: "Which of the following is NOT a location of uterine leiomyoma?",
+    opts: ["A. Intramural (interstitial)", "B. Subserosal", "C. Submucosal", "D. Intraligamentous only"],
+    ans: 3,
+    exp: "Leiomyomas may occur within the myometrium (intramural or interstitial), the serosa (subserosal), or just underneath the endometrium (submucosal). Intraligamentous is not listed as a standard location."
+  },
+  {
+    q: "Microscopically, leiomyomas are composed of:",
+    opts: ["A. Glandular elements with stroma", "B. Whorled bundles of smooth muscle cells admixed with connective tissue", "C. Clear cells with lipid vacuoles", "D. Pleomorphic spindle cells with mitoses"],
+    ans: 1,
+    exp: "M/E: Leiomyomas are essentially composed of two tissue elements—whorled bundles of smooth muscle cells admixed with variable amount of connective tissue."
+  },
+  {
+    q: "Which secondary change in leiomyoma is described as 'sarcomatous change'?",
+    opts: ["A. Hyaline degeneration", "B. Cystic degeneration", "C. Fatty change", "D. Malignant transformation"],
+    ans: 3,
+    exp: "Secondary changes in leiomyomas include hyaline degeneration, cystic degeneration, infarction, calcification, infection and suppuration, necrosis, fatty change, and rarely, sarcomatous (malignant) change."
+  },
+  {
+    q: "Pelvic Inflammatory Disease (PID) is defined as:",
+    opts: ["A. A localized infection of the ovary only", "B. A clinical syndrome of ascending infection beginning in the vulva or vagina and spreading through the entire genital tract", "C. A viral infection of the uterus", "D. Inflammation limited to the fallopian tubes"],
+    ans: 1,
+    exp: "PID by definition is a clinical syndrome characterised by signs and symptoms of ascending infection beginning in the vulva or vagina and spreading through the entire genital tract."
+  },
+  {
+    q: "Long-standing chronic PID may lead to:",
+    opts: ["A. Polycystic ovaries", "B. Cervical carcinoma", "C. Infertility and adhesions between small intestine and pelvic organs", "D. Endometrial hyperplasia"],
+    ans: 2,
+    exp: "Long-standing chronic PID may lead to infertility and adhesions between small intestine and pelvic organs."
+  },
+  {
+    q: "In PID, the fallopian tubes are characteristically involved:",
+    opts: ["A. Unilaterally, on the right side only", "B. Bilaterally", "C. Only at the proximal end", "D. Without luminal dilation"],
+    ans: 1,
+    exp: "G/A: The fallopian tubes are invariably involved bilaterally in PID. The distal end is blocked by inflammatory exudate and the lumina are dilated."
+  },
+  {
+    q: "The most common form of ectopic gestation is:",
+    opts: ["A. Ovarian pregnancy", "B. Abdominal pregnancy", "C. Tubal pregnancy", "D. Uterine horn pregnancy"],
+    ans: 2,
+    exp: "Tubal pregnancy is by far the most common form of ectopic gestation."
+  },
+  {
+    q: "All of the following predispose to ectopic tubal pregnancy EXCEPT:",
+    opts: ["A. PID", "B. Previous tubal surgery", "C. Use of IUCD", "D. Multiparity without prior surgery"],
+    ans: 3,
+    exp: "Predisposing factors for ectopic tubal pregnancy include PID, previous tubal surgery, use of IUCD, and congenital anomalies. Simple multiparity is not listed as a predisposing factor."
+  },
+  {
+    q: "The dangerous complication of ectopic tubal pregnancy is:",
+    opts: ["A. Torsion of the ovary", "B. Rupture followed by intraperitoneal haemorrhage", "C. Development into hydatidiform mole", "D. Transformation into choriocarcinoma"],
+    ans: 1,
+    exp: "Ectopic tubal pregnancy is a potentially hazardous problem because of rupture which is followed by intraperitoneal haemorrhage."
+  },
+  {
+    q: "Polycystic Ovary Syndrome (PCOS) / Stein-Leventhal Syndrome is characterized by all EXCEPT:",
+    opts: ["A. Oligomenorrhoea", "B. Hirsutism", "C. Low levels of LH", "D. Bilaterally enlarged cystic ovaries"],
+    ans: 2,
+    exp: "PCOS is characterised by oligomenorrhoea, anovulation, infertility, hirsutism and obesity. The principal biochemical abnormalities include excessive androgens and low FSH. The unbalanced release involves elevated LH, not low LH."
+  },
+  {
+    q: "Grossly, the ovaries in PCOS appear:",
+    opts: ["A. Small, shrunken and dark red", "B. Grey-white, at least twice normal size, studded with multiple small bluish cysts beneath the cortex", "C. Normal-sized with a single large cyst", "D. Haemorrhagic with irregular surface"],
+    ans: 1,
+    exp: "G/A in PCOS: The ovaries are usually involved bilaterally and are at least twice the size of the normal ovary. They are grey-white in colour and studded with multiple small (0.5–1.5 cm) bluish cysts just beneath the cortex."
+  },
+  {
+    q: "Serous tumours of the ovary constitute approximately what percentage of malignant ovarian tumours?",
+    opts: ["A. 10%", "B. 25%", "C. 40%", "D. 60%"],
+    ans: 2,
+    exp: "Serous tumours comprise the largest group, constituting about 40% of malignant ovarian tumours."
+  },
+  {
+    q: "Regarding serous ovarian tumours, which statement is correct?",
+    opts: ["A. About 60% are malignant", "B. About 60% are benign, 15% borderline, and 25% malignant", "C. They never show papillary projections", "D. They occur exclusively in postmenopausal women"],
+    ans: 1,
+    exp: "About 60% of serous tumours are benign, 15% borderline, and 25% malignant."
+  },
+  {
+    q: "Hydatidiform mole is characterised by two main features: oedematous chorionic villi and:",
+    opts: ["A. Absence of trophoblastic proliferation", "B. Variable amount of circumferential trophoblastic proliferation", "C. Diffuse haemorrhage into the uterine cavity", "D. Absence of β-hCG production"],
+    ans: 1,
+    exp: "Hydatidiform mole is defined by: i) enlarged, oedematous and hydropic change of the chorionic villi, and ii) variable amount of circumferential trophoblastic proliferation."
+  },
+  {
+    q: "Clinically, hydatidiform mole typically appears during which month of gestation?",
+    opts: ["A. 1st–2nd month", "B. 4th–5th month", "C. 7th–8th month", "D. After delivery (postpartum)"],
+    ans: 1,
+    exp: "Clinically, hydatidiform mole appears in the 4th–5th month of gestation and is characterised by increase in uterine size, vaginal bleeding, and often symptoms of toxaemia."
+  },
+  {
+    q: "The most significant investigation in the management of hydatidiform mole is:",
+    opts: ["A. Ultrasound only", "B. Serial determination of β-hCG levels in blood and urine", "C. CA-125 levels", "D. Endometrial biopsy"],
+    ans: 1,
+    exp: "The single most significant investigation forming the mainstay of management is the serial determination of β-hCG, which is elevated more in both blood and urine compared with levels in normal pregnancy."
+  },
+  {
+    q: "Approximately what percentage of complete moles develop into choriocarcinoma?",
+    opts: ["A. 2.5%", "B. 10%", "C. 25%", "D. 50%"],
+    ans: 0,
+    exp: "About 10% of patients with complete mole develop into invasive moles and 2.5% into choriocarcinoma."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let wrongCount = 0;
+let answered = false;
+let timerInterval = null;
+let seconds = 0;
+
+function startQuiz() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('progress-wrap').style.display = 'block';
+  startTimer();
+  loadQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    document.getElementById('timer-val').textContent = m + ':' + s;
+  }, 1000);
+}
+
+function loadQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  document.getElementById('q-number').textContent = 'السؤال ' + (currentQ + 1) + ' من 45';
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('progress-val').textContent = currentQ + ' / 45';
+  document.getElementById('progress-fill').style.width = ((currentQ / 45) * 100) + '%';
+
+  const optDiv = document.getElementById('options');
+  optDiv.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${['A','B','C','D'][i]}</span><span>${opt.substring(3)}</span>`;
+    btn.onclick = () => selectAnswer(i, btn);
+    optDiv.appendChild(btn);
+  });
+
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('btn-next').className = 'btn-next';
+}
+
+function selectAnswer(index, btn) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[currentQ];
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  if (index === q.ans) {
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('score-val').textContent = score;
+    showToast('✅ إجابة صحيحة!', 'correct-toast');
+  } else {
+    btn.classList.add('wrong');
+    allBtns[q.ans].classList.add('correct');
+    wrongCount++;
+    showToast('❌ إجابة خاطئة', 'wrong-toast');
+    const expDiv = document.getElementById('explanation');
+    expDiv.innerHTML = '<strong>💡 الشرح:</strong> ' + q.exp;
+    expDiv.className = 'explanation show';
+  }
+
+  const btnNext = document.getElementById('btn-next');
+  btnNext.className = 'btn-next show';
+  if (currentQ === 44) btnNext.textContent = 'عرض النتيجة النهائية 🏆';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= 45) {
+    showResults();
+  } else {
+    loadQuestion();
+    document.getElementById('question-card').style.animation = 'none';
+    requestAnimationFrame(() => {
+      document.getElementById('question-card').style.animation = 'fadeSlide 0.4s ease';
+    });
+  }
+}
+
+function showResults() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('stats-bar').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+
+  const rs = document.getElementById('results-screen');
+  rs.style.display = 'block';
+
+  const pct = Math.round((score / 45) * 100);
+  document.getElementById('final-score-num').textContent = score;
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = wrongCount;
+  const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const s = String(seconds % 60).padStart(2, '0');
+  document.getElementById('r-time').textContent = m + ':' + s;
+
+  const circle = document.getElementById('result-circle');
+  let title, sub, color;
+  if (pct >= 90) {
+    title = '🏆 ممتاز!'; sub = 'أداء رائع! أنت متمكن من هذه المحاضرة.';
+    color = 'radial-gradient(circle, rgba(34,197,94,0.2), transparent)'; circle.style.border = '4px solid #22c55e';
+  } else if (pct >= 70) {
+    title = '👏 جيد جداً!'; sub = 'أداء جيد، راجع الأسئلة التي أخطأت فيها.';
+    color = 'radial-gradient(circle, rgba(59,130,246,0.2), transparent)'; circle.style.border = '4px solid #3b82f6';
+  } else if (pct >= 50) {
+    title = '📚 مقبول'; sub = 'يحتاج إلى مراجعة إضافية للمحاضرة.';
+    color = 'radial-gradient(circle, rgba(245,158,11,0.2), transparent)'; circle.style.border = '4px solid #f59e0b';
+  } else {
+    title = '💪 حاول مجدداً'; sub = 'راجع المحاضرة وأعد الاختبار للحصول على نتيجة أفضل.';
+    color = 'radial-gradient(circle, rgba(239,68,68,0.2), transparent)'; circle.style.border = '4px solid #ef4444';
+  }
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub + ' (' + pct + '%)';
+  circle.style.background = color;
+}
+
+function retryQuiz() {
+  currentQ = 0; score = 0; wrongCount = 0; seconds = 0;
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('timer-val').textContent = '00:00';
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('quiz-screen').style.display = 'block';
+  startTimer();
+  loadQuestion();
+}
+
+function showToast(msg, cls) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + cls + ' show';
+  setTimeout(() => { t.className = 'toast'; }, 1800);
+}
+</script>
+</body>
+</html>

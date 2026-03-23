@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار المحاضرة التاسعة - Lungs Diseases</title>
+<style>
+  /* Offline fallback fonts */
+  @font-face { font-family: 'Tajawal'; src: local('Tajawal'), local('Arial'), local('Segoe UI'); }
+  @font-face { font-family: 'Roboto'; src: local('Roboto'), local('Arial'), local('Segoe UI'); }
+</style>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2236;
+    --card2: #151c2e;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #2d3f5e;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.07) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 80%, rgba(96,165,250,0.05) 0%, transparent 60%);
+  }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* HEADER */
+  header {
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  }
+  .header-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--accent2);
+    letter-spacing: 0.5px;
+  }
+  .header-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .header-link {
+    font-size: 0.82rem;
+    background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.3);
+    padding: 4px 14px;
+    border-radius: 20px;
+    color: var(--accent2);
+  }
+  .header-link:hover { background: rgba(59,130,246,0.22); text-decoration: none; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 14px 24px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .stat-label { font-size: 0.72rem; color: var(--muted); }
+  .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  #timer-val { color: var(--accent2); }
+  #score-val { color: var(--success); }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 10px 24px 0;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .progress-bar-bg {
+    background: var(--border);
+    border-radius: 99px;
+    height: 7px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 28px 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform:none; } }
+  .q-num {
+    font-size: 0.75rem;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .q-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 22px;
+    font-weight: 500;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 18px;
+    text-align: right;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.08);
+  }
+  .opt-btn.selected {
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.12);
+  }
+  .opt-btn.correct {
+    border-color: var(--success) !important;
+    background: rgba(34,197,94,0.1) !important;
+    color: #86efac;
+  }
+  .opt-btn.wrong {
+    border-color: var(--danger) !important;
+    background: rgba(239,68,68,0.1) !important;
+    color: #fca5a5;
+  }
+  .opt-btn:disabled { cursor: default; }
+  .opt-letter {
+    min-width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .opt-btn.correct .opt-letter { background: var(--success); color: #fff; }
+  .opt-btn.wrong .opt-letter { background: var(--danger); color: #fff; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(239,68,68,0.07);
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 10px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem;
+    color: #fca5a5;
+    line-height: 1.6;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent2); }
+
+  /* NAV BUTTONS */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .btn {
+    padding: 11px 26px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { color: var(--text); border-color: var(--muted); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #toast.correct { background: var(--success); color: #fff; }
+  #toast.wrong { background: var(--danger); color: #fff; }
+
+  /* RESULT SCREEN */
+  #result-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeIn 0.5s ease;
+  }
+  #result-screen.show { display: block; }
+  .result-circle {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    border: 5px solid var(--accent);
+    margin: 0 auto 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(59,130,246,0.08);
+    box-shadow: 0 0 40px rgba(59,130,246,0.2);
+  }
+  .result-score { font-size: 2.4rem; font-weight: 900; color: var(--accent2); }
+  .result-of { font-size: 0.85rem; color: var(--muted); }
+  .result-title { font-size: 1.5rem; font-weight: 900; margin-bottom: 8px; }
+  .result-msg { color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
+  .result-stats {
+    display: flex; justify-content: center; gap: 32px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .r-stat { text-align: center; }
+  .r-stat-val { font-size: 1.5rem; font-weight: 900; }
+  .r-stat-lbl { font-size: 0.78rem; color: var(--muted); }
+  .green { color: var(--success); }
+  .red { color: var(--danger); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 22px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 20px;
+  }
+  footer a { color: var(--accent2); font-weight: 700; }
+
+  /* QUIZ CONTAINER */
+  #quiz-screen { display: block; }
+
+  @media (max-width: 500px) {
+    .q-card { padding: 18px 14px; }
+    .q-text { font-size: 0.95rem; }
+    .opt-btn { font-size: 0.88rem; padding: 11px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<header>
+  <div class="header-title">🫁 Lungs Diseases — المحاضرة التاسعة</div>
+  <div class="header-sub">علم الأمراض الوظيفي | المرحلة الثالثة | 45 سؤال MCQ</div>
+  <a class="header-link" href="https://t.me/mulimcq" target="_blank">
+    <strong>محمد صبار</strong> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  </a>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-label">⏱ الوقت</span>
+    <span class="stat-value" id="timer-val">00:00</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">📋 السؤال</span>
+    <span class="stat-value" id="q-counter">1 / 45</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">✅ النقاط</span>
+    <span class="stat-value" id="score-val">0</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-label">❌ الأخطاء</span>
+    <span class="stat-value" style="color:#ef4444" id="wrong-val">0</span>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-info">
+    <span id="prog-text">التقدم: 0%</span>
+    <span id="prog-answered">0 من 45</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="prog-fill"></div>
+  </div>
+</div>
+
+<main>
+  <div id="quiz-screen">
+    <div class="q-card" id="q-card">
+      <div class="q-num" id="q-num">السؤال 1 من 45</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" id="btn-prev" onclick="prevQ()" disabled>→ السابق</button>
+      <button class="btn btn-primary" id="btn-next" onclick="nextQ()" disabled>التالي ←</button>
+    </div>
+  </div>
+
+  <div id="result-screen">
+    <div class="result-circle">
+      <div class="result-score" id="res-score">0</div>
+      <div class="result-of">من 45</div>
+    </div>
+    <div class="result-title" id="res-title"></div>
+    <div class="result-msg" id="res-msg"></div>
+    <div class="result-stats">
+      <div class="r-stat">
+        <div class="r-stat-val green" id="res-correct">0</div>
+        <div class="r-stat-lbl">إجابات صحيحة</div>
+      </div>
+      <div class="r-stat">
+        <div class="r-stat-val red" id="res-wrong">0</div>
+        <div class="r-stat-lbl">إجابات خاطئة</div>
+      </div>
+      <div class="r-stat">
+        <div class="r-stat-val" id="res-pct" style="color:var(--accent2)">0%</div>
+        <div class="r-stat-lbl">النسبة المئوية</div>
+      </div>
+      <div class="r-stat">
+        <div class="r-stat-val" id="res-time" style="color:var(--muted)">0:00</div>
+        <div class="r-stat-lbl">الوقت المستغرق</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="restartQuiz()" style="font-size:1.05rem; padding:13px 40px;">🔄 إعادة الاختبار</button>
+  </div>
+</main>
+
+<footer>
+  من إنشاء <a href="https://t.me/mulimcq" target="_blank">محمد صبار</a> — اضغط هنا للحصول على اختبارات باقي المحاضرات
+  <br>
+  <span style="font-size:0.75rem; margin-top:4px; display:block;">المحاضرة التاسعة | Lungs Diseases | علم الأمراض الوظيفي</span>
+</footer>
+
+<script>
+const questions = [
+  {
+    q: "Developmental defects involving deficiency of bronchial or bronchiolar cartilage, elastic tissue and muscle result in:",
+    opts: ["Bronchiectasis","Congenital cystic disease of lungs","Pulmonary emphysema","Bronchial asthma"],
+    ans: 1,
+    exp: "Deficiency of bronchial/bronchiolar cartilage, elastic tissue and muscle leads to congenital cystic disease of the lungs."
+  },
+  {
+    q: "A single large congenital cyst occupying almost a lobe of the lung is called:",
+    opts: ["Pneumothorax","Pneumatocele","Pneumonia","Pneumoconiosis"],
+    ans: 1,
+    exp: "A single large congenital cyst of this type occupying almost a lobe is called a pneumatocele."
+  },
+  {
+    q: "Multiple small congenital lung cysts give the lung which appearance?",
+    opts: ["Honeycombed appearance","Sponge-like appearance","Marble-like appearance","Cobblestone appearance"],
+    ans: 1,
+    exp: "Multiple small congenital cysts are more common and give a sponge-like appearance to the lung."
+  },
+  {
+    q: "Bronchopulmonary sequestration is defined as:",
+    opts: [
+      "Inflammatory narrowing of bronchi",
+      "Lobes or segments of lung tissue not connected to the airway system",
+      "Collapse of lung tissue after birth",
+      "Abnormal dilatation of bronchi"
+    ],
+    ans: 1,
+    exp: "Sequestration is the presence of lobes or segments of lung tissue which are not connected to the airway system."
+  },
+  {
+    q: "Intralobar sequestration refers to:",
+    opts: [
+      "Sequestered mass lying outside the pleural investing layer",
+      "Sequestered bronchopulmonary mass within the pleural covering of the affected lung",
+      "Lung tissue sequestered below the diaphragm",
+      "Sequestration involving both lungs"
+    ],
+    ans: 1,
+    exp: "Intralobar sequestration is the sequestered bronchopulmonary mass within the pleural covering of the affected lung."
+  },
+  {
+    q: "Extralobar sequestration characteristically lies:",
+    opts: [
+      "Within the pleural covering of the affected lung",
+      "Inside the bronchial lumen",
+      "Outside the pleural investing layer, e.g., at the base of the left lung or below the diaphragm",
+      "In the tracheal wall"
+    ],
+    ans: 2,
+    exp: "Extralobar sequestration is the sequestered mass of lung tissue lying outside the pleural investing layer, such as at the base of the left lung or below the diaphragm."
+  },
+  {
+    q: "Primary atelectasis (atelectasis in the newborn) is defined as:",
+    opts: [
+      "Reduction in size of a previously aerated lung",
+      "Incomplete expansion of a lung or part of a lung",
+      "Collapse due to obstruction",
+      "Collapse due to surfactant deficiency in adults"
+    ],
+    ans: 1,
+    exp: "Atelectasis in the newborn or primary atelectasis is defined as incomplete expansion of a lung or part of a lung."
+  },
+  {
+    q: "Pulmonary collapse (secondary atelectasis) may occur at:",
+    opts: ["Only in neonates","Only in adults over 60","Any age","Only in premature infants"],
+    ans: 2,
+    exp: "Pulmonary collapse or secondary atelectasis is the reduction in lung size of a previously expanded lung and may occur at any age."
+  },
+  {
+    q: "Which of the following is NOT a common cause of primary atelectasis in the newborn?",
+    opts: ["Prematurity","Cerebral birth injury","CNS malformations","Pulmonary thromboembolism"],
+    ans: 3,
+    exp: "Common causes of primary atelectasis include prematurity, cerebral birth injury, CNS malformations, and intrauterine hypoxia. Pulmonary thromboembolism is not a cause."
+  },
+  {
+    q: "Acute Lung Injury (ALI) is characterized by abrupt onset of hypoxemia and bilateral pulmonary edema in the absence of:",
+    opts: ["Renal failure","Cardiac failure","Hepatic failure","Brain injury"],
+    ans: 1,
+    exp: "ALI is characterized by abrupt onset of hypoxemia and bilateral pulmonary edema in the absence of cardiac failure (noncardiogenic pulmonary edema)."
+  },
+  {
+    q: "The histologic manifestation of both ALI and ARDS is:",
+    opts: ["Lobar consolidation","Diffuse alveolar damage","Granuloma formation","Fibrous pleural plaques"],
+    ans: 1,
+    exp: "The histologic manifestation of ALI and ARDS is diffuse alveolar damage."
+  },
+  {
+    q: "ARDS is currently defined as respiratory failure occurring within how long of a known clinical insult?",
+    opts: ["24 hours","48 hours","1 week","1 month"],
+    ans: 2,
+    exp: "ARDS is now defined as respiratory failure occurring within 1 week of a known clinical insult."
+  },
+  {
+    q: "The most frequent trigger of ARDS is:",
+    opts: ["Pancreatitis","Trauma","Pneumonia (35%-45%)","Transfusion reactions"],
+    ans: 2,
+    exp: "The most frequent triggers of ARDS are pneumonia (35%-45%) and sepsis (30%-35%)."
+  },
+  {
+    q: "COVID-19 pneumonia in a subset of patients progresses to:",
+    opts: ["Chronic bronchitis","ARDS requiring intubation and mechanical ventilation","Primary pulmonary hypertension","Bronchiectasis"],
+    ans: 1,
+    exp: "COVID-19 pneumonia progresses in a subset of patients to ARDS, which often requires intubation and mechanical ventilation."
+  },
+  {
+    q: "Grossly, in ARDS the lungs are described as:",
+    opts: [
+      "Small, dry, and hyperinflated",
+      "Normal in size, stiff, congested, heavy, and airless (sinking in water)",
+      "Large, air-filled, and floating in water",
+      "Fibrotic and shrunken"
+    ],
+    ans: 1,
+    exp: "In ARDS, the lungs are normal in size but characteristically stiff, congested, heavy, and airless so that they sink in water."
+  },
+  {
+    q: "The mortality rate in neonatal ARDS is approximately:",
+    opts: ["5-10%","20-30%","50-60%","80-90%"],
+    ans: 1,
+    exp: "The mortality rate in neonatal ARDS is high — 20 to 30% — and is still higher in babies under 1 kg body weight."
+  },
+  {
+    q: "COPD stands for:",
+    opts: [
+      "Chronic Obstructive Pulmonary Disease",
+      "Congenital Obstructive Pulmonary Disorder",
+      "Chronic Obliterative Pleural Disease",
+      "Complicated Obstructive Pulmonary Disorder"
+    ],
+    ans: 0,
+    exp: "COPD stands for Chronic Obstructive Pulmonary Disease (also known as Chronic Obstructive Airway Disease, COAD)."
+  },
+  {
+    q: "Which etiologic factor is a common denominator in all forms of COPD?",
+    opts: ["Dust inhalation","Smoking","Bacterial infection","Genetic mutation"],
+    ans: 1,
+    exp: "One etiologic factor which is a common denominator in all forms of COPD is smoking."
+  },
+  {
+    q: "Which of the following is NOT included under COPD?",
+    opts: ["Chronic bronchitis","Emphysema","Bronchial asthma","Pulmonary thromboembolism"],
+    ans: 3,
+    exp: "COPD includes chronic bronchitis, emphysema, bronchial asthma, bronchiectasis, and small airways disease. Pulmonary thromboembolism is a vascular disease, not a form of COPD."
+  },
+  {
+    q: "Chronic bronchitis is clinically defined as persistent cough with expectoration on most days for at least:",
+    opts: [
+      "One month per year for one year",
+      "Three months of the year for two or more consecutive years",
+      "Six months per year for three years",
+      "Two weeks per year for five years"
+    ],
+    ans: 1,
+    exp: "Chronic bronchitis is defined as persistent cough with expectoration on most days for at least three months of the year for two or more consecutive years."
+  },
+  {
+    q: "The cough in chronic bronchitis is caused by:",
+    opts: [
+      "Bronchoconstriction",
+      "Over secretion of mucus",
+      "Pulmonary edema",
+      "Fibrosis of alveoli"
+    ],
+    ans: 1,
+    exp: "The cough in chronic bronchitis is caused by over-secretion of mucus."
+  },
+  {
+    q: "Pulmonary emphysema is defined as:",
+    opts: [
+      "Persistent productive cough for more than 3 months",
+      "Permanent dilatation of air spaces distal to terminal bronchioles with destruction of walls",
+      "Reversible narrowing of airways",
+      "Irreversible dilatation of bronchi greater than 2 mm"
+    ],
+    ans: 1,
+    exp: "The WHO defines pulmonary emphysema as permanent dilatation of air spaces distal to the terminal bronchioles combined with destruction of the walls of dilated air spaces."
+  },
+  {
+    q: "Emphysema is defined:",
+    opts: ["Clinically","Morphologically","Physiologically","Radiologically only"],
+    ans: 1,
+    exp: "Emphysema is defined morphologically, while chronic bronchitis is defined clinically."
+  },
+  {
+    q: "Bronchial asthma is characterized by increased responsiveness of the tracheobronchial tree resulting in:",
+    opts: [
+      "Permanent destruction of alveolar walls",
+      "Widespread spasmodic narrowing of air passages",
+      "Irreversible dilatation of bronchi",
+      "Mucous gland atrophy"
+    ],
+    ans: 1,
+    exp: "Asthma is characterized by increased responsiveness of the tracheobronchial tree resulting in widespread spasmodic narrowing of the air passages, which may be relieved spontaneously or by therapy."
+  },
+  {
+    q: "Status asthmaticus is:",
+    opts: [
+      "Mild episodic asthma",
+      "A severe and unremitting form of asthma that may prove fatal",
+      "Asthma triggered only by allergens",
+      "Asthma occurring only in children"
+    ],
+    ans: 1,
+    exp: "A severe and unremitting form of asthma termed status asthmaticus may prove fatal."
+  },
+  {
+    q: "Bronchiectasis is defined as abnormal and irreversible dilatation of bronchi and bronchioles greater than:",
+    opts: ["1 mm in diameter","2 mm in diameter","5 mm in diameter","10 mm in diameter"],
+    ans: 1,
+    exp: "Bronchiectasis is defined as abnormal and irreversible dilatation of the bronchi and bronchioles greater than 2 mm in diameter."
+  },
+  {
+    q: "The most characteristic clinical manifestation of bronchiectasis is:",
+    opts: [
+      "Dry non-productive cough",
+      "Persistent cough with expectoration of copious amounts of foul-smelling, purulent sputum",
+      "Paroxysmal dyspnea and wheezing",
+      "Chest pain and hemoptysis alone"
+    ],
+    ans: 1,
+    exp: "The most characteristic clinical manifestation of bronchiectasis is persistent cough with expectoration of copious amounts of foul-smelling, purulent sputum."
+  },
+  {
+    q: "Small airways disease (bronchiolitis) occurs predominantly in:",
+    opts: [
+      "Young adults aged 20-40",
+      "Older pediatric age group and elderly persons",
+      "Exclusively in neonates",
+      "Middle-aged adults only"
+    ],
+    ans: 1,
+    exp: "Bronchiolitis occurs predominantly in older pediatric age group and quite elderly persons."
+  },
+  {
+    q: "Which virus is frequently associated with bronchiolitis?",
+    opts: ["Influenza virus","Adenovirus and respiratory syncytial virus","Hepatitis B virus","Herpes simplex virus"],
+    ans: 1,
+    exp: "Etiologic factors for bronchiolitis include viral infection, frequently adenovirus and respiratory syncytial virus."
+  },
+  {
+    q: "Pulmonary embolism is defined as:",
+    opts: [
+      "Inflammation of the pulmonary veins",
+      "Occlusion of pulmonary arterial tree by thromboemboli",
+      "Hemorrhage into lung parenchyma",
+      "Inflammatory occlusion of alveolar capillaries"
+    ],
+    ans: 1,
+    exp: "Pulmonary embolism is the most common and fatal form of venous thromboembolism in which there is occlusion of the pulmonary arterial tree by thromboemboli."
+  },
+  {
+    q: "Pulmonary emboli are most common in:",
+    opts: ["Athletes","Hospitalised or bedridden patients","Children","Outdoor workers"],
+    ans: 1,
+    exp: "Pulmonary emboli are more common in hospitalised or bedridden patients."
+  },
+  {
+    q: "What percentage of pulmonary emboli originate from large veins of the lower legs?",
+    opts: ["50%","75%","95%","100%"],
+    ans: 2,
+    exp: "Thrombi originating from large veins of the lower legs (popliteal, femoral, and iliac) are the cause in 95% of pulmonary emboli."
+  },
+  {
+    q: "A saddle embolus refers to a thrombus that is impacted at:",
+    opts: [
+      "The pulmonary veins",
+      "The bifurcation of the main pulmonary artery",
+      "The tracheal bifurcation",
+      "The aortic valve"
+    ],
+    ans: 1,
+    exp: "If the thrombus is large, it is impacted at the bifurcation of the main pulmonary artery and is called a saddle embolus."
+  },
+  {
+    q: "Which group of women is at higher risk for pulmonary embolism?",
+    opts: [
+      "Postmenopausal women on HRT only",
+      "Women in late pregnancy, following delivery, and with use of contraceptive pills",
+      "Teenage girls",
+      "Women with chronic renal failure"
+    ],
+    ans: 1,
+    exp: "Women in their reproductive period are at higher risk, such as in late pregnancy, following delivery, and with use of contraceptive pills."
+  },
+  {
+    q: "Which of the following is NOT a consequence of pulmonary embolism?",
+    opts: [
+      "Sudden death",
+      "Pulmonary infarction",
+      "Resolution",
+      "Bronchiectasis"
+    ],
+    ans: 3,
+    exp: "Consequences of pulmonary embolism include sudden death, acute cor pulmonale, pulmonary infarction, pulmonary hemorrhage, resolution, and pulmonary hypertension. Bronchiectasis is not a consequence."
+  },
+  {
+    q: "Pulmonary hypertension is defined as a systolic blood pressure in the pulmonary arterial circulation above:",
+    opts: ["20 mmHg","30 mmHg","40 mmHg","50 mmHg"],
+    ans: 1,
+    exp: "Pulmonary hypertension is defined as a systolic blood pressure in the pulmonary arterial circulation above 30 mmHg."
+  },
+  {
+    q: "Primary (idiopathic) pulmonary hypertension typically affects:",
+    opts: [
+      "Elderly men over 70",
+      "Young females between 20-40 years, or children around 5 years",
+      "Middle-aged men between 50-60 years",
+      "Infants under 1 year of age exclusively"
+    ],
+    ans: 1,
+    exp: "Primary or idiopathic pulmonary hypertension is an uncommon condition of unknown cause affecting usually young females between age 20-40 years, or children around 5 years of age."
+  },
+  {
+    q: "Secondary pulmonary hypertension is seen more frequently in patients:",
+    opts: ["Under age 20","Over age 50","In the first decade of life","Between ages 30-40"],
+    ans: 1,
+    exp: "Secondary pulmonary hypertension may be encountered at any age but is seen more frequently over the age of 50 years."
+  },
+  {
+    q: "Passive pulmonary hypertension can be caused by:",
+    opts: [
+      "Patent ductus arteriosus",
+      "Mitral stenosis and chronic left ventricular failure",
+      "Multiple emboli",
+      "Emphysema"
+    ],
+    ans: 1,
+    exp: "Passive pulmonary hypertension is caused by mitral stenosis and chronic left ventricular failure."
+  },
+  {
+    q: "Hyperkinetic (reactive) pulmonary hypertension is caused by:",
+    opts: [
+      "Multiple emboli",
+      "Emphysema",
+      "Patent ductus arteriosus and atrial or ventricular septal defects",
+      "High altitude"
+    ],
+    ans: 2,
+    exp: "Hyperkinetic (reactive) pulmonary hypertension is caused by patent ductus arteriosus and atrial or ventricular septal defects."
+  },
+  {
+    q: "Vasoconstrictive type of pulmonary hypertension occurs in:",
+    opts: [
+      "Multiple emboli",
+      "Emphysema",
+      "Those residing at high altitude",
+      "Mitral stenosis"
+    ],
+    ans: 2,
+    exp: "Vasoconstrictive type of vaso-occlusive pulmonary hypertension is seen in those residing at high altitude."
+  },
+  {
+    q: "Chronic cases of pulmonary hypertension invariably lead to:",
+    opts: ["Left ventricular hypertrophy","Cor pulmonale","Mitral stenosis","Pulmonary fibrosis"],
+    ans: 1,
+    exp: "Irrespective of the type of pulmonary hypertension, chronic cases invariably lead to cor pulmonale — with hypertrophy of the right ventricle and dilatation of the right atrium."
+  },
+  {
+    q: "The risk factors for pulmonary thromboembolism include:",
+    opts: [
+      "Hypotension and anemia",
+      "Stasis of venous blood and hypercoagulable states",
+      "Hypertension and polycythemia only",
+      "Tachycardia and anemia"
+    ],
+    ans: 1,
+    exp: "The risk factors for pulmonary thromboembolism are stasis of venous blood and hypercoagulable states."
+  },
+  {
+    q: "Obliterative type of vaso-occlusive pulmonary hypertension is exemplified by:",
+    opts: ["Multiple emboli","High altitude","Emphysema","Atrial septal defect"],
+    ans: 2,
+    exp: "Obliterative type of vaso-occlusive pulmonary hypertension is exemplified by emphysema."
+  },
+  {
+    q: "Neonatal respiratory distress syndrome (as opposed to ARDS) is caused by:",
+    opts: [
+      "Sepsis in the newborn",
+      "Deficiency of surfactant in the setting of prematurity",
+      "Viral pneumonia",
+      "Congenital heart disease"
+    ],
+    ans: 1,
+    exp: "ARDS should not be confused with respiratory distress syndrome of the newborn; the latter is caused by a deficiency of surfactant in the setting of prematurity."
+  },
+  {
+    q: "The second most frequent trigger of ARDS after pneumonia is:",
+    opts: ["Trauma","Pancreatitis","Sepsis (30%-35%)","Transfusion reactions"],
+    ans: 2,
+    exp: "The most frequent triggers of ARDS are pneumonia (35%-45%) and sepsis (30%-35%), followed by aspiration, trauma, pancreatitis, and transfusion reactions."
+  }
+];
+
+let current = 0;
+let score = 0;
+let wrong = 0;
+let answered = new Array(questions.length).fill(null); // null = unanswered, true = correct, false = wrong
+let timerInterval;
+let seconds = 0;
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    document.getElementById('timer-val').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function updateStats() {
+  document.getElementById('q-counter').textContent = `${current+1} / ${questions.length}`;
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('wrong-val').textContent = wrong;
+  const answeredCount = answered.filter(a => a !== null).length;
+  const pct = Math.round((answeredCount / questions.length) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = `التقدم: ${pct}%`;
+  document.getElementById('prog-answered').textContent = `${answeredCount} من ${questions.length}`;
+}
+
+function renderQ() {
+  const q = questions[current];
+  document.getElementById('q-num').textContent = `السؤال ${current+1} من ${questions.length}`;
+  document.getElementById('q-text').textContent = q.q;
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    // Restore state if already answered
+    if (answered[current] !== null) {
+      btn.disabled = true;
+      if (i === q.ans) btn.classList.add('correct');
+      if (i !== q.ans && answered[current] === i) btn.classList.add('wrong');
+    }
+    opts.appendChild(btn);
+  });
+  // Restore explanation
+  const exp = document.getElementById('explanation');
+  if (answered[current] !== null && answered[current] !== true) {
+    // wrong answer was given
+    exp.innerHTML = `<strong>💡 الشرح:</strong> ${q.exp}`;
+    exp.classList.add('show');
+  } else {
+    exp.classList.remove('show');
+    exp.innerHTML = '';
+  }
+  // Nav buttons
+  document.getElementById('btn-prev').disabled = current === 0;
+  document.getElementById('btn-next').disabled = answered[current] === null;
+  if (current === questions.length - 1 && answered[current] !== null) {
+    document.getElementById('btn-next').textContent = 'إنهاء الاختبار ✓';
+  } else {
+    document.getElementById('btn-next').textContent = 'التالي ←';
+  }
+  updateStats();
+}
+
+function selectAnswer(idx) {
+  if (answered[current] !== null) return;
+  const q = questions[current];
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[q.ans].classList.add('correct');
+  if (idx === q.ans) {
+    answered[current] = true;
+    score++;
+    showToast('✅ إجابة صحيحة!', 'correct');
+  } else {
+    answered[current] = idx;
+    btns[idx].classList.add('wrong');
+    wrong++;
+    showToast('❌ إجابة خاطئة!', 'wrong');
+    const exp = document.getElementById('explanation');
+    exp.innerHTML = `<strong>💡 الشرح:</strong> ${q.exp}`;
+    exp.classList.add('show');
+  }
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('wrong-val').textContent = wrong;
+  document.getElementById('btn-next').disabled = false;
+  if (current === questions.length - 1) {
+    document.getElementById('btn-next').textContent = 'إنهاء الاختبار ✓';
+  }
+  updateStats();
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  setTimeout(() => { t.className = ''; }, 2000);
+}
+
+function nextQ() {
+  if (current === questions.length - 1) {
+    showResult();
+    return;
+  }
+  current++;
+  renderQ();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function prevQ() {
+  if (current > 0) {
+    current--;
+    renderQ();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').style.display = 'none';
+  const rs = document.getElementById('result-screen');
+  rs.classList.add('show');
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-correct').textContent = score;
+  document.getElementById('res-wrong').textContent = wrong;
+  document.getElementById('res-pct').textContent = pct + '%';
+  const m = String(Math.floor(seconds/60)).padStart(2,'0');
+  const s = String(seconds%60).padStart(2,'0');
+  document.getElementById('res-time').textContent = `${m}:${s}`;
+  let title, msg;
+  if (pct >= 90) { title = '🏆 ممتاز!'; msg = 'أداء رائع! أنت متميز في هذه المادة.'; }
+  else if (pct >= 75) { title = '✨ جيد جداً!'; msg = 'نتيجة ممتازة، استمر في الممارسة!'; }
+  else if (pct >= 60) { title = '👍 جيد'; msg = 'نتيجة مقبولة، راجع الأجزاء الضعيفة.'; }
+  else { title = '📚 تحتاج مراجعة'; msg = 'يُنصح بمراجعة المحاضرة مجدداً.'; }
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-msg').textContent = msg;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function restartQuiz() {
+  current = 0;
+  score = 0;
+  wrong = 0;
+  seconds = 0;
+  answered = new Array(questions.length).fill(null);
+  document.getElementById('timer-val').textContent = '00:00';
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQ();
+  startTimer();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Init
+renderQ();
+startTimer();
+</script>
+</body>
+</html>
