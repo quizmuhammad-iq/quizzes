@@ -95,7 +95,15 @@ header img { width: 40px; height: 40px; border-radius: 8px; }
 
 <script>
 const SALT = "QUIZZES_3RD_YEAR_2025_WAZARIA_SECRET";
-
+// تسجيل المحرك لظمان ظهور خيار التثبيت وعمل التطبيق
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('تم التسجيل بنجاح'))
+      .catch(err => console.log('فشل التسجيل', err));
+  });
+  }
+  
 // 1. توليد بصمة جهاز ثابتة (حل العيب 2)
 function generateFingerprint() {
     const nav = window.navigator;
