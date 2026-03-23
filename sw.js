@@ -1,4 +1,4 @@
-const CACHE_NAME = 'quizzes-v4';
+const CACHE_NAME = 'quizzes-v5';
 const STATIC_FILES = [
   'index.html',
   'quiz.html',
