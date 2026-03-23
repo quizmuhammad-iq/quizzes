@@ -1,10 +1,10 @@
-const CACHE_NAME = 'quizzes-v3';
+const CACHE_NAME = 'quizzes-v4';
 const STATIC_FILES = [
-  './',
   'index.html',
   'quiz.html',
   'manifest.json',
-  'icon.jpg'
+  'icon192.png',
+  'icon512.png'
 ];
 
 self.addEventListener('install', e => {
