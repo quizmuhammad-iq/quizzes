@@ -2,7 +2,7 @@
   "name": "كوزات المرحلة الثالثة الوزارية",
   "short_name": "كوزات الثالثة",
   "description": "اختبارات الباثو وفيزياء الرنين للمرحلة الثالثة تقنيات الأشعة",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a0e1a",
   "theme_color": "#0a0e1a",
@@ -11,12 +11,14 @@
     {
       "src": "icon192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icon512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
